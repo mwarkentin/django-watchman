@@ -21,7 +21,7 @@ class TestWatchman(unittest.TestCase):
         pass
 
     def test_something(self):
-        pass
+        self.assertTrue(True)
 
     def tearDown(self):
         pass

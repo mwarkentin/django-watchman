@@ -11,7 +11,8 @@ django-watchman
 .. image:: https://coveralls.io/repos/mwarkentin/django-watchman/badge.png?branch=master
     :target: https://coveralls.io/r/mwarkentin/django-watchman?branch=master
 
-django-watchmen exposes a status endpoint for your backing services
+django-watchmen exposes a status endpoint for your backing services like
+databases, caches, etc.
 
 Documentation
 -------------
@@ -21,13 +22,23 @@ The full documentation is at http://django-watchman.rtfd.org.
 Quickstart
 ----------
 
-Install django-watchman::
+1. Install django-watchman::
 
     pip install django-watchman
 
-Then use it in a project::
+2. Add "watchman" to your INSTALLED_APPS setting like this::
 
-    import django-watchman
+    INSTALLED_APPS = (
+        ...
+        'watchman',
+    )
+
+3. Include the watchman URLconf in your project urls.py like this::
+
+    url(r'^watchman/', include('watchman.urls')),
+
+4. Start the development server and visit http://127.0.0.1:8000/watchman/ to
+   get a JSON response of your backing service statuses
 
 Features
 --------
