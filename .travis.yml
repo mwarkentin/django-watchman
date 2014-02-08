@@ -1,0 +1,17 @@
+# Config file for automatic testing at travis-ci.org
+
+language: python
+
+python:
+  - "3.3"
+  - "2.7"
+  - "2.6"
+
+# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
+install: pip install -r requirements-test.txt
+
+# command to run tests using coverage, e.g. python setup.py test
+script: coverage run --source watchman runtests.py
+
+# report coverage to coveralls.io
+after_success: coveralls
