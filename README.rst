@@ -43,4 +43,11 @@ Quickstart
 Features
 --------
 
-* TODO
+Token based authentication
+**************************
+
+If you want to protect the status endpoint, you can add a WATCHMAN_TOKEN to your
+setting. When this setting is added, you must pass that value in as the
+watchman-token GET parameter::
+
+    GET http://127.0.0.1:8000/watchman/?watchman-token=:example-token
