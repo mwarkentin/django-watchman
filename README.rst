@@ -55,6 +55,6 @@ watchman-token GET parameter::
 If you want to change the token name, you can set the WATCHMAN_TOKEN_NAME. The
 value of this setting will be the GET parameter that you must pass in::
 
-    WATCHMAN_TOKEN_NAME = 'my-custom-token-name'
+    WATCHMAN_TOKEN_NAME = 'custom-token-name'
 
-    GET http://127.0.0.1:8000/watchman/?my-custom-token-name=:token
+    GET http://127.0.0.1:8000/watchman/?custom-token-name=:token
