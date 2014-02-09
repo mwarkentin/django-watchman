@@ -15,7 +15,7 @@ import unittest
 
 from mock import patch
 
-from watchman import views
+from watchman import checks, views
 
 
 class TestWatchman(unittest.TestCase):
@@ -38,13 +38,13 @@ class TestWatchman(unittest.TestCase):
         self.assertItemsEqual(expected_checks, content.keys())
 
     def test_check_database_handles_exception(self):
-        response = views.check_database('foo')
+        response = checks.check_database('foo')
         self.assertFalse(response['foo']['ok'])
         self.assertEqual(response['foo']['error'], "The connection foo doesn't exist")
 
     def test_check_cache_handles_exception(self):
         expected_error = "Could not find backend 'foo': Could not find backend 'foo': foo doesn't look like a module path"
-        response = views.check_cache('foo')
+        response = checks.check_cache('foo')
         self.assertFalse(response['foo']['ok'])
         self.assertEqual(response['foo']['error'], expected_error)
 
