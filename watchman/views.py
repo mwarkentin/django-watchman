@@ -4,7 +4,6 @@ import traceback
 
 from django.conf import settings
 from django.db import connections
-from django.db.utils import DatabaseError
 
 from jsonview.decorators import json_view
 
@@ -16,8 +15,10 @@ def status(request):
     }
     return response
 
+
 def check_databases():
     return [check_database(database) for database in settings.DATABASES]
+
 
 def check_database(database):
     try:
