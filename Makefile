@@ -24,7 +24,7 @@ clean-pyc:
 	find . -name '*~' -exec rm -f {} +
 
 lint:
-	flake8 watchman tests
+	flake8 watchman tests --ignore=E501
 
 test:
 	python runtests.py test

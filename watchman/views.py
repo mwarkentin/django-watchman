@@ -7,8 +7,10 @@ from django.conf import settings
 from jsonview.decorators import json_view
 
 from watchman.checks import check_caches, check_databases
+from watchman.decorators import token_required
 
 
+@token_required
 @json_view
 def status(request):
     response = {
