@@ -38,7 +38,24 @@ Quickstart
     url(r'^watchman/', include('watchman.urls')),
 
 4. Start the development server and visit ``http://127.0.0.1:8000/watchman/`` to
-   get a JSON response of your backing service statuses
+   get a JSON response of your backing service statuses::
+
+    {
+        "databases": [
+            {
+                "default": {
+                    "ok": true
+                }
+            }
+        ],
+        "caches": [
+            {
+                "default": {
+                    "ok": true
+                }
+            }
+        ]
+    }
 
 Features
 --------
