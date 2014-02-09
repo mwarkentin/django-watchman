@@ -2,10 +2,10 @@
 django-watchman
 =============================
 
-.. image:: https://img.shields.io/pypi/v/django-watchman.svg
+.. image:: http://img.shields.io/pypi/v/django-watchman.svg
     :target: http://badge.fury.io/py/django-watchman
 
-.. image:: https://img.shields.io/travis/mwarkentin/django-watchman/master.svg
+.. image:: http://img.shields.io/travis/mwarkentin/django-watchman/master.svg
     :target: https://travis-ci.org/mwarkentin/django-watchman
 
 .. image:: http://img.shields.io/coveralls/mwarkentin/django-watchman.svg
