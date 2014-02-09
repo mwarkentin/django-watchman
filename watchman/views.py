@@ -7,7 +7,6 @@ from django.db import connections
 from django.db.utils import DatabaseError
 
 from jsonview.decorators import json_view
-from psycopg2 import OperationalError
 
 
 @json_view

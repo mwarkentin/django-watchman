@@ -4,6 +4,8 @@
 import os
 import sys
 
+from pip.req import parse_requirements
+
 import watchman
 
 try:
@@ -23,6 +25,9 @@ if sys.argv[-1] == 'publish':
 readme = open('README.rst').read()
 history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 
+# parse_requirements() returns generator of pip.req.InstallRequirement objects
+install_reqs = [str(ir.req) for ir in parse_requirements('requirements.txt')]
+
 setup(
     name='django-watchman',
     version=version,
@@ -35,8 +40,7 @@ setup(
         'watchman',
     ],
     include_package_data=True,
-    install_requires=[
-    ],
+    install_requires=install_reqs,
     license="BSD",
     zip_safe=False,
     keywords='django-watchman',
