@@ -11,13 +11,13 @@ from jsonview.decorators import json_view
 @json_view
 def status(request):
     response = {
-        "databases": check_databases(),
+        "databases": check_databases(settings.DATABASES),
     }
     return response
 
 
-def check_databases():
-    return [check_database(database) for database in settings.DATABASES]
+def check_databases(databases):
+    return [check_database(database) for database in databases]
 
 
 def check_database(database):
