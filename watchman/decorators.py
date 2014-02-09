@@ -1,21 +1,32 @@
-from django.conf import settings
 from django.http import HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 
 from functools import wraps
 
-from watchman import settings as watchman_settings
+from watchman import settings
 
 
 def token_required(view_func):
-    """Decorator which ensures the user has provided a correct user and token pair."""
+    """
+    Decorator which ensures that WATCHMAN_TOKEN is provided if set.
+
+    WATCHMAN_TOKEN_NAME can also be set if the token GET parameter must be
+    customized.
+
+    """
+
+    def _validate_token(request):
+        watchman_token = settings.WATCHMAN_TOKEN
+        if watchman_token is None:
+            return True
+
+        watchman_token_name = settings.WATCHMAN_TOKEN_NAME
+        return watchman_token == request.GET.get(watchman_token_name)
 
     @csrf_exempt
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
-        watchman_token = watchman_settings.WATCHMAN_TOKEN
-        watchman_token_name = watchman_settings.WATCHMAN_TOKEN_NAME
-        if watchman_token is None or watchman_token == request.GET.get(watchman_token_name):
+        if _validate_token(request):
             return view_func(request, *args, **kwargs)
 
         return HttpResponseForbidden()

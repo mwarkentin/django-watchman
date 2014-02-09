@@ -16,10 +16,6 @@ from watchman import settings as watchman_settings
 from django.core.urlresolvers import reverse
 from django.test.client import Client
 
-from mock import patch
-
-from watchman import checks, views
-
 
 class TestWatchman(unittest.TestCase):
 
