@@ -11,7 +11,7 @@ django-watchman
 .. image:: https://coveralls.io/repos/mwarkentin/django-watchman/badge.png?branch=master
     :target: https://coveralls.io/r/mwarkentin/django-watchman?branch=master
 
-django-watchmen exposes a status endpoint for your backing services like
+django-watchman exposes a status endpoint for your backing services like
 databases, caches, etc.
 
 Documentation
