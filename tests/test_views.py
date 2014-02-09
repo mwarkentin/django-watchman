@@ -22,6 +22,12 @@ class TestWatchman(unittest.TestCase):
         pass
 
     @patch('watchman.views.check_databases')
+    def test_response_content_type_json(self, patched_check_databases):
+        patched_check_databases.return_value = []
+        response = views.status('')
+        self.assertEqual(response['Content-Type'], 'application/json')
+
+    @patch('watchman.views.check_databases')
     def test_response_contains_expected_checks(self, patched_check_databases):
         expected_checks = ['databases']
         patched_check_databases.return_value = []
