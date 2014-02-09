@@ -24,7 +24,7 @@ clean-pyc:
 	find . -name '*~' -exec rm -f {} +
 
 lint:
-	flake8 django-watchman tests
+	flake8 watchman tests
 
 test:
 	python runtests.py test
