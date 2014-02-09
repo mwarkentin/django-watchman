@@ -35,5 +35,10 @@ class TestWatchman(unittest.TestCase):
         content = json.loads(response.content)
         self.assertItemsEqual(expected_checks, content.keys())
 
+    def test_check_database_handles_exception(self):
+        response = views.check_database('foo')
+        self.assertFalse(response['foo']['ok'])
+        self.assertEqual(response['foo']['error'], "The connection foo doesn't exist")
+
     def tearDown(self):
         pass
