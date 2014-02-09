@@ -47,7 +47,14 @@ Token based authentication
 **************************
 
 If you want to protect the status endpoint, you can add a WATCHMAN_TOKEN to your
-setting. When this setting is added, you must pass that value in as the
+settings. When this setting is added, you must pass that value in as the
 watchman-token GET parameter::
 
-    GET http://127.0.0.1:8000/watchman/?watchman-token=:example-token
+    GET http://127.0.0.1:8000/watchman/?watchman-token=:token
+
+If you want to change the token name, you can set the WATCHMAN_TOKEN_NAME. The
+value of this setting will be the GET parameter that you must pass in::
+
+    WATCHMAN_TOKEN_NAME = 'my-custom-token-name'
+
+    GET http://127.0.0.1:8000/watchman/?my-custom-token-name=:token

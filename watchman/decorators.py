@@ -11,7 +11,8 @@ def token_required(view_func):
     @wraps(view_func)
     def _wrapped_view(request, *args, **kwargs):
         required_token = getattr(settings, 'WATCHMAN_TOKEN', None)
-        if required_token is None or required_token == request.GET.get('watchman-token'):
+        token_name = getattr(settings, 'WATCHMAN_TOKEN_NAME', 'watchman-token')
+        if required_token is None or required_token == request.GET.get(token_name):
             return view_func(request, *args, **kwargs)
 
         return HttpResponseForbidden()
