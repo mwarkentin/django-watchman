@@ -4,16 +4,16 @@ from __future__ import unicode_literals
 
 import traceback
 import uuid
-
+from django.conf import settings
 from django.core.cache import get_cache
 from django.db import connections
 
 
-def check_databases(databases):
-    return [check_database(database) for database in databases]
+def _check_databases(databases):
+    return [_check_database(database) for database in databases]
 
 
-def check_database(database):
+def _check_database(database):
     try:
         connections[database].introspection.table_names()
         response = {database: {"ok": True}}
@@ -28,11 +28,11 @@ def check_database(database):
     return response
 
 
-def check_caches(caches):
-    return [check_cache(cache) for cache in caches]
+def _check_caches(caches):
+    return [_check_cache(cache) for cache in caches]
 
 
-def check_cache(cache_name):
+def _check_cache(cache_name):
     key = str(uuid.uuid4())
     value = str(uuid.uuid4())
     try:
@@ -50,3 +50,11 @@ def check_cache(cache_name):
             },
         }
     return response
+
+
+def caches_status(request):
+    return {"caches": _check_caches(settings.CACHES)}
+
+
+def databases_status(request):
+    return {'databases': _check_databases(settings.DATABASES)}
