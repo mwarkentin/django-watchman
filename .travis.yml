@@ -13,3 +13,6 @@ script: coverage run --source watchman runtests.py
 
 # report coverage to coveralls.io
 after_success: coveralls
+
+notifications:
+  slack: tobalabs:XPt5OlsKuFGgIQZp0DpNXBUl
