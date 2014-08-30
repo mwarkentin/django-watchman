@@ -30,6 +30,6 @@ except ImportError: # < Django 1.7
             return attr
 
 
-def get_checkers(paths_to_checkers):
-    for python_path in paths_to_checkers:
+def get_checks(paths_to_checks):
+    for python_path in paths_to_checks:
         yield import_string(python_path)

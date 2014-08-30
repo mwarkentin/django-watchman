@@ -54,7 +54,7 @@ class TestWatchman(unittest.TestCase):
     def test_response_only_single_check(self, patched_check_databases):
         patched_check_databases.return_value = []
         request = RequestFactory().get('/', data={
-            'only_check': 'watchman.checks.databases_status',
+            'check': 'watchman.checks.databases_status',
         })
         response = views.status(request)
         content = json.loads(response.content)
@@ -65,7 +65,7 @@ class TestWatchman(unittest.TestCase):
     def test_response_404_when_none_specified(self, patched_check_databases):
         patched_check_databases.return_value = []
         request = RequestFactory().get('/', data={
-            'only_check': '',
+            'check': '',
         })
         response = views.status(request)
         content = json.loads(response.content)

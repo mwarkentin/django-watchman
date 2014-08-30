@@ -6,7 +6,7 @@ from django.conf import settings
 from django.http import Http404
 
 from jsonview.decorators import json_view
-from watchman.utils import get_checkers
+from watchman.utils import get_checks
 from watchman.settings import WATCHMAN_CHECKS
 from watchman.decorators import token_required
 
@@ -15,12 +15,12 @@ from watchman.decorators import token_required
 @json_view
 def status(request):
     response = {}
-    available_checkers = frozenset(WATCHMAN_CHECKS)
+    available_checks = frozenset(WATCHMAN_CHECKS)
     # allow for asking for only a subset back.
-    if len(request.GET) > 0 and 'only_check' in request.GET:
-        possible_filters = frozenset(request.GET.getlist('only_check'))
-        available_checkers &= possible_filters
-    for func in get_checkers(paths_to_checkers=available_checkers):
+    if len(request.GET) > 0 and 'check' in request.GET:
+        possible_filters = frozenset(request.GET.getlist('check'))
+        available_checks &= possible_filters
+    for func in get_checks(paths_to_checks=available_checks):
         if callable(func):
             response.update(func(request))
     if len(response) == 0:
