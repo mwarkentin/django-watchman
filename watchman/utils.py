@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-try: # try for Django 1.7+ first.
+try:  # try for Django 1.7+ first.
     from django.utils.module_loading import import_string
-except ImportError: # < Django 1.7
+except ImportError:  # < Django 1.7
     try:
         from django.utils.module_loading import import_by_path as import_string
-    except ImportError: # < Django 1.5.3 (including 1.4 LTS)
+    except ImportError:  # < Django 1.5.3 (including 1.4 LTS)
         import sys
         from django.utils import six
         from django.utils.importlib import import_module
         from django.core.exceptions import ImproperlyConfigured
+
         def import_string(dotted_path, error_prefix=''):
             try:
                 module_path, class_name = dotted_path.rsplit('.', 1)
