@@ -5,9 +5,9 @@ Credits
 Development Lead
 ----------------
 
-* Michael Warkentin <mwarkentin@gmail.com>
+* Michael Warkentin <mwarkentin@gmail.com> - https://github.com/mwarkentin
 
 Contributors
 ------------
 
-None yet. Why not be the first?
+* Keryn Knight - https://github.com/kezabelle

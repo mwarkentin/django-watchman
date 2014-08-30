@@ -77,3 +77,39 @@ The value of this setting will be the **GET** parameter that you must pass in::
     WATCHMAN_TOKEN_NAME = 'custom-token-name'
 
     GET http://127.0.0.1:8000/watchman/?custom-token-name=:token
+
+Custom checks
+*************
+
+django-watchman allows you to customize the checks which are run by modifying
+the ``WATCHMAN_CHECKS`` setting. In ``settings.py``::
+
+    WATCHMAN_CHECKS = (
+        'module.path.to.callable',
+        'another.module.path.to.callable',
+    )
+
+Checks now have the same contract as context processors: they consume a
+``request`` and return a ``dict`` whose keys are applied to the JSON response::
+
+    def my_check(request):
+        return {'x': 1}
+
+In the absence of any checks, a 404 is thrown, which is then handled by the
+``json_view`` decorator.
+
+Run a subset of available checks
+********************************
+
+A subset of checks may be run, by passing ``?check=module.path.to.callable&check=...``
+in the request URL. Only the callables given in querystring, which are in the
+``WATCHMAN_CHECKS`` should be run, eg::
+
+    curl -XGET http://127.0.0.1:8080/watchman/?check=watchman.views.caches_status
+
+Default checks
+--------------
+
+By default, django-watchman will run checks against your databases
+(``watchman.views.databases_status``) and caches (``watchman.views.caches_status``).
+These will function even if you haven't configured the respective settings.

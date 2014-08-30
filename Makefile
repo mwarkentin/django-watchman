@@ -39,9 +39,9 @@ coverage:
 	open htmlcov/index.html
 
 docs:
-	rm -f docs/django-watchman.rst
+	rm -f docs/watchman.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ django-watchman
+	sphinx-apidoc -o docs/ watchman
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	open docs/_build/html/index.html
