@@ -2,13 +2,13 @@
 django-watchman
 =============================
 
-.. image:: https://badge.fury.io/py/django-watchman.png
+.. image:: http://img.shields.io/pypi/v/django-watchman.svg
     :target: http://badge.fury.io/py/django-watchman
 
-.. image:: https://travis-ci.org/mwarkentin/django-watchman.png?branch=master
+.. image:: http://img.shields.io/travis/mwarkentin/django-watchman/master.svg
     :target: https://travis-ci.org/mwarkentin/django-watchman
 
-.. image:: https://coveralls.io/repos/mwarkentin/django-watchman/badge.png?branch=master
+.. image:: http://img.shields.io/coveralls/mwarkentin/django-watchman.svg
     :target: https://coveralls.io/r/mwarkentin/django-watchman?branch=master
 
 django-watchman exposes a status endpoint for your backing services like
