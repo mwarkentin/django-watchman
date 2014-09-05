@@ -13,11 +13,14 @@ from __future__ import unicode_literals
 import django
 import json
 import unittest
+import sys
 from django.conf import settings
 from django.test.client import RequestFactory
 from mock import patch
 
 from watchman import checks, views
+
+PYTHON_VERSION = sys.version_info[0]
 
 if django.VERSION >= (1, 7):
     # Initialize Django
@@ -45,8 +48,13 @@ class TestWatchman(unittest.TestCase):
         patched_check_databases.return_value = []
         request = RequestFactory().get('/')
         response = views.status(request)
-        content = json.loads(response.content)
-        self.assertItemsEqual(expected_checks, content.keys())
+
+        if PYTHON_VERSION == 2:
+            content = json.loads(response.content)
+            self.assertItemsEqual(expected_checks, content.keys())
+        else:
+            content = json.loads(response.content.decode('utf-8'))
+            self.assertCountEqual(expected_checks, content.keys())
 
     def test_check_database_handles_exception(self):
         response = checks._check_database('foo')
@@ -66,9 +74,14 @@ class TestWatchman(unittest.TestCase):
             'check': 'watchman.checks.databases_status',
         })
         response = views.status(request)
-        content = json.loads(response.content)
         self.assertEqual(response.status_code, 200)
-        self.assertItemsEqual({'databases': []}, content)
+
+        if PYTHON_VERSION == 2:
+            content = json.loads(response.content)
+            self.assertItemsEqual({'databases': []}, content)
+        else:
+            content = json.loads(response.content.decode('utf-8'))
+            self.assertCountEqual({'databases': []}, content)
 
     @patch('watchman.checks._check_databases')
     def test_response_404_when_none_specified(self, patched_check_databases):
@@ -77,9 +90,15 @@ class TestWatchman(unittest.TestCase):
             'check': '',
         })
         response = views.status(request)
-        content = json.loads(response.content)
         self.assertEqual(response.status_code, 404)
-        self.assertItemsEqual({'message': 'No checks found', 'error': 404},
+
+        if PYTHON_VERSION == 2:
+            content = json.loads(response.content)
+            self.assertItemsEqual({'message': 'No checks found', 'error': 404},
+                              content)
+        else:
+            content = json.loads(response.content.decode('utf-8'))
+            self.assertCountEqual({'message': 'No checks found', 'error': 404},
                               content)
 
     def tearDown(self):
