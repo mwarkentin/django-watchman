@@ -4,8 +4,6 @@
 import os
 import sys
 
-from pip.req import parse_requirements
-
 import watchman
 
 try:
