@@ -11,10 +11,10 @@ Tests for `django-watchman` decorators module.
 from __future__ import unicode_literals
 
 import unittest
-
-from watchman import settings as watchman_settings
 from django.core.urlresolvers import reverse
 from django.test.client import Client
+
+from watchman import settings as watchman_settings
 
 
 class TestWatchman(unittest.TestCase):

@@ -27,13 +27,13 @@ lint:
 	flake8 watchman tests --ignore=E501
 
 test:
-	python runtests.py test
+	python runtests.py
 
 test-all:
 	tox
 
 coverage:
-	coverage run --source django-watchman setup.py test
+	coverage run --source watchman runtests.py
 	coverage report -m
 	coverage html
 	open htmlcov/index.html
@@ -47,8 +47,8 @@ docs:
 	open docs/_build/html/index.html
 
 release: clean
-	python setup.py sdist upload
-	python setup.py bdist_wheel upload
+	python setup.py sdist upload -r pypi
+	python setup.py bdist_wheel upload -r pypi
 
 sdist: clean
 	python setup.py sdist
