@@ -3,6 +3,13 @@
 History
 -------
 
+0.2.2 (2014-09-05)
+++++++++++++++++++
+
+* Fix and run tests on Python 2.7 and 3.4
+* Bump django-jsonview dependency to latest
+* Update tox envlist and travis config to test 2.7 / 3.4
+
 0.2.1 (2014-09-04)
 ++++++++++++++++++
 
