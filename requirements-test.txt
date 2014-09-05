@@ -1,4 +1,5 @@
--r requirements.txt
+django
+django-jsonview==0.3.0
 
 coverage
 coveralls
