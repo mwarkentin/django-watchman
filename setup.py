@@ -39,7 +39,7 @@ setup(
     include_package_data=True,
     install_requires=[
         'django',
-        'django-jsonview==0.3.0',
+        'django-jsonview==0.4.3',
     ],
     license="BSD",
     zip_safe=False,
