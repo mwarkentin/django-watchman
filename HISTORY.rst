@@ -3,6 +3,16 @@
 History
 -------
 
+0.2.1 (2014-09-04)
+++++++++++++++++++
+
+* Initialize django during tests to prevent app loading issue for Django >= 1.7
+* Suppress ``MIDDLEWARE_CLASSES`` warning for Django >= 1.7
+* Reorganize test imports
+* Fix ``make test``, ``make coverage``, ``make release`` commands
+* Add htmlcov/ directory to .gitignore
+* Test django 1.4, 1.6, 1.7
+
 0.2.0 (2014-09-04)
 ++++++++++++++++++
 
