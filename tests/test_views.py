@@ -48,11 +48,13 @@ class TestWatchman(unittest.TestCase):
         patched_check_databases.return_value = []
         request = RequestFactory().get('/')
         response = views.status(request)
+
         if PYTHON_VERSION == 2:
             content = json.loads(response.content)
+            self.assertItemsEqual(expected_checks, content.keys())
         else:
             content = json.loads(response.content.decode('utf-8'))
-        self.assertItemsEqual(expected_checks, content.keys())
+            self.assertCountEqual(expected_checks, content.keys())
 
     def test_check_database_handles_exception(self):
         response = checks._check_database('foo')
@@ -72,12 +74,14 @@ class TestWatchman(unittest.TestCase):
             'check': 'watchman.checks.databases_status',
         })
         response = views.status(request)
+        self.assertEqual(response.status_code, 200)
+
         if PYTHON_VERSION == 2:
             content = json.loads(response.content)
+            self.assertItemsEqual({'databases': []}, content)
         else:
             content = json.loads(response.content.decode('utf-8'))
-        self.assertEqual(response.status_code, 200)
-        self.assertItemsEqual({'databases': []}, content)
+            self.assertCountEqual({'databases': []}, content)
 
     @patch('watchman.checks._check_databases')
     def test_response_404_when_none_specified(self, patched_check_databases):
@@ -86,12 +90,15 @@ class TestWatchman(unittest.TestCase):
             'check': '',
         })
         response = views.status(request)
+        self.assertEqual(response.status_code, 404)
+
         if PYTHON_VERSION == 2:
             content = json.loads(response.content)
+            self.assertItemsEqual({'message': 'No checks found', 'error': 404},
+                              content)
         else:
             content = json.loads(response.content.decode('utf-8'))
-        self.assertEqual(response.status_code, 404)
-        self.assertItemsEqual({'message': 'No checks found', 'error': 404},
+            self.assertCountEqual({'message': 'No checks found', 'error': 404},
                               content)
 
     def tearDown(self):
