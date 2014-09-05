@@ -9,13 +9,22 @@ Tests for `django-watchman` views module.
 """
 
 from __future__ import unicode_literals
-from django.test.client import RequestFactory
+
+import django
 import json
 import unittest
-
+from django.conf import settings
+from django.test.client import RequestFactory
 from mock import patch
 
 from watchman import checks, views
+
+if django.VERSION >= (1, 7):
+    # Initialize Django
+    django.setup()
+
+    # Silence MIDDLEWARE_CLASSES warning as this is not an actual Django project
+    settings.SILENCED_SYSTEM_CHECKS = ['1_7.W001']
 
 
 class TestWatchman(unittest.TestCase):
