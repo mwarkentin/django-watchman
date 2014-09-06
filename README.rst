@@ -105,10 +105,19 @@ Run a subset of available checks
 ********************************
 
 A subset of checks may be run, by passing ``?check=module.path.to.callable&check=...``
-in the request URL. Only the callables given in querystring, which are in the
-``WATCHMAN_CHECKS`` should be run, eg::
+in the request URL. Only the callables given in the querystring which are also
+in ``WATCHMAN_CHECKS`` should be run, eg::
 
     curl -XGET http://127.0.0.1:8080/watchman/?check=watchman.checks.caches_status
+
+Skip specific checks
+********************
+
+You can skip any number of checks, by passing ``?skip=module.path.to.callable&skip=...``
+in the request URL. Only the checks in ``WATCHMAN_CHECKS`` which are not in the
+querystring should be run, eg::
+
+    curl -XGET http://127.0.0.1:8080/watchman/?skip=watchman.checks.email_status
 
 Default checks
 --------------
