@@ -3,6 +3,14 @@
 History
 -------
 
+0.3.0 (2014-09-05)
+++++++++++++++++++
+
+* New check - email (``watchman.checks.email_status``)! django-watchman will now
+  check that your email settings are working too!
+* Fix a few small issues in the readme
+* Rearrange some of the code in checks.py
+
 0.2.2 (2014-09-05)
 ++++++++++++++++++
 
