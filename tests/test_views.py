@@ -44,7 +44,7 @@ class TestWatchman(unittest.TestCase):
 
     @patch('watchman.checks._check_databases')
     def test_response_contains_expected_checks(self, patched_check_databases):
-        expected_checks = ['caches', 'databases']
+        expected_checks = ['caches', 'databases', 'email', ]
         patched_check_databases.return_value = []
         request = RequestFactory().get('/')
         response = views.status(request)

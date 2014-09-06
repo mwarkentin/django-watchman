@@ -6,26 +6,8 @@ import traceback
 import uuid
 from django.conf import settings
 from django.core.cache import get_cache
+from django.core.mail import send_mail
 from django.db import connections
-
-
-def _check_databases(databases):
-    return [_check_database(database) for database in databases]
-
-
-def _check_database(database):
-    try:
-        connections[database].introspection.table_names()
-        response = {database: {"ok": True}}
-    except Exception as e:
-        response = {
-            database: {
-                "ok": False,
-                "error": str(e),
-                "stacktrace": traceback.format_exc(),
-            },
-        }
-    return response
 
 
 def _check_caches(caches):
@@ -52,9 +34,45 @@ def _check_cache(cache_name):
     return response
 
 
+def _check_databases(databases):
+    return [_check_database(database) for database in databases]
+
+
+def _check_database(database):
+    try:
+        connections[database].introspection.table_names()
+        response = {database: {"ok": True}}
+    except Exception as e:
+        response = {
+            database: {
+                "ok": False,
+                "error": str(e),
+                "stacktrace": traceback.format_exc(),
+            },
+        }
+    return response
+
+
+def _check_email():
+    try:
+        send_mail("subject", "message", "from@example.com", ["to@example.com"])
+        response = {"ok": True}
+    except Exception as e:
+        response = {
+            "ok": False,
+            "error": str(e),
+            "stacktrace": traceback.format_exc(),
+        }
+    return response
+
+
 def caches_status(request):
     return {"caches": _check_caches(settings.CACHES)}
 
 
 def databases_status(request):
-    return {'databases': _check_databases(settings.DATABASES)}
+    return {"databases": _check_databases(settings.DATABASES)}
+
+
+def email_status(request):
+    return {"email": _check_email()}
