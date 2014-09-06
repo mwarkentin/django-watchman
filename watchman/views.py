@@ -15,10 +15,13 @@ from watchman.decorators import token_required
 def status(request):
     response = {}
     available_checks = frozenset(WATCHMAN_CHECKS)
-    # allow for asking for only a subset back.
-    if len(request.GET) > 0 and 'check' in request.GET:
-        possible_filters = frozenset(request.GET.getlist('check'))
-        available_checks &= possible_filters
+    if len(request.GET) > 0:
+        if 'check' in request.GET:
+            possible_filters = frozenset(request.GET.getlist('check'))
+            available_checks &= possible_filters
+        if 'skip' in request.GET:
+            skipped_filters = frozenset(request.GET.getlist('skip'))
+            available_checks -= skipped_filters
     for func in get_checks(paths_to_checks=available_checks):
         if callable(func):
             response.update(func(request))
