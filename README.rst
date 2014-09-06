@@ -50,6 +50,9 @@ Quickstart
                 }
             }
         ],
+        "email": {
+            "ok": true
+        },
         "caches": [
             {
                 "default": {
@@ -105,11 +108,11 @@ A subset of checks may be run, by passing ``?check=module.path.to.callable&check
 in the request URL. Only the callables given in querystring, which are in the
 ``WATCHMAN_CHECKS`` should be run, eg::
 
-    curl -XGET http://127.0.0.1:8080/watchman/?check=watchman.views.caches_status
+    curl -XGET http://127.0.0.1:8080/watchman/?check=watchman.checks.caches_status
 
 Default checks
 --------------
 
 By default, django-watchman will run checks against your databases
-(``watchman.views.databases_status``) and caches (``watchman.views.caches_status``).
-These will function even if you haven't configured the respective settings.
+(``watchman.checks.databases_status``), caches (``watchman.checks.caches_status``),
+and email (``watchman.checks.email_status``).
