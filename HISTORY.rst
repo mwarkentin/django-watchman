@@ -3,6 +3,12 @@
 History
 -------
 
+0.4.0 (2014-09-08)
+++++++++++++++++++
+
+* Add the ability to skip certain checks by passing one or more
+  ``skip=path.to.callable`` GET params when hitting the watchman URL
+
 0.3.0 (2014-09-05)
 ++++++++++++++++++
 
