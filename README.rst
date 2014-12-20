@@ -108,7 +108,7 @@ A subset of checks may be run, by passing ``?check=module.path.to.callable&check
 in the request URL. Only the callables given in the querystring which are also
 in ``WATCHMAN_CHECKS`` should be run, eg::
 
-    curl -XGET http://127.0.0.1:8080/watchman/?check=watchman.checks.caches_status
+    curl -XGET http://127.0.0.1:8080/watchman/?check=watchman.checks.caches
 
 Skip specific checks
 ********************
@@ -117,11 +117,11 @@ You can skip any number of checks, by passing ``?skip=module.path.to.callable&sk
 in the request URL. Only the checks in ``WATCHMAN_CHECKS`` which are not in the
 querystring should be run, eg::
 
-    curl -XGET http://127.0.0.1:8080/watchman/?skip=watchman.checks.email_status
+    curl -XGET http://127.0.0.1:8080/watchman/?skip=watchman.checks.email
 
 Default checks
 --------------
 
 By default, django-watchman will run checks against your databases
-(``watchman.checks.databases_status``), caches (``watchman.checks.caches_status``),
-email (``watchman.checks.email_status``), and storage (``watchman.checks.storage_status``).
+(``watchman.checks.databases``), caches (``watchman.checks.caches``),
+email (``watchman.checks.email``), and storage (``watchman.checks.storage``).

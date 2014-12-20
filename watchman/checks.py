@@ -84,17 +84,17 @@ def _check_storage():
     return response
 
 
-def caches_status(request):
+def caches(request):
     return {"caches": _check_caches(settings.CACHES)}
 
 
-def databases_status(request):
+def databases(request):
     return {"databases": _check_databases(settings.DATABASES)}
 
 
-def email_status(request):
+def email(request):
     return {"email": _check_email()}
 
 
-def storage_status(request):
+def storage(request):
     return {"storage": _check_storage()}
