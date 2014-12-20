@@ -119,8 +119,42 @@ querystring should be run, eg::
 
     curl -XGET http://127.0.0.1:8080/watchman/?skip=watchman.checks.email
 
+Available checks
+----------------
+
+caches
+******
+
+For each cache in ``django.conf.settings.CACHES``:
+
+* Set a test cache item
+* Get test item
+* Delete test item
+
+databases
+*********
+
+For each database in ``django.conf.settings.DATABASES``:
+
+* Verify connection by calling ``connections[database].introspection.table_names()``
+
+email
+*****
+
+Send a test email to ``to@example.com`` using ``django.core.mail.send_mail``
+
+storage
+*******
+
+Using ``django.core.files.storage.default_storage``:
+
+* Write a test file
+* Check the test file's size
+* Read the test file's contents
+* Delete the test file
+
 Default checks
---------------
+**************
 
 By default, django-watchman will run checks against your databases
 (``watchman.checks.databases``), caches (``watchman.checks.caches``),
