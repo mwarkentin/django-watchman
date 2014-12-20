@@ -124,4 +124,4 @@ Default checks
 
 By default, django-watchman will run checks against your databases
 (``watchman.checks.databases_status``), caches (``watchman.checks.caches_status``),
-and email (``watchman.checks.email_status``).
+email (``watchman.checks.email_status``), and storage (``watchman.checks.storage_status``).
