@@ -26,7 +26,7 @@ history = open('HISTORY.rst').read().replace('.. :changelog:', '')
 setup(
     name='django-watchman',
     version=version,
-    description="""django-watchmen exposes a status endpoint for your backing services""",
+    description="""django-watchman exposes a status endpoint for your backing services""",
     long_description=readme + '\n\n' + history,
     author='Michael Warkentin',
     author_email='mwarkentin@gmail.com',
