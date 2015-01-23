@@ -9,6 +9,7 @@ History
   * Exit code of `0` if all checks pass, `1` otherwise
   * Print json stacktrace to stdout if check fails
   * Handles `--verbosity` option to print all status checks
+  * `-c`, `--checks`, `-s`, `--skips` options take comma-separated list of python paths to run / skip
 * Improve identifiability of emails sent from a django-watchman endpoint
   * From: watchman@example.com
   * Subject: django-watchman email check
