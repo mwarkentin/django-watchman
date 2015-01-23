@@ -92,10 +92,9 @@ the ``WATCHMAN_CHECKS`` setting. In ``settings.py``::
         'another.module.path.to.callable',
     )
 
-Checks now have the same contract as context processors: they consume a
-``request`` and return a ``dict`` whose keys are applied to the JSON response::
+Checks take no arguments, and must return a ``dict`` whose keys are applied to the JSON response::
 
-    def my_check(request):
+    def my_check():
         return {'x': 1}
 
 In the absence of any checks, a 404 is thrown, which is then handled by the

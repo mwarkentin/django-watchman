@@ -66,13 +66,13 @@ def _check_email():
     return response
 
 
-def caches_status(request):
+def caches_status():
     return {"caches": _check_caches(settings.CACHES)}
 
 
-def databases_status(request):
+def databases_status():
     return {"databases": _check_databases(settings.DATABASES)}
 
 
-def email_status(request):
+def email_status():
     return {"email": _check_email()}
