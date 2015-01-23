@@ -2,6 +2,15 @@
 
 History
 -------
+0.5.0 (2015-0?-??)
+++++++++++++++++++
+
+* Improve identifiability of emails sent from a django-watchman endpoint
+  * From: watchman@example.com
+  * Subject: django-watchman email check
+  * Body: This is an automated test of the email system.
+  * Add `X-DJANGO-WATCHMAN: True` custom header
+* Remove `email_status` from default checks
 
 0.4.0 (2014-09-08)
 ++++++++++++++++++
