@@ -6,7 +6,7 @@ import traceback
 import uuid
 from django.conf import settings
 from django.core.cache import get_cache
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 from django.db import connections
 
 
@@ -55,7 +55,15 @@ def _check_database(database):
 
 def _check_email():
     try:
-        send_mail("subject", "message", "from@example.com", ["to@example.com"])
+        headers = {"X-DJANGO-WATCHMAN": True}
+        email = EmailMessage(
+            "django-watchman email check",
+            "This is an automated test of the email system.",
+            "watchman@example.com",
+            ["to@example.com"],
+            headers=headers
+        )
+        email.send()
         response = {"ok": True}
     except Exception as e:
         response = {
