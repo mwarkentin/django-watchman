@@ -17,8 +17,8 @@ def _check_caches(caches):
 
 
 def _check_cache(cache_name):
-    key = str(uuid.uuid4())
-    value = str(uuid.uuid4())
+    key = 'django-watchman-{}'.format(uuid.uuid4())
+    value = 'django-watchman-{}'.format(uuid.uuid4())
     try:
         cache = get_cache(cache_name)
         cache.set(key, value)
@@ -78,9 +78,11 @@ def _check_email():
 
 def _check_storage():
     try:
-        path = default_storage.save('test', ContentFile('test content'))
+        filename = 'django-watchman-{}.txt'.format(uuid.uuid4())
+        content = 'django-watchman test file'
+        path = default_storage.save(filename, ContentFile(content))
         default_storage.size(path)
-        default_storage.open(path).read()
+        contents = default_storage.open(path).read()
         default_storage.delete(path)
         response = {"ok": True}
     except Exception as e:

@@ -10,12 +10,15 @@ Tests for `django-watchman` views module.
 
 from __future__ import unicode_literals
 
-import django
 import json
-import unittest
+import os
 import sys
+import unittest
+
+import django
 from django.conf import settings
 from django.test.client import RequestFactory
+
 from mock import patch
 
 from watchman import checks, views
