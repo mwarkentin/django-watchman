@@ -50,16 +50,14 @@ Quickstart
                 }
             }
         ],
-        "email": {
-            "ok": true
-        },
         "caches": [
             {
                 "default": {
                     "ok": true
                 }
             }
-        ]
+        ],
+        "storage": {"ok": true}
     }
 
 Features
@@ -140,7 +138,14 @@ For each database in ``django.conf.settings.DATABASES``:
 email
 *****
 
-Send a test email to ``to@example.com`` using ``django.core.mail.send_mail``
+Send a test email to ``to@example.com`` using ``django.core.mail.send_mail``.
+
+If you're using a 3rd party mail provider, this check could end up costing you
+money, depending how aggresive you are with your monitoring. For this reason,
+this check is **not enabled** by default.
+
+For reference, if you were using Mandrill, and hitting your watchman endpoint
+once per minute, this would cost you ~$5.60/month.
 
 storage
 *******
@@ -156,5 +161,5 @@ Default checks
 **************
 
 By default, django-watchman will run checks against your databases
-(``watchman.checks.databases``), caches (``watchman.checks.caches``),
-email (``watchman.checks.email``), and storage (``watchman.checks.storage``).
+(``watchman.checks.databases``), caches (``watchman.checks.caches``), and
+storage (``watchman.checks.storage``).
