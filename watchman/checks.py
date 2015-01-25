@@ -6,6 +6,8 @@ import traceback
 import uuid
 from django.conf import settings
 from django.core.cache import get_cache
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from django.core.mail import EmailMessage
 from django.db import connections
 
@@ -74,13 +76,33 @@ def _check_email():
     return response
 
 
-def caches_status(request):
+def _check_storage():
+    try:
+        path = default_storage.save('test', ContentFile('test content'))
+        default_storage.size(path)
+        default_storage.open(path).read()
+        default_storage.delete(path)
+        response = {"ok": True}
+    except Exception as e:
+        response = {
+            "ok": False,
+            "error": str(e),
+            "stacktrace": traceback.format_exc(),
+        }
+    return response
+
+
+def caches(request):
     return {"caches": _check_caches(settings.CACHES)}
 
 
-def databases_status(request):
+def databases(request):
     return {"databases": _check_databases(settings.DATABASES)}
 
 
-def email_status(request):
+def email(request):
     return {"email": _check_email()}
+
+
+def storage(request):
+    return {"storage": _check_storage()}
