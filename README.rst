@@ -116,6 +116,44 @@ querystring should be run, eg::
 
     curl -XGET http://127.0.0.1:8080/watchman/?skip=watchman.checks.email
 
+Django management command (new in ``django-watchman 0.5``)
+**********************************************************
+
+You can also run your checks without starting the webserver and making requests.
+This can be useful for testing your configuration before enabling a server,
+checking configuration on worker servers, etc. Run the management command like so::
+
+    python manage.py watchman
+
+By default, successful checks will not print any output. If all checks pass
+successfully, the exit code will be ``0``. If a check fails, the exit code will
+be ``1``, and the error message including stack trace will be printed to ``stderr``.
+
+If you'd like to see output for successful checks as well, set verbosity to
+``2`` or higher::
+
+    python manage.py watchman -v 2
+    {"storage": {"ok": true}}
+    {"caches": [{"default": {"ok": true}}]}
+    {"databases": [{"default": {"ok": true}}]}
+
+If you'd like to run a subset of checks, use ``-c`` and a comma-separated list
+of python module paths::
+
+    python manage.py watchman -c watchman.checks.caches,watchman.checks.databases -v 2
+    {"caches": [{"default": {"ok": true}}]}
+    {"databases": [{"default": {"ok": true}}]}
+
+If you'd like to skip certain checks, use ``-s`` and a comma-separated list of
+python module paths::
+
+    python manage.py watchman -s watchman.checks.caches,watchman.checks.databases -v 2
+    {"storage": {"ok": true}}
+
+Use ``-h`` to see a full list of options::
+
+    python manage.py watchman -h
+
 Available checks
 ----------------
 
