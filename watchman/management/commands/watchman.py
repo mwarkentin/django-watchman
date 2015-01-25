@@ -47,4 +47,4 @@ class Command(BaseCommand):
                 if '"ok": false' in resp:
                     raise CommandError(resp)
                 elif print_all_checks:
-                    print resp
+                    self.stdout.write(resp)
