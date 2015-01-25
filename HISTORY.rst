@@ -2,6 +2,23 @@
 
 History
 -------
+0.5.0 (2015-0?-??)
+++++++++++++++++++
+
+* Add `watchman` management command
+  * Exit code of `0` if all checks pass, `1` otherwise
+  * Print json stacktrace to stdout if check fails
+  * Handles `--verbosity` option to print all status checks
+  * `-c`, `--checks`, `-s`, `--skips` options take comma-separated list of python paths to run / skip
+* Improve identifiability of emails sent from a django-watchman endpoint
+  * From: watchman@example.com
+  * Subject: django-watchman email check
+  * Body: This is an automated test of the email system.
+  * Add `X-DJANGO-WATCHMAN: True` custom header
+* Remove `email_status` from default checks
+* Refactor `utils.get_checks` to allow reuse in management command
+  * `get_checks` now performs the optional check inclusion / skipping
+  * `status` refactored to pull `check_list` / `skip_list` from GET params and pass them to `get_checks`
 
 0.4.0 (2014-09-08)
 ++++++++++++++++++
