@@ -5,7 +5,7 @@
 test_django-watchman
 ------------
 
-Tests for `django-watchman` decorators module.
+Tests for `django-watchman` utils module.
 """
 
 from __future__ import unicode_literals
