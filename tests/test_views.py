@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
@@ -11,7 +10,6 @@ Tests for `django-watchman` views module.
 from __future__ import unicode_literals
 
 import json
-import os
 import sys
 import unittest
 
@@ -34,9 +32,6 @@ if django.VERSION >= (1, 7):
 
 
 class TestWatchman(unittest.TestCase):
-
-    def setUp(self):
-        pass
 
     def test_response_content_type_json(self):
         request = RequestFactory().get('/')

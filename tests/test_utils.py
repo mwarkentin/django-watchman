@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
@@ -17,16 +16,13 @@ from watchman.utils import get_checks
 
 class TestWatchman(unittest.TestCase):
 
-    def assertListsEqual(self, l1, l2):
+    def assertListsEqual(self, list1, list2):
         try:
             # Python 3.4
-            self.assertCountEqual(l1, l2)
+            self.assertCountEqual(list1, list2)
         except AttributeError:
             # Python 2.7
-            self.assertItemsEqual(l1, l2)
-
-    def setUp(self):
-        pass
+            self.assertItemsEqual(list1, list2)
 
     def test_get_checks_returns_all_available_checks_by_default(self):
         checks = [check.__name__ for check in get_checks()]

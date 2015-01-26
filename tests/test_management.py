@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
@@ -17,9 +16,6 @@ from django.utils.six import StringIO
 
 
 class TestWatchman(unittest.TestCase):
-
-    def setUp(self):
-        pass
 
     def test_successful_management_command_outputs_nothing(self):
         out = StringIO()

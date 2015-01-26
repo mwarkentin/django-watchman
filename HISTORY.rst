@@ -7,7 +7,7 @@ History
 
 * Add ``watchman`` management command
   * Exit code of ``0`` if all checks pass, ``1`` otherwise
-  * Print json stacktrace to stdout if check fails
+  * Print json stacktrace to ``stderr`` if check fails
   * Handles ``--verbosity`` option to print all status checks
   * ``-c``, ``--checks``, ``-s``, ``--skips`` options take comma-separated list of python paths to run / skip
 * Improve identifiability of emails sent from a django-watchman endpoint
