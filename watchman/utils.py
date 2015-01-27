@@ -38,9 +38,9 @@ def get_checks(check_list=None, skip_list=None):
     checks_to_run = frozenset(WATCHMAN_CHECKS)
 
     if check_list is not None:
-        checks_to_run &= frozenset(check_list)
+        checks_to_run = checks_to_run.intersection(check_list)
     if skip_list is not None:
-        checks_to_run -= frozenset(skip_list)
+        checks_to_run = checks_to_run.difference(skip_list)
 
     for python_path in checks_to_run:
         yield import_string(python_path)
