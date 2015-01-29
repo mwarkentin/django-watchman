@@ -6,7 +6,9 @@ import traceback
 import uuid
 from django.conf import settings
 from django.core.cache import get_cache
-from django.core.mail import send_mail
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
+from django.core.mail import EmailMessage
 from django.db import connections
 
 
@@ -15,8 +17,8 @@ def _check_caches(caches):
 
 
 def _check_cache(cache_name):
-    key = str(uuid.uuid4())
-    value = str(uuid.uuid4())
+    key = 'django-watchman-{}'.format(uuid.uuid4())
+    value = 'django-watchman-{}'.format(uuid.uuid4())
     try:
         cache = get_cache(cache_name)
         cache.set(key, value)
@@ -55,7 +57,15 @@ def _check_database(database):
 
 def _check_email():
     try:
-        send_mail("subject", "message", "from@example.com", ["to@example.com"])
+        headers = {"X-DJANGO-WATCHMAN": True}
+        email = EmailMessage(
+            "django-watchman email check",
+            "This is an automated test of the email system.",
+            "watchman@example.com",
+            ["to@example.com"],
+            headers=headers
+        )
+        email.send()
         response = {"ok": True}
     except Exception as e:
         response = {
@@ -66,13 +76,35 @@ def _check_email():
     return response
 
 
-def caches_status(request):
+def _check_storage():
+    try:
+        filename = 'django-watchman-{}.txt'.format(uuid.uuid4())
+        content = 'django-watchman test file'
+        path = default_storage.save(filename, ContentFile(content))
+        default_storage.size(path)
+        default_storage.open(path).read()
+        default_storage.delete(path)
+        response = {"ok": True}
+    except Exception as e:
+        response = {
+            "ok": False,
+            "error": str(e),
+            "stacktrace": traceback.format_exc(),
+        }
+    return response
+
+
+def caches():
     return {"caches": _check_caches(settings.CACHES)}
 
 
-def databases_status(request):
+def databases():
     return {"databases": _check_databases(settings.DATABASES)}
 
 
-def email_status(request):
+def email():
     return {"email": _check_email()}
+
+
+def storage():
+    return {"storage": _check_storage()}

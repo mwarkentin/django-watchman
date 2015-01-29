@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+
+from watchman.settings import WATCHMAN_CHECKS
+
 try:  # try for Django 1.7+ first.
     from django.utils.module_loading import import_string
 except ImportError:  # < Django 1.7
@@ -31,6 +34,13 @@ except ImportError:  # < Django 1.7
             return attr
 
 
-def get_checks(paths_to_checks):
-    for python_path in paths_to_checks:
+def get_checks(check_list=None, skip_list=None):
+    checks_to_run = frozenset(WATCHMAN_CHECKS)
+
+    if check_list is not None:
+        checks_to_run = checks_to_run.intersection(check_list)
+    if skip_list is not None:
+        checks_to_run = checks_to_run.difference(skip_list)
+
+    for python_path in checks_to_run:
         yield import_string(python_path)

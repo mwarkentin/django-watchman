@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
 """
@@ -10,12 +9,14 @@ Tests for `django-watchman` views module.
 
 from __future__ import unicode_literals
 
-import django
 import json
-import unittest
 import sys
+import unittest
+
+import django
 from django.conf import settings
 from django.test.client import RequestFactory
+
 from mock import patch
 
 from watchman import checks, views
@@ -32,16 +33,13 @@ if django.VERSION >= (1, 7):
 
 class TestWatchman(unittest.TestCase):
 
-    def setUp(self):
-        pass
-
     def test_response_content_type_json(self):
         request = RequestFactory().get('/')
         response = views.status(request)
         self.assertEqual(response['Content-Type'], 'application/json')
 
     def test_response_contains_expected_checks(self):
-        expected_checks = ['caches', 'databases', 'email', ]
+        expected_checks = ['caches', 'databases', 'storage', ]
         request = RequestFactory().get('/')
         response = views.status(request)
 
@@ -64,9 +62,9 @@ class TestWatchman(unittest.TestCase):
         self.assertIn(response['foo']['error'], expected_error)
 
     def test_response_skipped_checks(self):
-        expected_checks = ['caches', 'email', ]
+        expected_checks = ['caches', 'storage', ]
         request = RequestFactory().get('/', data={
-            'skip': 'watchman.checks.databases_status',
+            'skip': 'watchman.checks.databases',
         })
         response = views.status(request)
 
@@ -82,8 +80,8 @@ class TestWatchman(unittest.TestCase):
         # skip the same check, you should get back a 404 as they cancel each
         # other out
         request = RequestFactory().get('/', data={
-            'check': 'watchman.checks.email_status',
-            'skip': 'watchman.checks.email_status',
+            'check': 'watchman.checks.email',
+            'skip': 'watchman.checks.email',
         })
         response = views.status(request)
         self.assertEqual(response.status_code, 404)
@@ -92,7 +90,7 @@ class TestWatchman(unittest.TestCase):
     def test_response_only_single_check(self, patched_check_databases):
         patched_check_databases.return_value = []
         request = RequestFactory().get('/', data={
-            'check': 'watchman.checks.databases_status',
+            'check': 'watchman.checks.databases',
         })
         response = views.status(request)
         self.assertEqual(response.status_code, 200)

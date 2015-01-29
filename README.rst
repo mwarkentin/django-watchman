@@ -50,16 +50,14 @@ Quickstart
                 }
             }
         ],
-        "email": {
-            "ok": true
-        },
         "caches": [
             {
                 "default": {
                     "ok": true
                 }
             }
-        ]
+        ],
+        "storage": {"ok": true}
     }
 
 Features
@@ -92,10 +90,9 @@ the ``WATCHMAN_CHECKS`` setting. In ``settings.py``::
         'another.module.path.to.callable',
     )
 
-Checks now have the same contract as context processors: they consume a
-``request`` and return a ``dict`` whose keys are applied to the JSON response::
+Checks take no arguments, and must return a ``dict`` whose keys are applied to the JSON response::
 
-    def my_check(request):
+    def my_check():
         return {'x': 1}
 
 In the absence of any checks, a 404 is thrown, which is then handled by the
@@ -108,7 +105,7 @@ A subset of checks may be run, by passing ``?check=module.path.to.callable&check
 in the request URL. Only the callables given in the querystring which are also
 in ``WATCHMAN_CHECKS`` should be run, eg::
 
-    curl -XGET http://127.0.0.1:8080/watchman/?check=watchman.checks.caches_status
+    curl -XGET http://127.0.0.1:8080/watchman/?check=watchman.checks.caches
 
 Skip specific checks
 ********************
@@ -117,11 +114,90 @@ You can skip any number of checks, by passing ``?skip=module.path.to.callable&sk
 in the request URL. Only the checks in ``WATCHMAN_CHECKS`` which are not in the
 querystring should be run, eg::
 
-    curl -XGET http://127.0.0.1:8080/watchman/?skip=watchman.checks.email_status
+    curl -XGET http://127.0.0.1:8080/watchman/?skip=watchman.checks.email
+
+Django management command (new in ``django-watchman 0.5``)
+**********************************************************
+
+You can also run your checks without starting the webserver and making requests.
+This can be useful for testing your configuration before enabling a server,
+checking configuration on worker servers, etc. Run the management command like so::
+
+    python manage.py watchman
+
+By default, successful checks will not print any output. If all checks pass
+successfully, the exit code will be ``0``. If a check fails, the exit code will
+be ``1``, and the error message including stack trace will be printed to ``stderr``.
+
+If you'd like to see output for successful checks as well, set verbosity to
+``2`` or higher::
+
+    python manage.py watchman -v 2
+    {"storage": {"ok": true}}
+    {"caches": [{"default": {"ok": true}}]}
+    {"databases": [{"default": {"ok": true}}]}
+
+If you'd like to run a subset of checks, use ``-c`` and a comma-separated list
+of python module paths::
+
+    python manage.py watchman -c watchman.checks.caches,watchman.checks.databases -v 2
+    {"caches": [{"default": {"ok": true}}]}
+    {"databases": [{"default": {"ok": true}}]}
+
+If you'd like to skip certain checks, use ``-s`` and a comma-separated list of
+python module paths::
+
+    python manage.py watchman -s watchman.checks.caches,watchman.checks.databases -v 2
+    {"storage": {"ok": true}}
+
+Use ``-h`` to see a full list of options::
+
+    python manage.py watchman -h
+
+Available checks
+----------------
+
+caches
+******
+
+For each cache in ``django.conf.settings.CACHES``:
+
+* Set a test cache item
+* Get test item
+* Delete test item
+
+databases
+*********
+
+For each database in ``django.conf.settings.DATABASES``:
+
+* Verify connection by calling ``connections[database].introspection.table_names()``
+
+email
+*****
+
+Send a test email to ``to@example.com`` using ``django.core.mail.send_mail``.
+
+If you're using a 3rd party mail provider, this check could end up costing you
+money, depending how aggresive you are with your monitoring. For this reason,
+this check is **not enabled** by default.
+
+For reference, if you were using Mandrill, and hitting your watchman endpoint
+once per minute, this would cost you ~$5.60/month.
+
+storage
+*******
+
+Using ``django.core.files.storage.default_storage``:
+
+* Write a test file
+* Check the test file's size
+* Read the test file's contents
+* Delete the test file
 
 Default checks
---------------
+**************
 
 By default, django-watchman will run checks against your databases
-(``watchman.checks.databases_status``), caches (``watchman.checks.caches_status``),
-and email (``watchman.checks.email_status``).
+(``watchman.checks.databases``), caches (``watchman.checks.caches``), and
+storage (``watchman.checks.storage``).
