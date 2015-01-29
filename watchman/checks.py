@@ -82,7 +82,7 @@ def _check_storage():
         content = 'django-watchman test file'
         path = default_storage.save(filename, ContentFile(content))
         default_storage.size(path)
-        contents = default_storage.open(path).read()
+        default_storage.open(path).read()
         default_storage.delete(path)
         response = {"ok": True}
     except Exception as e:
