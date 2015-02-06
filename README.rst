@@ -201,3 +201,10 @@ Default checks
 By default, django-watchman will run checks against your databases
 (``watchman.checks.databases``), caches (``watchman.checks.caches``), and
 storage (``watchman.checks.storage``).
+
+Paid checks
+***********
+
+Currently there is only one "paid" check - ``watchman.checks.email``. You can
+enable it by setting the ``WATCHMAN_ENABLE_PAID_CHECKS`` to ``True``, or by
+overriding the ``WATCHMAN_CHECKS`` setting.

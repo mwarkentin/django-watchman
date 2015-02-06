@@ -17,6 +17,7 @@ History
   * Add ``X-DJANGO-WATCHMAN: True`` custom header
 * Add new default check: ``storage`` check
   * Checks that files can be both written and read with the current Django storage engine
+  * Add ``WATCHMAN_ENABLE_PAID_CHECKS`` setting to enable all paid checks without modifying ``WATCHMAN_CHECKS``
 * Remove ``email_status`` from default checks
 * Refactor ``utils.get_checks`` to allow reuse in management command
   * ``get_checks`` now performs the optional check inclusion / skipping
