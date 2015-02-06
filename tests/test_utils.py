@@ -53,3 +53,12 @@ class TestWatchman(unittest.TestCase):
         checks = [check.__name__ for check in get_checks(check_list=check_list, skip_list=skip_list)]
         expected_checks = ['databases']
         self.assertListsEqual(checks, expected_checks)
+
+    def test_get_checks_with_paid_checks_disabled_returns_expected_checks(self):
+        expected_checks = ['caches', 'databases', 'storage']
+        checks = [check.__name__ for check in get_checks()]
+        self.assertListsEqual(checks, expected_checks)
+
+    @unittest.skip("Unsure how to test w/ modified settings")
+    def test_get_checks_with_paid_checks_enabled_returns_expected_checks(self):
+        pass
