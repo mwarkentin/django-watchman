@@ -32,3 +32,15 @@ def token_required(view_func):
         return HttpResponseForbidden()
 
     return _wrapped_view
+
+
+if settings.WATCHMAN_LOGIN:
+    from django.contrib.auth.decorators import login_required
+else:
+    def login_required(view_func):
+        @csrf_exempt
+        @wraps(view_func)
+        def _wrapped_view(request, *args, **kwargs):
+            return view_func(request, *args, **kwargs)
+
+        return _wrapped_view

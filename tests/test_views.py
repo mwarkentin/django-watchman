@@ -10,12 +10,18 @@ Tests for `django-watchman` views module.
 from __future__ import unicode_literals
 
 import json
+try:
+    from importlib import reload
+except ImportError:  # Python < 3
+    pass
 import sys
 import unittest
 
 import django
 from django.conf import settings
+from django.contrib.auth.models import AnonymousUser
 from django.test.client import RequestFactory
+from django.test.utils import override_settings
 
 from mock import patch
 
@@ -115,6 +121,50 @@ class TestWatchman(unittest.TestCase):
         else:
             content = json.loads(response.content.decode('utf-8'))
             self.assertCountEqual({'message': 'No checks found', 'error': 404}, content)
+
+    @override_settings(WATCHMAN_LOGIN=False)
+    def test_login_not_required(self):
+        # Reload settings - and all dependent modules - from scratch
+        reload(sys.modules['watchman.settings'])
+        reload(sys.modules['watchman.decorators'])
+        reload(sys.modules['watchman.views'])
+
+        request = RequestFactory().get('/')
+
+        response = views.status(request)
+
+        self.assertEqual(response.status_code, 200)
+
+    @override_settings(WATCHMAN_LOGIN=True)
+    def test_response_when_login_required_is_redirect(self):
+        # Reload settings - and all dependent modules - from scratch
+        reload(sys.modules['watchman.settings'])
+        reload(sys.modules['watchman.decorators'])
+        reload(sys.modules['watchman.views'])
+
+        request = RequestFactory().get('/')
+        request.user = AnonymousUser()
+        request.user.is_authenticated = lambda: False
+
+        response = views.status(request)
+
+        self.assertEqual(response.status_code, 302)
+
+    @override_settings(WATCHMAN_LOGIN=True)
+    def test_response_when_login_required(self):
+        # Reload settings - and all dependent modules - from scratch
+        reload(sys.modules['watchman.settings'])
+        reload(sys.modules['watchman.decorators'])
+        reload(sys.modules['watchman.views'])
+
+        request = RequestFactory().get('/')
+        request.user = AnonymousUser()
+        # Fake logging the user in
+        request.user.is_authenticated = lambda: True
+
+        response = views.status(request)
+
+        self.assertEqual(response.status_code, 200)
 
     def tearDown(self):
         pass
