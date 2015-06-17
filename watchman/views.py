@@ -37,7 +37,6 @@ def status(request):
 @token_required
 def dashboard(request):
     check_types = []
-    checks = {}
 
     for check in get_checks(None, None):
         if callable(check):
@@ -66,7 +65,7 @@ def dashboard(request):
 
                     statuses.append(status)
 
-                type_overall_status = 'OK' if all([status['status'] == 'OK' for status in statuses]) else 'ERROR'
+                type_overall_status = 'OK' if all([s['status'] == 'OK' for s in statuses]) else 'ERROR'
 
                 check_types.append({
                     'type': _type,
