@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 
 from django.http import Http404
 from django.shortcuts import render
+from django.utils.translation import ugettext as _
 
 from jsonview.decorators import json_view
 from watchman.decorators import token_required
@@ -29,7 +30,7 @@ def status(request):
             response.update(check())
 
     if len(response) == 0:
-        raise Http404('No checks found')
+        raise Http404(_('No checks found'))
 
     return response
 

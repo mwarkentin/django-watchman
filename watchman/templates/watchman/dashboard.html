@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block content %}
-<h2>System Status{% if overall_status == 'OK' %} <small>All systems up and running!</small>{% endif %}</h2>
+<h2>{% trans 'System Status' %}{% if overall_status == 'OK' %} <small>{% trans 'All systems up and running!' %}</small>{% endif %}</h2>
 
 <table class="table table-bordered table-hover">
     <thead>
@@ -21,11 +21,11 @@
         <td>{{ thing.name|title }}</td>
 
         {% if thing.status == 'OK' %}
-        <td class="success">{{ thing.status }}</td>
+        <td class="success">{% trans 'OK' %}</td>
 
         {% else %}
         <td class="danger">
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type.type }}-{{ thing.name }}">ERROR!</button>
+            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type.type }}-{{ thing.name }}">{% trans 'ERROR!' %}</button>
 
             <div class="modal fade" id="{{ type.type }}-{{ thing.name }}" tabindex="-1" role="dialog" aria-labelledby="{{ type.type }}-{{ thing.name }}-title">
                 <div class="modal-dialog" role="document">
@@ -51,11 +51,11 @@
     {% endfor %}{# for thing in type.statuses #}
     {% empty %}
     <tr>
-        <td colspan="3">No checks indicated</td>
+        <td colspan="3">{% trans 'No checks indicated.' %}</td>
     </tr>
     {% endfor %}{# for type in checks #}
     </tbody>
 </table>
 
-<span class="pull-right"><small>Click an error button to see the full traceback</small></span>
+<span class="pull-right"><small>{% trans 'Click an error button to see the full traceback' %}</small></span>
 {% endblock %}{# status_content #}
