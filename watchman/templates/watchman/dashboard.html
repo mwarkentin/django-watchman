@@ -3,7 +3,7 @@
 {% load i18n %}
 
 {% block content %}
-<h2>{% trans 'System Status' %}{% if overall_status == 'OK' %} <small>{% trans 'All systems up and running!' %}</small>{% endif %}</h2>
+<h2>{% trans 'System Status' %}{% if overall_status == 'OK' %} <small>{% trans 'All systems up and running!' %}</small>{% else %} <small>{% trans 'WARNING - Some systems down!' %}</small>{% endif %}</h2>
 
 <table class="table table-bordered table-hover">
     <thead>
@@ -17,7 +17,7 @@
     {% for type in checks %}
     {% for thing in type.statuses %}
     <tr>
-        <td class="{% if type.overall_status == 'OK' %}bg-success{% endif %}">{{ type.type|title }}</td>
+        <td class="{% if type.overall_status == 'OK' %}bg-success{% else %}bg-danger{% endif %}">{{ type.type|title }}</td>
         <td>{{ thing.name|title }}</td>
 
         {% if thing.status == 'OK' %}
@@ -57,5 +57,5 @@
     </tbody>
 </table>
 
-<span class="pull-right"><small>{% trans 'Click an error button to see the full traceback' %}</small></span>
+{% if overall_status != 'OK' %}<span class="pull-right"><small>{% trans 'Click an error button to see the full traceback' %}</small></span>{% endif %}{# overall_status != 'OK' #}
 {% endblock %}{# status_content #}
