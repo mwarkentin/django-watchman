@@ -1,61 +1,87 @@
-{% extends "base.html" %}
-
 {% load i18n %}
 
-{% block content %}
-<h2>{% trans 'System Status' %}{% if overall_status == 'OK' %} <small>{% trans 'All systems up and running!' %}</small>{% else %} <small>{% trans 'WARNING - Some systems down!' %}</small>{% endif %}</h2>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        {% block content %}
+        <div class="container">
+            <h2>{% trans 'System Status' %}</h2>
+            <h3 class="{% if overall_status == 'OK' %}text-success{% else %}text-danger{% endif %}">
+                {% if overall_status == 'OK' %}
+                    <span class="glyphicon glyphicon-ok"></span> {% trans 'All systems up and running!' %}
+                {% else %}
+                    <span class="glyphicon glyphicon-alert"></span> {% trans 'WARNING - Some systems down!' %}
+                {% endif %}
+            </h3>
+            <small></small>
 
-<table class="table table-bordered table-hover">
-    <thead>
-    <tr>
-        <th>{% trans 'Type' %}</th>
-        <th>{% trans 'Name' %}</th>
-        <th>{% trans 'Status' %}</th>
-    </tr>
-    </thead>
-    <tbody>
-    {% for type in checks %}
-    {% for thing in type.statuses %}
-    <tr>
-        <td class="{% if type.overall_status == 'OK' %}bg-success{% else %}bg-danger{% endif %}">{{ type.type|title }}</td>
-        <td>{{ thing.name|title }}</td>
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>{% trans 'Type' %}</th>
+                    <th>{% trans 'Name' %}</th>
+                    <th>{% trans 'Status' %}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for type in checks %}
+                {% for thing in type.statuses %}
+                <tr class="{% if type.overall_status == 'OK' %}success{% else %}danger{% endif %}">
+                    <td>{{ type.type|title }}</td>
+                    <td>{{ thing.name|title }}</td>
 
-        {% if thing.status == 'OK' %}
-        <td class="success">{% trans 'OK' %}</td>
+                    {% if thing.status == 'OK' %}
+                    <td class="success">{% trans 'OK' %}</td>
 
-        {% else %}
-        <td class="danger">
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type.type }}-{{ thing.name }}">{% trans 'ERROR!' %}</button>
+                    {% else %}
+                    <td class="danger">
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type.type }}-{{ thing.name }}">{% trans 'ERROR!' %}</button>
+                    </td>
+                    {% endif %}{# thing.status == 'OK' #}
 
-            <div class="modal fade" id="{{ type.type }}-{{ thing.name }}" tabindex="-1" role="dialog" aria-labelledby="{{ type.type }}-{{ thing.name }}-title">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="{{ type.type }}-{{ thing.name }}-title">{{ type.type|title }} - {{ thing.name|title }}</h4>
-                        </div><!-- class="modal-header" -->
-                        <div class="modal-body">
-                            <h4><pre>{{ thing.error }}</pre></h4>
-                            <pre>{{ thing.traceback }}</pre>
-                        </div><!-- class="model-body" -->
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div><!-- class="modal-footer" -->
-                    </div>
-                </div>
-            </div>
-        </td>
-        {% endif %}{# thing.status == 'OK' #}
+                </tr>
+                {% endfor %}{# for thing in type.statuses #}
+                {% empty %}
+                <tr>
+                    <td colspan="3">{% trans 'No checks indicated.' %}</td>
+                </tr>
+                {% endfor %}{# for type in checks #}
+                </tbody>
+            </table>
 
-    </tr>
-    {% endfor %}{# for thing in type.statuses #}
-    {% empty %}
-    <tr>
-        <td colspan="3">{% trans 'No checks indicated.' %}</td>
-    </tr>
-    {% endfor %}{# for type in checks #}
-    </tbody>
-</table>
+            {% if overall_status != 'OK' %}<span class="pull-right"><small>{% trans 'Click an error button to see the full traceback' %}</small></span>{% endif %}{# overall_status != 'OK' #}
+        </div>
+        {% endblock %}{# status_content #}
 
-{% if overall_status != 'OK' %}<span class="pull-right"><small>{% trans 'Click an error button to see the full traceback' %}</small></span>{% endif %}{# overall_status != 'OK' #}
-{% endblock %}{# status_content #}
+
+        {% for type in checks %}
+        {% for thing in type.statuses %}
+        {% if thing.status != 'OK' %}
+        <div class="modal fade" id="{{ type.type }}-{{ thing.name }}" tabindex="-1" role="dialog" aria-labelledby="{{ type.type }}-{{ thing.name }}-title">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="{{ type.type }}-{{ thing.name }}-title">{{ type.type|title }} - {{ thing.name|title }}</h4>
+                    </div><!-- class="modal-header" -->
+                    <div class="modal-body">
+                        <h4><pre>{{ thing.error }}</pre></h4>
+                        <pre>{{ thing.traceback }}</pre>
+                    </div><!-- class="model-body" -->
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div><!-- class="modal-footer" -->
+                </div><!-- class="modal-content" -->
+            </div><!-- class="modal-dialog" -->
+        </div><!-- class="modal fade" -->
+        {% endif %}{# thing.status != 'OK' #}
+        {% endfor %}{# for type in checks #}
+        {% endfor %}{# for thing in type.statuses #}
+    </body>
+</html>
