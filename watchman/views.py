@@ -5,12 +5,11 @@ from __future__ import unicode_literals
 from django.http import Http404
 
 from jsonview.decorators import json_view
-from watchman.decorators import token_required, login_required
+from watchman.decorators import auth
 from watchman.utils import get_checks
 
 
-@token_required
-@login_required
+@auth
 @json_view
 def status(request):
     response = {}

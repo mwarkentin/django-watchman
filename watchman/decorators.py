@@ -33,14 +33,22 @@ def token_required(view_func):
 
     return _wrapped_view
 
-
-if settings.WATCHMAN_LOGIN:
-    from django.contrib.auth.decorators import login_required
-else:
-    def login_required(view_func):
+if settings.WATCHMAN_AUTH_DECORATOR is None:
+    def auth(view_func):
         @csrf_exempt
         @wraps(view_func)
         def _wrapped_view(request, *args, **kwargs):
             return view_func(request, *args, **kwargs)
 
         return _wrapped_view
+elif settings.WATCHMAN_AUTH_DECORATOR == 'watchman.decorators.token_required':
+    # Avoid import loops
+    auth = token_required
+else:
+    try:
+        from importlib import import_module
+    except ImportError:  # Django < 1.8
+        from django.utils.importlib import import_module
+
+    mod_name, dec = settings.WATCHMAN_AUTH_DECORATOR.rsplit('.', 1)
+    auth = getattr(import_module(mod_name), dec)

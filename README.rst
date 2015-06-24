@@ -79,14 +79,18 @@ The value of this setting will be the **GET** parameter that you must pass in::
 
     GET http://127.0.0.1:8000/watchman/?custom-token-name=:token
 
-Login based authentication
-**************************
+Custom authentication/authorization
+***********************************
 
-If you want to protect the status endpoint, you can add ``WATCHMAN_LOGIN`` to
-your settings. This will add the django.contrib.auth.decorators.login_required
-decorator to the endpoint::
+If you want to protect the status endpoint with a customized
+authentication/authorization decorator, you can add ``WATCHMAN_AUTH_DECORATOR``
+to your settings. This needs to be a dotted-path to a decorator, and defaults
+to ``watchman.decorators.token_required``::
 
-    WATCHMAN_LOGIN = True
+    WATCHMAN_AUTH_DECORATOR = 'django.contrib.admin.views.decorators.staff_member_required'
+
+Note that the ``token_required`` decorator does not protect a view unless the
+``WATCHMAN_TOKEN`` is set in settings.
 
 Custom checks
 *************

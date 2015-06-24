@@ -37,7 +37,20 @@ if django.VERSION >= (1, 7):
     settings.SILENCED_SYSTEM_CHECKS = ['1_7.W001']
 
 
+def reload_settings():
+    # Reload settings - and all dependent modules - from scratch
+    reload(sys.modules['watchman.settings'])
+    reload(sys.modules['watchman.decorators'])
+    reload(sys.modules['watchman.views'])
+
+
 class TestWatchman(unittest.TestCase):
+    def setUp(self):
+        # Ensure that every test executes with separate settings
+        reload_settings()
+
+    def tearDown(self):
+        pass
 
     def test_response_content_type_json(self):
         request = RequestFactory().get('/')
@@ -122,41 +135,37 @@ class TestWatchman(unittest.TestCase):
             content = json.loads(response.content.decode('utf-8'))
             self.assertCountEqual({'message': 'No checks found', 'error': 404}, content)
 
-    @override_settings(WATCHMAN_LOGIN=False)
+    @override_settings(WATCHMAN_TOKEN='ABCDE')
+    @override_settings(WATCHMAN_AUTH_DECORATOR='watchman.decorators.token_required')
     def test_login_not_required(self):
-        # Reload settings - and all dependent modules - from scratch
-        reload(sys.modules['watchman.settings'])
-        reload(sys.modules['watchman.decorators'])
-        reload(sys.modules['watchman.views'])
-
-        request = RequestFactory().get('/')
+        # Have to manually reload settings here because override_settings
+        # happens after self.setUp(), but before self.tearDown()
+        reload_settings()
+        request = RequestFactory().get('/', data={
+            'watchman-token': 'ABCDE',
+        })
 
         response = views.status(request)
 
         self.assertEqual(response.status_code, 200)
 
-    @override_settings(WATCHMAN_LOGIN=True)
+    @override_settings(WATCHMAN_AUTH_DECORATOR='django.contrib.auth.decorators.login_required')
     def test_response_when_login_required_is_redirect(self):
-        # Reload settings - and all dependent modules - from scratch
-        reload(sys.modules['watchman.settings'])
-        reload(sys.modules['watchman.decorators'])
-        reload(sys.modules['watchman.views'])
-
+        # Have to manually reload settings here because override_settings
+        # happens after self.setUp()
+        reload_settings()
         request = RequestFactory().get('/')
         request.user = AnonymousUser()
-        request.user.is_authenticated = lambda: False
 
         response = views.status(request)
 
         self.assertEqual(response.status_code, 302)
 
-    @override_settings(WATCHMAN_LOGIN=True)
+    @override_settings(WATCHMAN_AUTH_DECORATOR='django.contrib.auth.decorators.login_required')
     def test_response_when_login_required(self):
-        # Reload settings - and all dependent modules - from scratch
-        reload(sys.modules['watchman.settings'])
-        reload(sys.modules['watchman.decorators'])
-        reload(sys.modules['watchman.views'])
-
+        # Have to manually reload settings here because override_settings
+        # happens after self.setUp()
+        reload_settings()
         request = RequestFactory().get('/')
         request.user = AnonymousUser()
         # Fake logging the user in
@@ -165,6 +174,3 @@ class TestWatchman(unittest.TestCase):
         response = views.status(request)
 
         self.assertEqual(response.status_code, 200)
-
-    def tearDown(self):
-        pass
