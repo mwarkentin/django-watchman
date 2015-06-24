@@ -4,9 +4,9 @@
 <html lang="en">
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     </head>
     <body>
         {% block content %}
@@ -31,22 +31,22 @@
                 </thead>
                 <tbody>
                 {% for type in checks %}
-                {% for thing in type.statuses %}
+                {% for status in type.statuses %}
                 <tr class="{% if type.ok %}success{% else %}danger{% endif %}">
                     <td>{{ type.type|title }}</td>
-                    <td>{{ thing.name|title }}</td>
+                    <td>{{ status.name|title }}</td>
 
-                    {% if thing.ok %}
+                    {% if status.ok %}
                     <td class="success">{% trans 'OK' %}</td>
 
                     {% else %}
                     <td class="danger">
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type.type }}{% if thing.name %}-{{ thing.name }}{% endif %}">{% trans 'ERROR!' %}</button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}">{% trans 'ERROR!' %}</button>
                     </td>
-                    {% endif %}{# thing.ok #}
+                    {% endif %}{# status.ok #}
 
                 </tr>
-                {% endfor %}{# for thing in type.statuses #}
+                {% endfor %}{# for status in type.statuses #}
                 {% empty %}
                 <tr>
                     <td colspan="3">{% trans 'No checks indicated.' %}</td>
@@ -61,18 +61,18 @@
 
 
         {% for type in checks %}
-        {% for thing in type.statuses %}
-        {% if not thing.ok %}
-        <div class="modal fade" id="{{ type.type }}{% if thing.name %}-{{ thing.name }}{% endif %}" tabindex="-1" role="dialog" aria-labelledby="{{ type.type }}{% if thing.name %}-{{ thing.name }}{% endif %}-title">
+        {% for status in type.statuses %}
+        {% if not status.ok %}
+        <div class="modal fade" id="{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}" tabindex="-1" role="dialog" aria-labelledby="{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}-title">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="{{ type.type }}{% if thing.name %}-{{ thing.name }}{% endif %}-title">{{ type.type|title }}{% if thing.name %} - {{ thing.name|title }}{% endif %}</h4>
+                        <h4 class="modal-title" id="{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}-title">{{ type.type|title }}{% if status.name %} - {{ status.name|title }}{% endif %}</h4>
                     </div><!-- class="modal-header" -->
                     <div class="modal-body">
-                        <h4><pre>{{ thing.error }}</pre></h4>
-                        <pre>{{ thing.traceback }}</pre>
+                        <h4><pre>{{ status.error }}</pre></h4>
+                        <pre>{{ status.traceback }}</pre>
                     </div><!-- class="model-body" -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -80,8 +80,8 @@
                 </div><!-- class="modal-content" -->
             </div><!-- class="modal-dialog" -->
         </div><!-- class="modal fade" -->
-        {% endif %}{# not thing.ok #}
+        {% endif %}{# not status.ok #}
         {% endfor %}{# for type in checks #}
-        {% endfor %}{# for thing in type.statuses #}
+        {% endfor %}{# for status in type.statuses #}
     </body>
 </html>
