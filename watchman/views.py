@@ -44,35 +44,73 @@ def dashboard(request):
             _check = check()
 
             for _type in _check:
-                # _check[_type] is a list of dictionaries:
-                # Example: [{'default': {'ok': True}}]
+                # For other systems (eg: email, storage) _check[_type] is a
+                # dictionary of status
+                #
+                # Example:
+                # {
+                #     'ok': True,  # Status
+                # }
+                #
+                # Example:
+                # {
+                #     'ok': False,  # Status
+                #     'error': "RuntimeError",
+                #     'stacktrace': "...",
+                # }
+                #
+                # For some systems (eg: cache, database) _check[_type] is a
+                # list of dictionaries of dictionaries of statuses
+                #
+                # Example:
+                # [
+                #     {
+                #         'default': {  # Cache/database name
+                #             'ok': True,  # Status
+                #         }
+                #     },
+                #     {
+                #         'non-default': {  # Cache/database name
+                #             'ok': False,  # Status
+                #             'error': "RuntimeError",
+                #             'stacktrace': "...",
+                #         }
+                #     },
+                # ]
+                #
                 statuses = []
 
-                for a in _check[_type]:
-                    status = {}
+                if type(_check[_type]) == dict:
+                    result = _check[_type]
+                    statuses = [{
+                        'name': '',
+                        'ok': result['ok'],
+                        'error': '' if result['ok'] else result['error'],
+                        'stacktrace': '' if result['ok'] else result['stacktrace'],
+                    }]
 
-                    # Systems like storage don't have names
-                    if a == 'ok':
-                        status['name'] = ''
-                        status['status'] = 'OK'
-                        status['error'] = ''
-                        status['stacktrace'] = ''
-                    else:
-                        for name in a:
-                            status['name'] = name
-                            status['status'] = 'OK' if a[name]['ok'] else 'ERROR'
-                            status['error'] = a[name]['error'] if not a[name]['ok'] else ''
-                            status['stacktrace'] = a[name]['stacktrace'] if not a[name]['ok'] else ''
+                    type_overall_status = _check[_type]['ok']
 
-                    statuses.append(status)
+                elif type(_check[_type]) == list:
+                    for result in _check[_type]:
+                        for name in result:
+                            statuses.append({
+                                'name': name,
+                                'ok': result[name]['ok'],
+                                'error': '' if result[name]['ok'] else result[name]['error'],
+                                'stacktrace': '' if result[name]['ok'] else result[name]['stacktrace'],
+                            })
 
-                type_overall_status = 'OK' if all([s['status'] == 'OK' for s in statuses]) else 'ERROR'
+                    type_overall_status = all([s['ok'] for s in statuses])
 
                 check_types.append({
                     'type': _type,
-                    'overall_status': type_overall_status,
+                    'ok': type_overall_status,
                     'statuses': statuses})
 
-    overall_status = 'OK' if all([type_status['overall_status'] == 'OK' for type_status in check_types]) else 'ERROR'
+    overall_status = all([type_status['ok'] for type_status in check_types])
 
-    return render(request, 'watchman/dashboard.html', {'checks': check_types, 'overall_status': overall_status})
+    return render(request, 'watchman/dashboard.html', {
+        'checks': check_types,
+        'overall_status': overall_status
+    })

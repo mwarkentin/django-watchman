@@ -12,12 +12,12 @@
         {% block content %}
         <div class="container">
             <h2>{% trans 'System Status' %}</h2>
-            <h3 class="{% if overall_status == 'OK' %}text-success{% else %}text-danger{% endif %}">
-                {% if overall_status == 'OK' %}
+            <h3 class="{% if overall_status %}text-success{% else %}text-danger{% endif %}">
+                {% if overall_status %}
                     <span class="glyphicon glyphicon-ok"></span> {% trans 'All systems up and running!' %}
                 {% else %}
                     <span class="glyphicon glyphicon-alert"></span> {% trans 'WARNING - Some systems down!' %}
-                {% endif %}
+                {% endif %}{# overall_status #}
             </h3>
             <small></small>
 
@@ -32,18 +32,18 @@
                 <tbody>
                 {% for type in checks %}
                 {% for thing in type.statuses %}
-                <tr class="{% if type.overall_status == 'OK' %}success{% else %}danger{% endif %}">
+                <tr class="{% if type.ok %}success{% else %}danger{% endif %}">
                     <td>{{ type.type|title }}</td>
                     <td>{{ thing.name|title }}</td>
 
-                    {% if thing.status == 'OK' %}
+                    {% if thing.ok %}
                     <td class="success">{% trans 'OK' %}</td>
 
                     {% else %}
                     <td class="danger">
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type.type }}-{{ thing.name }}">{% trans 'ERROR!' %}</button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type.type }}{% if thing.name %}-{{ thing.name }}{% endif %}">{% trans 'ERROR!' %}</button>
                     </td>
-                    {% endif %}{# thing.status == 'OK' #}
+                    {% endif %}{# thing.ok #}
 
                 </tr>
                 {% endfor %}{# for thing in type.statuses #}
@@ -55,20 +55,20 @@
                 </tbody>
             </table>
 
-            {% if overall_status != 'OK' %}<span class="pull-right"><small>{% trans 'Click an error button to see the full traceback' %}</small></span>{% endif %}{# overall_status != 'OK' #}
+            {% if not overall_status %}<span class="pull-right"><small>{% trans 'Click an error button to see the full traceback' %}</small></span>{% endif %}{# overall_status #}
         </div>
         {% endblock %}{# status_content #}
 
 
         {% for type in checks %}
         {% for thing in type.statuses %}
-        {% if thing.status != 'OK' %}
-        <div class="modal fade" id="{{ type.type }}-{{ thing.name }}" tabindex="-1" role="dialog" aria-labelledby="{{ type.type }}-{{ thing.name }}-title">
+        {% if not thing.ok %}
+        <div class="modal fade" id="{{ type.type }}{% if thing.name %}-{{ thing.name }}{% endif %}" tabindex="-1" role="dialog" aria-labelledby="{{ type.type }}{% if thing.name %}-{{ thing.name }}{% endif %}-title">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="{{ type.type }}-{{ thing.name }}-title">{{ type.type|title }} - {{ thing.name|title }}</h4>
+                        <h4 class="modal-title" id="{{ type.type }}{% if thing.name %}-{{ thing.name }}{% endif %}-title">{{ type.type|title }}{% if thing.name %} - {{ thing.name|title }}{% endif %}</h4>
                     </div><!-- class="modal-header" -->
                     <div class="modal-body">
                         <h4><pre>{{ thing.error }}</pre></h4>
@@ -80,7 +80,7 @@
                 </div><!-- class="modal-content" -->
             </div><!-- class="modal-dialog" -->
         </div><!-- class="modal fade" -->
-        {% endif %}{# thing.status != 'OK' #}
+        {% endif %}{# not thing.ok #}
         {% endfor %}{# for type in checks #}
         {% endfor %}{# for thing in type.statuses #}
     </body>

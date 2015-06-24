@@ -118,3 +118,10 @@ class TestWatchman(unittest.TestCase):
 
     def tearDown(self):
         pass
+
+
+class TestWatchmanDashboard(unittest.TestCase):
+    def test_dashboard_response_code(self):
+        request = RequestFactory().get('/')
+        response = views.dashboard(request)
+        self.assertEqual(response.status_code, 200)
