@@ -49,9 +49,6 @@ class TestWatchman(unittest.TestCase):
         # Ensure that every test executes with separate settings
         reload_settings()
 
-    def tearDown(self):
-        pass
-
     def test_response_content_type_json(self):
         request = RequestFactory().get('/')
         response = views.status(request)
@@ -172,5 +169,18 @@ class TestWatchman(unittest.TestCase):
         request.user.is_authenticated = lambda: True
 
         response = views.status(request)
+        self.assertEqual(response.status_code, 200)
 
+    def tearDown(self):
+        pass
+
+
+class TestWatchmanDashboard(unittest.TestCase):
+    def setUp(self):
+        # Ensure that every test executes with separate settings
+        reload_settings()
+
+    def test_dashboard_response_code(self):
+        request = RequestFactory().get('/')
+        response = views.dashboard(request)
         self.assertEqual(response.status_code, 200)
