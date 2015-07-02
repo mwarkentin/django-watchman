@@ -2,7 +2,7 @@
 
 History
 -------
-0.6.0 (2015-07-??)
+0.6.0 (2015-07-02)
 ++++++++++++++++++
 
 * [`#30 <https://github.com/mwarkentin/django-watchman/pull/30>`_] Allow users to specify a custom authentication/authorization decorator
