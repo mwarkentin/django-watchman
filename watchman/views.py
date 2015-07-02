@@ -11,11 +11,7 @@ from watchman.decorators import auth
 from watchman.utils import get_checks
 
 
-@auth
-@json_view
-def status(request):
-    response = {}
-
+def _get_check_params(request):
     check_list = None
     skip_list = None
 
@@ -24,6 +20,16 @@ def status(request):
             check_list = request.GET.getlist('check')
         if 'skip' in request.GET:
             skip_list = request.GET.getlist('skip')
+
+    return (check_list, skip_list)
+
+
+@auth
+@json_view
+def status(request):
+    response = {}
+
+    check_list, skip_list = _get_check_params(request)
 
     for check in get_checks(check_list=check_list, skip_list=skip_list):
         if callable(check):
@@ -39,7 +45,9 @@ def status(request):
 def dashboard(request):
     check_types = []
 
-    for check in get_checks(None, None):
+    check_list, skip_list = _get_check_params(request)
+
+    for check in get_checks(check_list=check_list, skip_list=skip_list):
         if callable(check):
             _check = check()
 
