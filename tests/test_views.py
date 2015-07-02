@@ -171,6 +171,11 @@ class TestWatchman(unittest.TestCase):
         response = views.status(request)
         self.assertEqual(response.status_code, 200)
 
+    def test_response_version_header(self):
+        request = RequestFactory().get('/')
+        response = views.status(request)
+        self.assertTrue(response.has_header('X-Watchman-Version'))
+
     def tearDown(self):
         pass
 
@@ -184,3 +189,8 @@ class TestWatchmanDashboard(unittest.TestCase):
         request = RequestFactory().get('/')
         response = views.dashboard(request)
         self.assertEqual(response.status_code, 200)
+
+    def test_response_version_header(self):
+        request = RequestFactory().get('/')
+        response = views.dashboard(request)
+        self.assertTrue(response.has_header('X-Watchman-Version'))
