@@ -6,12 +6,13 @@ History
 ++++++++++++++++++
 
 * [`#30 <https://github.com/mwarkentin/django-watchman/pull/30>`_] Allow users to specify a custom authentication/authorization decorator
-    * Override the ``@auth`` decorator by setting ``WATCHMAN_AUTH_DECORATOR`` to a dot-separated path to your own decorator
-    * eg. ``WATCHMAN_AUTH_DECORATOR = 'django.contrib.admin.views.decorators.staff_member_required'``
-    * Token-based authentication remains the default
+ * Override the ``@auth`` decorator by setting ``WATCHMAN_AUTH_DECORATOR`` to a dot-separated path to your own decorator
+ * eg. ``WATCHMAN_AUTH_DECORATOR = 'django.contrib.admin.views.decorators.staff_member_required'``
+ * Token-based authentication remains the default
 * [`#31 <https://github.com/mwarkentin/django-watchman/pull/31>`_], [`#34 <https://github.com/mwarkentin/django-watchman/pull/34>`_] Add a human-friendly status dashboard
-    * Available at ``<watchman url>/dashboard/``
-    * ``?check`` & ``?skip`` GET params work on the dashboard as well
+ * Available at ``<watchman url>/dashboard/``
+ * ``?check`` & ``?skip`` GET params work on the dashboard as well
+* [`#35 <https://github.com/mwarkentin/django-watchman/pull/35>`_] Add ``X-Watchman-Version`` header to responses
 
 0.5.0 (2015-01-25)
 ++++++++++++++++++
