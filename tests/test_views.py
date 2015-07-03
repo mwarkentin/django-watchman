@@ -146,6 +146,17 @@ class TestWatchman(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
 
+    @override_settings(WATCHMAN_TOKEN='ABCDE')
+    def test_version_header_not_included_when_token_auth_fails(self):
+        # Have to manually reload settings here because override_settings
+        # happens after self.setUp(), but before self.tearDown()
+        reload_settings()
+        request = RequestFactory().get('/')
+
+        response = views.status(request)
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(response.has_header('X-Watchman-Version'))
+
     @override_settings(WATCHMAN_AUTH_DECORATOR='django.contrib.auth.decorators.login_required')
     def test_response_when_login_required_is_redirect(self):
         # Have to manually reload settings here because override_settings
