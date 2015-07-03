@@ -182,7 +182,16 @@ class TestWatchman(unittest.TestCase):
         response = views.status(request)
         self.assertEqual(response.status_code, 200)
 
+    def test_response_version_header_missing_by_default(self):
+        request = RequestFactory().get('/')
+        response = views.status(request)
+        self.assertFalse(response.has_header('X-Watchman-Version'))
+
+    @override_settings(WATCHMAN_VERSION_HEADER=True)
     def test_response_version_header(self):
+        # Have to manually reload settings here because override_settings
+        # happens after self.setUp()
+        reload_settings()
         request = RequestFactory().get('/')
         response = views.status(request)
         self.assertTrue(response.has_header('X-Watchman-Version'))
@@ -201,7 +210,16 @@ class TestWatchmanDashboard(unittest.TestCase):
         response = views.dashboard(request)
         self.assertEqual(response.status_code, 200)
 
+    def test_response_version_header_missing_by_default(self):
+        request = RequestFactory().get('/')
+        response = views.dashboard(request)
+        self.assertFalse(response.has_header('X-Watchman-Version'))
+
+    @override_settings(WATCHMAN_VERSION_HEADER=True)
     def test_response_version_header(self):
+        # Have to manually reload settings here because override_settings
+        # happens after self.setUp()
+        reload_settings()
         request = RequestFactory().get('/')
         response = views.dashboard(request)
         self.assertTrue(response.has_header('X-Watchman-Version'))

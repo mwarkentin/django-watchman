@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.utils.translation import ugettext as _
 
 from jsonview.decorators import json_view
-from watchman import __version__
+from watchman import __version__, settings
 from watchman.decorators import auth
 from watchman.utils import get_checks
 
@@ -42,7 +42,10 @@ def status(request):
     if len(response) == 0:
         raise Http404(_('No checks found'))
 
-    return response, 200, {WATCHMAN_VERSION_HEADER: __version__}
+    if settings.WATCHMAN_VERSION_HEADER:
+        return response, 200, {WATCHMAN_VERSION_HEADER: __version__}
+    else:
+        return response
 
 
 @auth
@@ -127,5 +130,7 @@ def dashboard(request):
         'overall_status': overall_status
     })
 
-    response[WATCHMAN_VERSION_HEADER] = __version__
+    if settings.WATCHMAN_VERSION_HEADER:
+        response[WATCHMAN_VERSION_HEADER] = __version__
+
     return response
