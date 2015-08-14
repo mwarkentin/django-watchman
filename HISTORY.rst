@@ -2,6 +2,13 @@
 
 History
 -------
+
+0.7.0 (2015-08-14)
+++++++++++++++++++
+
+* [`#40 <https://github.com/mwarkentin/django-watchman/pull/40>`_] Bump ``django-jsonview`` for improved Django 1.8 compatibility
+ * Also brought travis Django test versions in line with currently supported Django versions (1.4.x, 1.7.x, 1.8.x)
+
 0.6.0 (2015-07-02)
 ++++++++++++++++++
 
