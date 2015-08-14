@@ -4,6 +4,11 @@
 History
 =======
 
+0.7.1 (2015-08-14)
+------------------
+
+* Update headers in ``HISTORY.rst`` to attempt to fix localshop parsing issues
+
 0.7.0 (2015-08-14)
 ------------------
 
