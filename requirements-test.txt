@@ -7,4 +7,5 @@ mock>=1.0.1
 nose>=1.3.0
 django-nose>=1.2
 flake8>=2.1.0
+restructuredtext_lint==0.12.2
 tox>=1.7.0

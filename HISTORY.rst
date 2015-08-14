@@ -7,40 +7,40 @@ History
 ++++++++++++++++++
 
 * [`#40 <https://github.com/mwarkentin/django-watchman/pull/40>`_] Bump ``django-jsonview`` for improved Django 1.8 compatibility
- * Also brought travis Django test versions in line with currently supported Django versions (1.4.x, 1.7.x, 1.8.x)
+  * Also brought travis Django test versions in line with currently supported Django versions (1.4.x, 1.7.x, 1.8.x)
 
 0.6.0 (2015-07-02)
 ++++++++++++++++++
 
 * [`#30 <https://github.com/mwarkentin/django-watchman/pull/30>`_] Allow users to specify a custom authentication/authorization decorator
- * Override the ``@auth`` decorator by setting ``WATCHMAN_AUTH_DECORATOR`` to a dot-separated path to your own decorator
- * eg. ``WATCHMAN_AUTH_DECORATOR = 'django.contrib.admin.views.decorators.staff_member_required'``
- * Token-based authentication remains the default
+  * Override the ``@auth`` decorator by setting ``WATCHMAN_AUTH_DECORATOR`` to a dot-separated path to your own decorator
+  * eg. ``WATCHMAN_AUTH_DECORATOR = 'django.contrib.admin.views.decorators.staff_member_required'``
+  * Token-based authentication remains the default
 * [`#31 <https://github.com/mwarkentin/django-watchman/pull/31>`_], [`#34 <https://github.com/mwarkentin/django-watchman/pull/34>`_] Add a human-friendly status dashboard
- * Available at ``<watchman url>/dashboard/``
- * ``?check`` & ``?skip`` GET params work on the dashboard as well
+  * Available at ``<watchman url>/dashboard/``
+  * ``?check`` & ``?skip`` GET params work on the dashboard as well
 * [`#35 <https://github.com/mwarkentin/django-watchman/pull/35>`_] Add ``X-Watchman-Version`` header to responses
 
 0.5.0 (2015-01-25)
 ++++++++++++++++++
 
 * Add ``watchman`` management command
- * Exit code of ``0`` if all checks pass, ``1`` otherwise
- * Print json stacktrace to ``stderr`` if check fails
- * Handles ``--verbosity`` option to print all status checks
- * ``-c``, ``--checks``, ``-s``, ``--skips`` options take comma-separated list of python paths to run / skip
+  * Exit code of ``0`` if all checks pass, ``1`` otherwise
+  * Print json stacktrace to ``stderr`` if check fails
+  * Handles ``--verbosity`` option to print all status checks
+  * ``-c``, ``--checks``, ``-s``, ``--skips`` options take comma-separated list of python paths to run / skip
 * Improve identifiability of emails sent from a django-watchman endpoint
- * From: watchman@example.com
- * Subject: django-watchman email check
- * Body: This is an automated test of the email system.
- * Add ``X-DJANGO-WATCHMAN: True`` custom header
+  * From: watchman@example.com
+  * Subject: django-watchman email check
+  * Body: This is an automated test of the email system.
+  * Add ``X-DJANGO-WATCHMAN: True`` custom header
 * Add new default check: ``storage`` check
- * Checks that files can be both written and read with the current Django storage engine
- * Add ``WATCHMAN_ENABLE_PAID_CHECKS`` setting to enable all paid checks without modifying ``WATCHMAN_CHECKS``
+  * Checks that files can be both written and read with the current Django storage engine
+  * Add ``WATCHMAN_ENABLE_PAID_CHECKS`` setting to enable all paid checks without modifying ``WATCHMAN_CHECKS``
 * Remove ``email_status`` from default checks
 * Refactor ``utils.get_checks`` to allow reuse in management command
- * ``get_checks`` now performs the optional check inclusion / skipping
- * ``status`` refactored to pull ``check_list`` / ``skip_list`` from GET params and pass them to ``get_checks``
+  * ``get_checks`` now performs the optional check inclusion / skipping
+  * ``status`` refactored to pull ``check_list`` / ``skip_list`` from GET params and pass them to ``get_checks``
 * Namespace cache keys
 * Update documentation
 
