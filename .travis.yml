@@ -7,9 +7,9 @@ python:
   - "3.4"
 
 env:
-  - DJANGO_VERSION=1.4.15
-  - DJANGO_VERSION=1.6.7
-  - DJANGO_VERSION=1.7.0
+  - DJANGO_VERSION=1.4.21
+  - DJANGO_VERSION=1.7.9
+  - DJANGO_VERSION=1.8.3
 
 # command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install: pip install -r requirements-test.txt
