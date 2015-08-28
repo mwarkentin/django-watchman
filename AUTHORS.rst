@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Michael Warkentin <mwarkentin@gmail.com> - https://github.com/mwarkentin
+* Michael Warkentin <mwarkentin@gmail.com> - https://github.com/mwarkentin - `@mwarkentin <https://twitter.com/mwarkentin>`_
 
 Contributors
 ------------
