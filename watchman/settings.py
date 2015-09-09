@@ -5,6 +5,7 @@ WATCHMAN_ENABLE_PAID_CHECKS = getattr(settings, 'WATCHMAN_ENABLE_PAID_CHECKS', F
 WATCHMAN_AUTH_DECORATOR = getattr(settings, 'WATCHMAN_AUTH_DECORATOR', 'watchman.decorators.token_required')
 WATCHMAN_TOKEN = getattr(settings, 'WATCHMAN_TOKEN', None)
 WATCHMAN_TOKEN_NAME = getattr(settings, 'WATCHMAN_TOKEN_NAME', 'watchman-token')
+WATCHMAN_500_ERRORS = getattr(settings, 'WATCHMAN_500_ERRORS', False)
 
 DEFAULT_CHECKS = (
     'watchman.checks.caches',
