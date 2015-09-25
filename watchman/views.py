@@ -39,19 +39,18 @@ def status(request):
     for check in get_checks(check_list=check_list, skip_list=skip_list):
         if callable(check):
             _check = check()
-            # If WATCHMAN_500_ERRORS=True, we return an HTTP code 500
-            # when any checks are failed. Otherwise always return 200.
-            if settings.WATCHMAN_500_ERRORS:
+            # Set our HTTP status code if there were any errors
+            if settings.WATCHMAN_ERROR_CODE:
                 for _type in _check:
                     if type(_check[_type]) == dict:
                         result = _check[_type]
                         if not result['ok']:
-                            http_code = 500
+                            http_code = settings.WATCHMAN_ERROR_CODE
                     elif type(_check[_type]) == list:
                         for entry in _check[_type]:
                             for result in entry:
                                 if not entry[result]['ok']:
-                                    http_code = 500
+                                    http_code = settings.WATCHMAN_ERROR_CODE
             response.update(_check)
 
     if len(response) == 0:
