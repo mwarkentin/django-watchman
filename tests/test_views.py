@@ -176,6 +176,24 @@ class TestWatchman(unittest.TestCase):
         response = views.status(request)
         self.assertTrue(response.has_header('X-Watchman-Version'))
 
+    @patch('watchman.checks._check_databases')
+    @override_settings(WATCHMAN_ERROR_CODE=503)
+    def test_response_error_code(self, patched_check_databases):
+        reload_settings()
+        # Fake a DB error, ensure we get our error code
+        patched_check_databases.return_value = [{
+            "foo": {
+                "ok": False,
+                "error": "Fake DB Error",
+                "stacktrace": "Fake DB Stack Trace",
+            },
+        }]
+        request = RequestFactory().get('/', data={
+            'check': 'watchman.checks.databases',
+        })
+        response = views.status(request)
+        self.assertEqual(response.status_code, 503)
+
     def tearDown(self):
         pass
 
