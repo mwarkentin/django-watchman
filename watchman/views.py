@@ -40,7 +40,7 @@ def status(request):
         if callable(check):
             _check = check()
             # Set our HTTP status code if there were any errors
-            if settings.WATCHMAN_ERROR_CODE:
+            if settings.WATCHMAN_ERROR_CODE != 200:
                 for _type in _check:
                     if type(_check[_type]) == dict:
                         result = _check[_type]
