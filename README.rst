@@ -199,7 +199,7 @@ email
 Send a test email to ``to@example.com`` using ``django.core.mail.send_mail``.
 
 If you're using a 3rd party mail provider, this check could end up costing you
-money, depending how aggresive you are with your monitoring. For this reason,
+money, depending how aggressive you are with your monitoring. For this reason,
 this check is **not enabled** by default.
 
 For reference, if you were using Mandrill, and hitting your watchman endpoint
