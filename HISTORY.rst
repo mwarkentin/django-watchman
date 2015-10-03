@@ -4,6 +4,11 @@
 History
 =======
 
+0.8.0 (2015-10-03)
+------------------
+
+* [`#46 <https://github.com/mwarkentin/django-watchman/pull/46>`_] Allow custom response codes with the ``WATCHMAN_ERROR_CODE`` setting
+
 0.7.1 (2015-08-14)
 ------------------
 
