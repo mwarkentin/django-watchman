@@ -25,7 +25,7 @@ Testimonials
 ------------
 
     We're in love with django-watchman. External monitoring is a vital part of our service offering. Using django-watchman we can introspect the infrastructure of an application via a secure URL. It's very well written and easy to extend. We've recommended it to many of our clients already.
-    
+
 — Hany Fahim, CEO, `VM Farms <https://vmfarms.com/>`_.
 
 Quickstart
@@ -136,8 +136,8 @@ querystring should be run, eg::
 
     curl -XGET http://127.0.0.1:8080/watchman/?skip=watchman.checks.email
 
-Django management command (new in ``django-watchman 0.5``)
-**********************************************************
+Django management command
+*************************
 
 You can also run your checks without starting the webserver and making requests.
 This can be useful for testing your configuration before enabling a server,
@@ -173,6 +173,16 @@ python module paths::
 Use ``-h`` to see a full list of options::
 
     python manage.py watchman -h
+
+Custom response code
+********************
+
+By default, watchman will return a ``200`` HTTP response code, even if there's a
+failing check. You can specify a different response code for failing checks
+using the ``WATCHMAN_ERROR_CODE`` setting::
+
+    WATCHMAN_ERROR_CODE = 500
+
 
 Available checks
 ----------------
