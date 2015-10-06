@@ -12,3 +12,4 @@ Contributors
 
 * Keryn Knight - https://github.com/kezabelle
 * blag - https://github.com/blag
+* kilbasar - https://github.com/kilbasar
