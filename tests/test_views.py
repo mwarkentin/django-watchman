@@ -209,7 +209,7 @@ class TestWatchman(unittest.TestCase):
             'check': 'watchman.checks.databases',
         })
         response = views.status(request)
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 500)
 
     def tearDown(self):
         pass
