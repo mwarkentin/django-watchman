@@ -241,3 +241,26 @@ Paid checks
 Currently there is only one "paid" check - ``watchman.checks.email``. You can
 enable it by setting the ``WATCHMAN_ENABLE_PAID_CHECKS`` to ``True``, or by
 overriding the ``WATCHMAN_CHECKS`` setting.
+
+Trying it out with Vagrant
+--------------------------
+
+A sample project is available along with a Vagrantfile to make it easy to try
+out django-watchman.
+
+Requirements
+************
+
+* `Vagrant <https://www.vagrantup.com/>`_
+* `Virtualbox <https://www.virtualbox.org/>`_
+* `Ansible <http://www.ansible.com/>`_
+
+Instructions
+************
+
+1. Launch vagrant box: ``vagrant up``
+2. SSH into vagrant: ``vagrant ssh``
+3. Activate the virtualenv: ``workon watchman``
+4. Launch the development server: ``python manage.py runserver 0.0.0.0:8000``
+5. Visit watchman json endpoint in your browser: http://127.0.0.1:8000/watchman/
+6. Visit watchman dashboard in your browser: http://127.0.0.1:8000/watchman/dashboard/
