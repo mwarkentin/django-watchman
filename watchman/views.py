@@ -94,8 +94,8 @@ def dashboard(request):
                 #     {
                 #         'default': {  # Cache/database name
                 #             'ok': True,  # Status
-                #             'time': 0.005 # Response time
-                #         }
+                #         },
+                #         'time': 0.005 # Response time
                 #     },
                 #     {
                 #         'non-default': {  # Cache/database name
@@ -110,14 +110,10 @@ def dashboard(request):
 
                 if type(_check[_type]) == dict:
                     result = _check[_type]
-                    time = ''
-                    if result['ok']:
-                        time = result['time']
-
                     statuses = [{
                         'name': '',
                         'ok': result['ok'],
-                        'time': time,
+                        'time': result.get('time', ''),
                         'error': '' if result['ok'] else result['error'],
                         'stacktrace': '' if result['ok'] else result['stacktrace'],
                     }]
@@ -128,13 +124,10 @@ def dashboard(request):
                     for result in _check[_type]:
                         for name in result:
                             if not name == 'time':
-                                time = ''
-                                if result[name]['ok']:
-                                    time = result['time']
                                 statuses.append({
                                     'name': name,
                                     'ok': result[name]['ok'],
-                                    'time': time,
+                                    'time': result.get('time', ''),
                                     'error': '' if result[name]['ok'] else result[name]['error'],
                                     'stacktrace': '' if result[name]['ok'] else result[name]['stacktrace'],
                                 })
