@@ -251,9 +251,9 @@ out django-watchman.
 Requirements
 ************
 
-* Vagrant
-* Virtualbox
-* Ansible
+* `Vagrant <https://www.vagrantup.com/>`_
+* `Virtualbox <https://www.virtualbox.org/>`_
+* `Ansible <http://www.ansible.com/>`_
 
 Instructions
 ************
