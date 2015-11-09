@@ -11,6 +11,8 @@ from __future__ import unicode_literals
 
 import unittest
 
+import django
+
 from mock import patch
 
 from watchman.utils import get_cache, get_checks
@@ -27,9 +29,9 @@ class TestWatchman(unittest.TestCase):
             self.assertItemsEqual(list1, list2)
 
     @patch('django.core.cache.get_cache')
-    @patch('django.VERSION')
-    def test_get_cache_less_than_django_17(self, version_mock, get_cache_mock):
-        version_mock.return_value = (1, 6, 6, 'final', 0)
+    @patch('watchman.utils.django')
+    def test_get_cache_less_than_django_17(self, django_mock, get_cache_mock):
+        django_mock.VERSION = (1, 6, 6, 'final', 0)
 
         get_cache('foo')
 
