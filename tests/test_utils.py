@@ -28,6 +28,20 @@ class TestWatchman(unittest.TestCase):
             # Python 2.7
             self.assertItemsEqual(list1, list2)
 
+    @patch('watchman.utils.django_cache')
+    def test_get_cache(self, cache_mock):
+        cache_key = 'my_cache'
+        cache_value = 'i am a cache'
+        cache = {cache_key: cache_value}
+        def getitem(cache_name):
+            return cache[cache_name]
+
+        cache_mock.caches.__getitem__.side_effect = getitem
+
+        result = get_cache(cache_key)
+
+        self.assertEqual(result, cache_value)
+
     @patch('django.core.cache.get_cache')
     @patch('watchman.utils.django')
     def test_get_cache_less_than_django_17(self, django_mock, get_cache_mock):
