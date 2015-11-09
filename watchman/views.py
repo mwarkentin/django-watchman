@@ -49,7 +49,7 @@ def status(request):
                     elif type(_check[_type]) == list:
                         for entry in _check[_type]:
                             for result in entry:
-                                if not entry[result]['ok']:
+                                if not result == 'time' and not entry[result]['ok']:
                                     http_code = settings.WATCHMAN_ERROR_CODE
             response.update(_check)
 
@@ -120,12 +120,13 @@ def dashboard(request):
                 elif type(_check[_type]) == list:
                     for result in _check[_type]:
                         for name in result:
-                            statuses.append({
-                                'name': name,
-                                'ok': result[name]['ok'],
-                                'error': '' if result[name]['ok'] else result[name]['error'],
-                                'stacktrace': '' if result[name]['ok'] else result[name]['stacktrace'],
-                            })
+                            if not name == 'time':
+                                statuses.append({
+                                    'name': name,
+                                    'ok': result[name]['ok'],
+                                    'error': '' if result[name]['ok'] else result[name]['error'],
+                                    'stacktrace': '' if result[name]['ok'] else result[name]['stacktrace'],
+                                })
 
                     type_overall_status = all([s['ok'] for s in statuses])
 

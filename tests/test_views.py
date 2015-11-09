@@ -66,6 +66,22 @@ class TestWatchman(unittest.TestCase):
             content = json.loads(response.content.decode('utf-8'))
             self.assertCountEqual(expected_checks, content.keys())
 
+    def test_response_contains_runtimes(self):
+        request = RequestFactory().get('/')
+        response = views.status(request)
+
+        if PYTHON_VERSION == 2:
+            content = json.loads(response.content)
+        else:
+            content = json.loads(response.content.decode('utf-8'))
+
+        for check in content:
+            if type(content[check]) == list:
+                for entry in content[check]:
+                    self.assertIn('time', entry)
+            elif type(content[check]) == dict:
+                self.assertIn('time', content[check])
+
     def test_check_database_handles_exception(self):
         response = checks._check_database('foo')
         self.assertFalse(response['foo']['ok'])

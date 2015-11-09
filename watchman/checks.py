@@ -10,7 +10,7 @@ from django.core.files.storage import default_storage
 from django.core.mail import EmailMessage
 from django.db import connections
 
-from watchman.decorators import check
+from watchman.decorators import benchmark, check
 
 
 def _check_caches(caches):
@@ -18,6 +18,7 @@ def _check_caches(caches):
 
 
 @check
+@benchmark
 def _check_cache(cache_name):
     key = 'django-watchman-{}'.format(uuid.uuid4())
     value = 'django-watchman-{}'.format(uuid.uuid4())
@@ -34,12 +35,14 @@ def _check_databases(databases):
 
 
 @check
+@benchmark
 def _check_database(database):
     connections[database].introspection.table_names()
     return {database: {"ok": True}}
 
 
 @check
+@benchmark
 def _check_email():
     headers = {"X-DJANGO-WATCHMAN": True}
     email = EmailMessage(
@@ -54,6 +57,7 @@ def _check_email():
 
 
 @check
+@benchmark
 def _check_storage():
     filename = 'django-watchman-{}.txt'.format(uuid.uuid4())
     content = 'django-watchman test file'

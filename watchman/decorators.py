@@ -2,6 +2,7 @@ from django.http import HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 
 from functools import wraps
+import time
 import traceback
 
 from watchman import settings
@@ -24,6 +25,16 @@ def check(func):
             # database). Preface the results by name.
             if args:
                 response = {args[0]: response}
+        return response
+    return wrapped
+
+
+def benchmark(func):
+    def wrapped(*args, **kwargs):
+        start_time = time.time()
+        response = func(*args, **kwargs)
+        run_time = time.time() - start_time
+        response.update({'time': run_time})
         return response
     return wrapped
 

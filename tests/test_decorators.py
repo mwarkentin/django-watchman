@@ -17,7 +17,7 @@ from django.test.client import Client
 import mock
 
 from watchman import settings as watchman_settings
-from watchman.decorators import check
+from watchman.decorators import benchmark, check
 
 
 class FakeException(Exception):
@@ -93,6 +93,12 @@ class TestWatchman(unittest.TestCase):
         self.assertEqual(response['default']['ok'], False)
         self.assertEqual(response['default']['error'], 'example error')
         self.assertIsInstance(response['default']['stacktrace'], str)
+
+    def test_benchmark_decorator_for_dict_response(self):
+        func = mock.Mock(return_value={'ok': True})
+        decorated_func = benchmark(func)
+        response = decorated_func()
+        self.assertIn('time', response)
 
     def tearDown(self):
         watchman_settings.WATCHMAN_TOKEN = None
