@@ -14,7 +14,7 @@ from watchman.decorators import check
 
 
 def _check_caches(caches):
-    return [_check_cache(cache) for cache in caches]
+    return [_check_cache(cache) for cache in sorted(caches)]
 
 
 @check
@@ -30,7 +30,7 @@ def _check_cache(cache_name):
 
 
 def _check_databases(databases):
-    return [_check_database(database) for database in databases]
+    return [_check_database(database) for database in sorted(databases)]
 
 
 @check
