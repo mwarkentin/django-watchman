@@ -20,11 +20,10 @@ import unittest
 import django
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
-from django.core import cache
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
 
-from mock import Mock, patch
+from mock import patch
 
 from watchman import checks, views
 
@@ -79,11 +78,10 @@ class TestWatchman(unittest.TestCase):
         self.assertFalse(response['foo']['ok'])
         self.assertIn(response['foo']['error'], expected_error)
 
-    @patch('django.core.cache.get_cache')
-    def test_check_cache_less_than_django_17_uses_get_cache(self, get_cache_mock):
-        django.VERSION = (1, 6, 6, 'final', 0)
-
+    @patch('watchman.utils.get_cache')
+    def test_check_cache_uses_util_get_cache(self, get_cache_mock):
         checks._check_cache('foo')
+
         get_cache_mock.assert_called_once_with('foo')
 
     def test_response_skipped_checks(self):

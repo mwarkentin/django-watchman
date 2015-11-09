@@ -3,15 +3,14 @@
 from __future__ import unicode_literals
 
 import uuid
-import django
 from django.conf import settings
-from django.core import cache as django_cache
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.mail import EmailMessage
 from django.db import connections
 
 from watchman.decorators import check
+from watchman import utils
 
 
 def _check_caches(caches):
@@ -23,12 +22,7 @@ def _check_cache(cache_name):
     key = 'django-watchman-{}'.format(uuid.uuid4())
     value = 'django-watchman-{}'.format(uuid.uuid4())
 
-    # As of Django 1.7, django.core.cache.caches replaces
-    # django.core.cache.get_cache
-    if django.VERSION < (1, 7):
-        cache = django_cache.get_cache(cache_name)
-    else:
-        cache = django_cache.caches[cache_name]
+    cache = utils.get_cache(cache_name)
 
     cache.set(key, value)
     cache.get(key)

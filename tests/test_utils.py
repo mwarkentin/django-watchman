@@ -11,7 +11,9 @@ from __future__ import unicode_literals
 
 import unittest
 
-from watchman.utils import get_checks
+from mock import patch
+
+from watchman.utils import get_cache, get_checks
 
 
 class TestWatchman(unittest.TestCase):
@@ -23,6 +25,15 @@ class TestWatchman(unittest.TestCase):
         except AttributeError:
             # Python 2.7
             self.assertItemsEqual(list1, list2)
+
+    @patch('django.core.cache.get_cache')
+    @patch('django.VERSION')
+    def test_get_cache_less_than_django_17(self, version_mock, get_cache_mock):
+        version_mock.return_value = (1, 6, 6, 'final', 0)
+
+        get_cache('foo')
+
+        get_cache_mock.assert_called_once_with('foo')
 
     def test_get_checks_returns_all_available_checks_by_default(self):
         checks = [check.__name__ for check in get_checks()]
