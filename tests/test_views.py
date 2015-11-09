@@ -78,12 +78,6 @@ class TestWatchman(unittest.TestCase):
         self.assertFalse(response['foo']['ok'])
         self.assertIn(response['foo']['error'], expected_error)
 
-    @patch('watchman.utils.get_cache')
-    def test_check_cache_uses_util_get_cache(self, get_cache_mock):
-        checks._check_cache('foo')
-
-        get_cache_mock.assert_called_once_with('foo')
-
     def test_response_skipped_checks(self):
         expected_checks = ['caches', 'storage', ]
         request = RequestFactory().get('/', data={
