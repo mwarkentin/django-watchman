@@ -2,6 +2,8 @@
 
 from __future__ import unicode_literals
 
+import time
+
 from django.http import Http404
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
@@ -13,6 +15,7 @@ from watchman.utils import get_checks
 
 
 WATCHMAN_VERSION_HEADER = 'X-Watchman-Version'
+WATCHMAN_RESPONSE_TIME = 'X-Watchman-Timer'
 
 
 def _get_check_params(request):
@@ -36,6 +39,8 @@ def status(request):
 
     check_list, skip_list = _get_check_params(request)
 
+    start_time = time.time()
+
     for check in get_checks(check_list=check_list, skip_list=skip_list):
         if callable(check):
             _check = check()
@@ -53,10 +58,12 @@ def status(request):
                                     http_code = settings.WATCHMAN_ERROR_CODE
             response.update(_check)
 
+    run_time = time.time() - start_time
+
     if len(response) == 0:
         raise Http404(_('No checks found'))
 
-    return response, http_code, {WATCHMAN_VERSION_HEADER: __version__}
+    return response, http_code, {WATCHMAN_VERSION_HEADER: __version__, WATCHMAN_RESPONSE_TIME: run_time}
 
 
 @auth
