@@ -20,10 +20,11 @@ import unittest
 import django
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
+from django.core import cache
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
 
-from mock import patch
+from mock import Mock, patch
 
 from watchman import checks, views
 
@@ -72,10 +73,18 @@ class TestWatchman(unittest.TestCase):
         self.assertEqual(response['foo']['error'], "The connection foo doesn't exist")
 
     def test_check_cache_handles_exception(self):
-        expected_error = "Could not find backend 'foo': Could not find backend 'foo': foo doesn't look like a module path"
+        expected_error = "Could not find config for 'foo' in settings.CACHES"
+
         response = checks._check_cache('foo')
         self.assertFalse(response['foo']['ok'])
         self.assertIn(response['foo']['error'], expected_error)
+
+    @patch('django.core.cache.get_cache')
+    def test_check_cache_less_than_django_17_uses_get_cache(self, get_cache_mock):
+        django.VERSION = (1, 6, 6, 'final', 0)
+
+        checks._check_cache('foo')
+        get_cache_mock.assert_called_once_with('foo')
 
     def test_response_skipped_checks(self):
         expected_checks = ['caches', 'storage', ]
