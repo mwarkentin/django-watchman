@@ -2,8 +2,30 @@ from django.http import HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 
 from functools import wraps
+import traceback
 
 from watchman import settings
+
+
+def check(func):
+    """
+    Decorator which wraps checks and returns an error response on failure.
+    """
+    def wrapped(*args, **kwargs):
+        try:
+            response = func(*args, **kwargs)
+        except Exception as e:
+            response = {
+                "ok": False,
+                "error": str(e),
+                "stacktrace": traceback.format_exc(),
+            }
+            # The check contains several individual checks (e.g., one per
+            # database). Preface the results by name.
+            if args:
+                response = {args[0]: response}
+        return response
+    return wrapped
 
 
 def token_required(view_func):

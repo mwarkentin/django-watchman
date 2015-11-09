@@ -110,8 +110,11 @@ the ``WATCHMAN_CHECKS`` setting. In ``settings.py``::
         'another.module.path.to.callable',
     )
 
-Checks take no arguments, and must return a ``dict`` whose keys are applied to the JSON response::
+Checks take no arguments, and must return a ``dict`` whose keys are applied to the JSON response. Use the ``watchman.decorators.check`` decorator to capture exceptions::
 
+    from watchman.decorators import check
+
+    @check
     def my_check():
         return {'x': 1}
 
