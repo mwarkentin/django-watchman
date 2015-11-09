@@ -81,6 +81,7 @@ class TestWatchman(unittest.TestCase):
                     self.assertIn('time', entry)
             elif type(content[check]) == dict:
                 self.assertIn('time', content[check])
+        self.assertTrue(response.has_header('X-Watchman-Timer'))
 
     def test_check_database_handles_exception(self):
         response = checks._check_database('foo')
@@ -133,6 +134,7 @@ class TestWatchman(unittest.TestCase):
         else:
             content = json.loads(response.content.decode('utf-8'))
             self.assertCountEqual({'databases': []}, content)
+        self.assertTrue(response.has_header('X-Watchman-Timer'))
 
     def test_response_404_when_none_specified(self):
         request = RequestFactory().get('/', data={
@@ -191,6 +193,7 @@ class TestWatchman(unittest.TestCase):
         request = RequestFactory().get('/')
         response = views.status(request)
         self.assertTrue(response.has_header('X-Watchman-Version'))
+        self.assertTrue(response.has_header('X-Watchman-Timer'))
 
     @patch('watchman.checks._check_databases')
     @override_settings(WATCHMAN_ERROR_CODE=503)
