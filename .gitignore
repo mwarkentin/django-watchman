@@ -43,3 +43,9 @@ docs/_build
 
 # Coverage.py
 htmlcov/
+
+# Sqlite databases
+*.sqlite3
+
+# Vagrant boxes
+.vagrant/

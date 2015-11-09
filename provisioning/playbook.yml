@@ -1,0 +1,30 @@
+- hosts: all
+  tasks:
+  - name: install git
+    apt:
+      name: git
+      state: latest
+    sudo: yes
+
+  - name: download pip installer
+    get_url:
+      url: https://bootstrap.pypa.io/get-pip.py
+      dest: /tmp
+
+  - name: install pip
+    command: python /tmp/get-pip.py
+    sudo: yes
+
+  - name: install global python packages
+    pip:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - virtualenv
+      - virtualenvwrapper
+    sudo: yes
+
+  - name: install sample project requirements
+    pip:
+      requirements: /vagrant/sample_project/requirements.txt
+      virtualenv: ~/venv
