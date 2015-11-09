@@ -1,5 +1,12 @@
 - hosts: all
+  vars:
+  - virtualenv_path: ~/.virtualenvs/watchman
   tasks:
+  - name: configure .bashrc
+    template:
+      src: templates/.bashrc.j2
+      dest: ~/.bashrc
+
   - name: install git
     apt:
       name: git
@@ -27,4 +34,9 @@
   - name: install sample project requirements
     pip:
       requirements: /vagrant/sample_project/requirements.txt
-      virtualenv: ~/venv
+      virtualenv: "{{ virtualenv_path}}"
+
+  - name: configure virtualenv project
+    copy:
+      content: /vagrant/sample_project
+      dest: "{{ virtualenv_path}}/.project"
