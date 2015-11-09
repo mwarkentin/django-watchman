@@ -70,10 +70,11 @@ Quickstart
 Features
 --------
 
-Human-friendly dashboard (new in 0.6.0)
-***************************************
+Human-friendly dashboard
+************************
 
-TBD
+Visit ``http://127.0.0.1:8000/watchman/dashboard/`` to get a human-friendly HTML
+representation of all of your watchman checks.
 
 Token based authentication
 **************************
@@ -185,7 +186,13 @@ Use ``-h`` to see a full list of options::
 X-Watchman-Version response header
 **********************************
 
-TBD
+Watchman can return the version of watchman which is running to help you keep
+track of whether or not your sites are using an up-to-date version. This is
+disabled by default to prevent any unintended information leakage for websites
+without authentication. To enable, update the ``WATCHMAN_VERSION_HEADER``
+setting::
+
+    WATCHMAN_VERSION_HEADER = True
 
 Custom response code
 ********************
