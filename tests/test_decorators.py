@@ -10,10 +10,19 @@ Tests for `django-watchman` decorators module.
 from __future__ import unicode_literals
 
 import unittest
+
 from django.core.urlresolvers import reverse
 from django.test.client import Client
 
+import mock
+
 from watchman import settings as watchman_settings
+from watchman.decorators import check
+
+
+class FakeException(Exception):
+    def __init__(self, *args, **kwargs):
+        super(self.__class__, self).__init__(*args, **kwargs)
 
 
 class TestWatchman(unittest.TestCase):
@@ -54,6 +63,36 @@ class TestWatchman(unittest.TestCase):
         }
         response = self.client.get(reverse('watchman.views.status'), data)
         self.assertEqual(response.status_code, 403)
+
+    # We cannot easily mock a stacktrace, since:
+    #
+    #   1. it is not a property of the exception,
+    #   2. file paths will change between systems
+    #
+    # Instead, assert all other response parameters are correct.
+    def test_exception_caught_if_no_arguments(self):
+        keys = ['ok', 'error', 'stacktrace']
+        func = mock.Mock(side_effect=FakeException('example error'))
+        decorated_func = check(func)
+        response = decorated_func()
+        self.assertIsInstance(response, dict)
+        for key in keys:
+            self.assertIn(key, response)
+        self.assertEqual(response['ok'], False)
+        self.assertEqual(response['error'], 'example error')
+        self.assertIsInstance(response['stacktrace'], str)
+
+    def test_exception_caught_with_argument(self):
+        keys = ['ok', 'error', 'stacktrace']
+        func = mock.Mock(side_effect=FakeException('example error'))
+        decorated_func = check(func)
+        response = decorated_func('default')
+        self.assertIsInstance(response, dict)
+        for key in keys:
+            self.assertIn(key, response['default'])
+        self.assertEqual(response['default']['ok'], False)
+        self.assertEqual(response['default']['error'], 'example error')
+        self.assertIsInstance(response['default']['stacktrace'], str)
 
     def tearDown(self):
         watchman_settings.WATCHMAN_TOKEN = None

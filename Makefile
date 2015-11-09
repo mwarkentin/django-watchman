@@ -3,7 +3,7 @@
 help:
 	@echo "clean-build - remove build artifacts"
 	@echo "clean-pyc - remove Python file artifacts"
-	@echo "lint - check style with flake8"
+	@echo "lint - check PEP8 style with flake8, and rst with rst-lint"
 	@echo "test - run tests quickly with the default Python"
 	@echo "testall - run tests on every Python version with tox"
 	@echo "coverage - check code coverage quickly with the default Python"
@@ -25,6 +25,7 @@ clean-pyc:
 
 lint:
 	flake8 watchman tests --ignore=E501
+	rst-lint *.rst
 
 test:
 	python runtests.py
@@ -46,7 +47,7 @@ docs:
 	$(MAKE) -C docs html
 	open docs/_build/html/index.html
 
-release: clean
+release: clean lint test
 	python setup.py sdist upload -r pypi
 	python setup.py bdist_wheel upload -r pypi
 

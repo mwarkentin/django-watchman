@@ -21,6 +21,13 @@ Documentation
 
 The full documentation is at http://django-watchman.rtfd.org.
 
+Testimonials
+------------
+
+    We're in love with django-watchman. External monitoring is a vital part of our service offering. Using django-watchman we can introspect the infrastructure of an application via a secure URL. It's very well written and easy to extend. We've recommended it to many of our clients already.
+
+— Hany Fahim, CEO, `VM Farms <https://vmfarms.com/>`_.
+
 Quickstart
 ----------
 
@@ -108,8 +115,11 @@ the ``WATCHMAN_CHECKS`` setting. In ``settings.py``::
         'another.module.path.to.callable',
     )
 
-Checks take no arguments, and must return a ``dict`` whose keys are applied to the JSON response::
+Checks take no arguments, and must return a ``dict`` whose keys are applied to the JSON response. Use the ``watchman.decorators.check`` decorator to capture exceptions::
 
+    from watchman.decorators import check
+
+    @check
     def my_check():
         return {'x': 1}
 
@@ -177,6 +187,15 @@ X-Watchman-Version response header
 
 TBD
 
+Custom response code
+********************
+
+By default, watchman will return a ``200`` HTTP response code, even if there's a
+failing check. You can specify a different response code for failing checks
+using the ``WATCHMAN_ERROR_CODE`` setting::
+
+    WATCHMAN_ERROR_CODE = 500
+
 Available checks
 ----------------
 
@@ -202,7 +221,7 @@ email
 Send a test email to ``to@example.com`` using ``django.core.mail.send_mail``.
 
 If you're using a 3rd party mail provider, this check could end up costing you
-money, depending how aggresive you are with your monitoring. For this reason,
+money, depending how aggressive you are with your monitoring. For this reason,
 this check is **not enabled** by default.
 
 For reference, if you were using Mandrill, and hitting your watchman endpoint

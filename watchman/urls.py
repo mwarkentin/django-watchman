@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
-urlpatterns = patterns(
-    '',
-    url(r'^$', 'watchman.views.status', name="status"),
-    url(r'^dashboard/$', 'watchman.views.dashboard', name="dashboard"),
-)
+from watchman import views
+
+
+urlpatterns = [
+    url(r'^$', views.status, name="status"),
+    url(r'^dashboard/$', views.dashboard, name="dashboard"),
+]
