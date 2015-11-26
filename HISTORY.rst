@@ -4,6 +4,18 @@
 History
 =======
 
+0.9.0 (2015-11-25)
+------------------
+
+* [`#51 <https://github.com/mwarkentin/django-watchman/pull/51>`_] Update TravisCI Python / Django versions
+* [`#52 <https://github.com/mwarkentin/django-watchman/pull/52>`_] Fix deprecated ``url_patterns``
+* [`#53 <https://github.com/mwarkentin/django-watchman/pull/54>`_] Change default error response code to ``500``
+* [`#56 <https://github.com/mwarkentin/django-watchman/pull/56>`_] Add ``@check`` decorator and refactor existing checks to use it (thanks @benwebber!)
+* [`#57 <https://github.com/mwarkentin/django-watchman/pull/57>`_] Sort ``caches`` / ``databases`` in response for more consistent responses
+* [`#59 <https://github.com/mwarkentin/django-watchman/pull/59>`_] Add ``.editorconfig`` for improved consistency in contributions
+* [`#61 <https://github.com/mwarkentin/django-watchman/pull/61>`_] Add ``Vagrantfile`` and docs for how to run and develop on Vagrant instance
+* [`#65 <https://github.com/mwarkentin/django-watchman/pull/65>`_] Include assets in source tarball for Debian packaging (thanks @fladi)
+
 0.8.0 (2015-10-03)
 ------------------
 
