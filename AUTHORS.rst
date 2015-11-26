@@ -14,3 +14,5 @@ Contributors
 * blag - https://github.com/blag
 * kilbasar - https://github.com/kilbasar
 * Joseph Kahn - https://github.com/JBKahn
+* Ben Webber - https://github.com/benwebber
+* Michael Fladischer - https://github.com/fladi
