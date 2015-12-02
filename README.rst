@@ -54,14 +54,16 @@ Quickstart
             {
                 "default": {
                     "ok": true
-                }
+                },
+                "time": 0.05,
             }
         ],
         "caches": [
             {
                 "default": {
                     "ok": true
-                }
+                },
+                "time": 0.05,
             }
         ],
         "storage": {"ok": true}
@@ -162,22 +164,22 @@ If you'd like to see output for successful checks as well, set verbosity to
 ``2`` or higher::
 
     python manage.py watchman -v 2
-    {"storage": {"ok": true}}
-    {"caches": [{"default": {"ok": true}}]}
-    {"databases": [{"default": {"ok": true}}]}
+    {"storage": {"ok": true, "time":0.05}}
+    {"caches": [{"default": {"ok": true}, "time":0.05}]}
+    {"databases": [{"default": {"ok": true}, "time":0.05}]}
 
 If you'd like to run a subset of checks, use ``-c`` and a comma-separated list
 of python module paths::
 
     python manage.py watchman -c watchman.checks.caches,watchman.checks.databases -v 2
-    {"caches": [{"default": {"ok": true}}]}
-    {"databases": [{"default": {"ok": true}}]}
+    {"caches": [{"default": {"ok": true, "time":0.05}}]}
+    {"databases": [{"default": {"ok": true}, "time":0.05}]}
 
 If you'd like to skip certain checks, use ``-s`` and a comma-separated list of
 python module paths::
 
     python manage.py watchman -s watchman.checks.caches,watchman.checks.databases -v 2
-    {"storage": {"ok": true}}
+    {"storage": {"ok": true, "time":0.05}}
 
 Use ``-h`` to see a full list of options::
 

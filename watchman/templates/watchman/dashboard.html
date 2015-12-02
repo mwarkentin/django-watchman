@@ -27,6 +27,7 @@
                     <th>{% trans 'Type' %}</th>
                     <th>{% trans 'Name' %}</th>
                     <th>{% trans 'Status' %}</th>
+                    <th>{% trans 'Response Time (seconds)' %}</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -44,6 +45,8 @@
                         <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}">{% trans 'ERROR!' %}</button>
                     </td>
                     {% endif %}{# status.ok #}
+
+                    <td>{{ status.time }}</td>
 
                 </tr>
                 {% endfor %}{# for status in type.statuses #}
