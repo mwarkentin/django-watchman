@@ -15,6 +15,7 @@ History
 * [`#59 <https://github.com/mwarkentin/django-watchman/pull/59>`_] Add ``.editorconfig`` for improved consistency in contributions
 * [`#61 <https://github.com/mwarkentin/django-watchman/pull/61>`_] Add ``Vagrantfile`` and docs for how to run and develop on Vagrant instance
 * [`#65 <https://github.com/mwarkentin/django-watchman/pull/65>`_] Include assets in source tarball for Debian packaging (thanks @fladi)
+* [`#71 <https://github.com/mwarkentin/django-watchman/pull/71>`_] Unpin `django-jsonview` in setup.py
 
 0.8.0 (2015-10-03)
 ------------------
