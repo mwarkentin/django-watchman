@@ -4,13 +4,13 @@ from __future__ import unicode_literals
 
 import uuid
 from django.conf import settings
+from django.core.cache import get_cache
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.mail import EmailMessage
 from django.db import connections
 
 from watchman.decorators import check
-from watchman import utils
 
 
 def _check_caches(caches):
@@ -22,8 +22,7 @@ def _check_cache(cache_name):
     key = 'django-watchman-{}'.format(uuid.uuid4())
     value = 'django-watchman-{}'.format(uuid.uuid4())
 
-    cache = utils.get_cache(cache_name)
-
+    cache = get_cache(cache_name)
     cache.set(key, value)
     cache.get(key)
     cache.delete(key)

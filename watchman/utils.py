@@ -1,8 +1,5 @@
 # -*- coding: utf-8 -*-
 
-import django
-from django.core import cache as django_cache
-
 from watchman.settings import WATCHMAN_CHECKS
 
 try:  # try for Django 1.7+ first.
@@ -35,15 +32,6 @@ except ImportError:  # < Django 1.7
                 raise ImproperlyConfigured('%sModule "%s" does not define a "%s" attribute/class' % (
                     error_prefix, module_path, class_name))
             return attr
-
-
-def get_cache(cache_name):
-    # As of Django 1.7, django.core.cache.caches replaces
-    # django.core.cache.get_cache
-    if django.VERSION < (1, 7):
-        return django_cache.get_cache(cache_name)
-    else:
-        return django_cache.caches[cache_name]
 
 
 def get_checks(check_list=None, skip_list=None):
