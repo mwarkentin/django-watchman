@@ -64,7 +64,7 @@
         {% for status in type.statuses %}
         {% if not status.ok %}
         <div class="modal fade" id="{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}" tabindex="-1" role="dialog" aria-labelledby="{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}-title">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog" role="document" style="width: 65%">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -72,7 +72,7 @@
                     </div><!-- class="modal-header" -->
                     <div class="modal-body">
                         <h4><pre>{{ status.error }}</pre></h4>
-                        <pre>{{ status.traceback }}</pre>
+                        <pre>{{ status.stacktrace }}</pre>
                     </div><!-- class="model-body" -->
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
