@@ -16,6 +16,7 @@ History
 * [`#61 <https://github.com/mwarkentin/django-watchman/pull/61>`_] Add ``Vagrantfile`` and docs for how to run and develop on Vagrant instance
 * [`#65 <https://github.com/mwarkentin/django-watchman/pull/65>`_] Include assets in source tarball for Debian packaging (thanks @fladi)
 * [`#71 <https://github.com/mwarkentin/django-watchman/pull/71>`_] Unpin `django-jsonview` in setup.py
+* [`#72 <https://github.com/mwarkentin/django-watchman/pull/72>`_] Fix stacktrace on dashboard modal and increase width for better readability
 
 0.8.0 (2015-10-03)
 ------------------
