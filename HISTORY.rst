@@ -4,7 +4,7 @@
 History
 =======
 
-0.9.0 (2015-11-25)
+0.9.0 (2015-12-16)
 ------------------
 
 * [`#51 <https://github.com/mwarkentin/django-watchman/pull/51>`_] Update TravisCI Python / Django versions
