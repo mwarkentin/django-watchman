@@ -1,5 +1,4 @@
 django
-django-jsonview==0.5.0
 
 coverage
 coveralls

@@ -2,10 +2,9 @@
 
 from __future__ import unicode_literals
 
-from django.http import Http404
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
-from jsonview.decorators import json_view
 from watchman import settings
 from watchman import __version__
 from watchman.decorators import auth
@@ -29,9 +28,8 @@ def _get_check_params(request):
 
 
 @auth
-@json_view
 def status(request):
-    response = {}
+    results = {}
     http_code = 200
 
     check_list, skip_list = _get_check_params(request)
@@ -51,12 +49,18 @@ def status(request):
                             for result in entry:
                                 if not entry[result]['ok']:
                                     http_code = settings.WATCHMAN_ERROR_CODE
-            response.update(_check)
+            results.update(_check)
 
-    if len(response) == 0:
-        raise Http404(_('No checks found'))
+    if not results:
+        http_code = 404
+        results = {
+            'error': 404,
+            'message': _('No checks found'),
+        }
 
-    return response, http_code, {WATCHMAN_VERSION_HEADER: __version__}
+    response = JsonResponse(results, status=http_code)
+    response[WATCHMAN_VERSION_HEADER] = __version__
+    return response
 
 
 @auth
