@@ -6,6 +6,7 @@ WATCHMAN_AUTH_DECORATOR = getattr(settings, 'WATCHMAN_AUTH_DECORATOR', 'watchman
 WATCHMAN_TOKEN = getattr(settings, 'WATCHMAN_TOKEN', None)
 WATCHMAN_TOKEN_NAME = getattr(settings, 'WATCHMAN_TOKEN_NAME', 'watchman-token')
 WATCHMAN_ERROR_CODE = getattr(settings, 'WATCHMAN_ERROR_CODE', 500)
+WATCHMAN_EMAIL_RECIPIENTS = getattr(settings, 'WATCHMAN_EMAIL_RECIPIENTS', ['to@example.com'])
 WATCHMAN_EMAIL_HEADERS = getattr(settings, 'WATCHMAN_EMAIL_HEADERS', {})
 
 DEFAULT_CHECKS = (

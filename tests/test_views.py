@@ -234,12 +234,46 @@ class TestWatchmanDashboard(unittest.TestCase):
         self.assertTrue(response.has_header('X-Watchman-Version'))
 
 
+# TODO: Figure out why settings defaults aren't working - related to https://github.com/mwarkentin/django-watchman/issues/13?
+@override_settings(WATCHMAN_EMAIL_RECIPIENTS=['to@example.com'])
+@override_settings(WATCHMAN_EMAIL_HEADERS={})
 class TestEmailCheck(DjangoTestCase):
     def setUp(self):
         # Ensure that every test executes with separate settings
         reload_settings()
 
-    @override_settings(WATCHMAN_EMAIL_HEADERS={})
+    def def_test_email_with_default_recipient(self):
+        checks._check_email()
+
+        # Test that one message has been sent.
+        self.assertEqual(len(mail.outbox), 1)
+
+        sent_email = mail.outbox[0]
+        expected_recipients = ['to@example.com']
+        self.assertEqual(sent_email.to, expected_recipients)
+
+    @override_settings(WATCHMAN_EMAIL_RECIPIENTS=['custom@example.com'])
+    def def_test_email_with_custom_recipient(self):
+        checks._check_email()
+
+        # Test that one message has been sent.
+        self.assertEqual(len(mail.outbox), 1)
+
+        sent_email = mail.outbox[0]
+        expected_recipients = ['custom@example.com']
+        self.assertEqual(sent_email.to, expected_recipients)
+
+    @override_settings(WATCHMAN_EMAIL_RECIPIENTS=['to1@example.com', 'to2@example.com'])
+    def def_test_email_with_multiple_recipients(self):
+        checks._check_email()
+
+        # Test that one message has been sent.
+        self.assertEqual(len(mail.outbox), 1)
+
+        sent_email = mail.outbox[0]
+        expected_recipients = ['to1@example.com', 'to2@example.com']
+        self.assertEqual(sent_email.to, expected_recipients)
+
     def test_email_check_with_default_headers(self):
         checks._check_email()
 

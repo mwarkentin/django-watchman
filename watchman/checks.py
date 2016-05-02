@@ -48,8 +48,8 @@ def _check_email():
         "django-watchman email check",
         "This is an automated test of the email system.",
         "watchman@example.com",
-        ["to@example.com"],
-        headers=headers
+        settings.WATCHMAN_EMAIL_RECIPIENTS,
+        headers=headers,
     )
     email.send()
     return {"ok": True}
