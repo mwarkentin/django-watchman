@@ -20,6 +20,8 @@ import unittest
 import django
 from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
+from django.core import mail
+from django.test import TestCase as DjangoTestCase
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
 
@@ -230,3 +232,36 @@ class TestWatchmanDashboard(unittest.TestCase):
         request = RequestFactory().get('/')
         response = views.dashboard(request)
         self.assertTrue(response.has_header('X-Watchman-Version'))
+
+
+class TestEmailCheck(DjangoTestCase):
+    def setUp(self):
+        # Ensure that every test executes with separate settings
+        reload_settings()
+
+    @override_settings(WATCHMAN_EMAIL_HEADERS={})
+    def test_email_check_with_default_headers(self):
+        checks._check_email()
+
+        # Test that one message has been sent.
+        self.assertEqual(len(mail.outbox), 1)
+
+        sent_email = mail.outbox[0]
+        expected_headers = {
+            'X-DJANGO-WATCHMAN': True,
+        }
+        self.assertEqual(sent_email.extra_headers, expected_headers)
+
+    @override_settings(WATCHMAN_EMAIL_HEADERS={'foo': 'bar'})
+    def test_email_check_with_custom_headers(self):
+        checks._check_email()
+
+        # Test that one message has been sent.
+        self.assertEqual(len(mail.outbox), 1)
+
+        sent_email = mail.outbox[0]
+        expected_headers = {
+            'X-DJANGO-WATCHMAN': True,
+            'foo': 'bar',
+        }
+        self.assertEqual(sent_email.extra_headers, expected_headers)
