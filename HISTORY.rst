@@ -4,7 +4,7 @@
 History
 =======
 
-0.10.0 (2016-05)
+0.10.0 (2016-05-02)
 
 * [`#75 <https://github.com/mwarkentin/django-watchman/pull/75>`_] Enable header-based authentication
   * Set a header instead of passing the token via GET param: ``"Authorization: WATCHMAN-TOKEN Token=\":token\""``
