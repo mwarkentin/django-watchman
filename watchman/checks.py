@@ -10,6 +10,7 @@ from django.core.mail import EmailMessage
 from django.db import connections
 
 from watchman.decorators import check
+from watchman import settings as watchman_settings
 from watchman import utils
 
 
@@ -43,12 +44,12 @@ def _check_database(database):
 @check
 def _check_email():
     headers = {"X-DJANGO-WATCHMAN": True}
-    headers.update(settings.WATCHMAN_EMAIL_HEADERS)
+    headers.update(watchman_settings.WATCHMAN_EMAIL_HEADERS)
     email = EmailMessage(
         "django-watchman email check",
         "This is an automated test of the email system.",
         "watchman@example.com",
-        settings.WATCHMAN_EMAIL_RECIPIENTS,
+        watchman_settings.WATCHMAN_EMAIL_RECIPIENTS,
         headers=headers,
     )
     email.send()
