@@ -66,7 +66,7 @@ Quickstart
         ],
         "storage": {"ok": true}
     }
-    
+
 Pycon Canada Presentation (10 minutes)
 --------------------------------------
 
@@ -223,6 +223,11 @@ this check is **not enabled** by default.
 
 For reference, if you were using Mandrill, and hitting your watchman endpoint
 once per minute, this would cost you ~$5.60/month.
+
+**Custom Settings**
+
+* ``WATCHMAN_EMAIL_RECIPIENTS`` (default: ``[to@example.com]``): Specify a list of email addresses to send the test email
+* ``WATCHMAN_EMAIL_HEADERS`` (default: ``{}``): Specify a dict of custom headers to be added to the test email
 
 storage
 *******
