@@ -43,12 +43,13 @@ def _check_database(database):
 @check
 def _check_email():
     headers = {"X-DJANGO-WATCHMAN": True}
+    headers.update(settings.WATCHMAN_EMAIL_HEADERS)
     email = EmailMessage(
         "django-watchman email check",
         "This is an automated test of the email system.",
         "watchman@example.com",
-        ["to@example.com"],
-        headers=headers
+        settings.WATCHMAN_EMAIL_RECIPIENTS,
+        headers=headers,
     )
     email.send()
     return {"ok": True}

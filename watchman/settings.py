@@ -1,11 +1,13 @@
 from django.conf import settings
 
-# TODO: these should not be module level.
+# TODO: these should not be module level (https://github.com/mwarkentin/django-watchman/issues/13)
 WATCHMAN_ENABLE_PAID_CHECKS = getattr(settings, 'WATCHMAN_ENABLE_PAID_CHECKS', False)
 WATCHMAN_AUTH_DECORATOR = getattr(settings, 'WATCHMAN_AUTH_DECORATOR', 'watchman.decorators.token_required')
 WATCHMAN_TOKEN = getattr(settings, 'WATCHMAN_TOKEN', None)
 WATCHMAN_TOKEN_NAME = getattr(settings, 'WATCHMAN_TOKEN_NAME', 'watchman-token')
 WATCHMAN_ERROR_CODE = getattr(settings, 'WATCHMAN_ERROR_CODE', 500)
+WATCHMAN_EMAIL_RECIPIENTS = getattr(settings, 'WATCHMAN_EMAIL_RECIPIENTS', ['to@example.com'])
+WATCHMAN_EMAIL_HEADERS = getattr(settings, 'WATCHMAN_EMAIL_HEADERS', {})
 
 DEFAULT_CHECKS = (
     'watchman.checks.caches',
