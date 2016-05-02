@@ -1,8 +1,9 @@
+from functools import wraps
+import re
+import traceback
+
 from django.http import HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
-
-from functools import wraps
-import traceback
 
 from watchman import settings
 
@@ -37,13 +38,38 @@ def token_required(view_func):
 
     """
 
+    def _parse_auth_header(auth_header):
+        """
+        Parse the `Authorization` header
+
+        Expected format: `WATCHMAN-TOKEN Token="ABC123"`
+        """
+
+        reg = re.compile('(\w+)[=] ?"?(\w+)"?')
+        header_dict = dict(reg.findall(auth_header))
+        return header_dict['Token']
+
+    def _get_passed_token(request):
+        """
+        Try to get the passed token, starting with the header and fall back to `GET` param
+        """
+
+        try:
+            auth_header = request.META['HTTP_AUTHORIZATION']
+            token = _parse_auth_header(auth_header)
+        except KeyError:
+            token = request.GET.get(settings.WATCHMAN_TOKEN_NAME)
+        return token
+
     def _validate_token(request):
         watchman_token = settings.WATCHMAN_TOKEN
+
         if watchman_token is None:
             return True
 
-        watchman_token_name = settings.WATCHMAN_TOKEN_NAME
-        return watchman_token == request.GET.get(watchman_token_name)
+        passed_token = _get_passed_token(request)
+
+        return watchman_token == passed_token
 
     @csrf_exempt
     @wraps(view_func)

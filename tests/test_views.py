@@ -137,7 +137,7 @@ class TestWatchman(unittest.TestCase):
 
     @override_settings(WATCHMAN_TOKEN='ABCDE')
     @override_settings(WATCHMAN_AUTH_DECORATOR='watchman.decorators.token_required')
-    def test_login_not_required(self):
+    def test_login_not_required_with_get_param(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp(), but before self.tearDown()
         reload_settings()
@@ -148,6 +148,40 @@ class TestWatchman(unittest.TestCase):
         response = views.status(request)
 
         self.assertEqual(response.status_code, 200)
+
+    @override_settings(WATCHMAN_TOKEN='ABCDE')
+    @override_settings(WATCHMAN_AUTH_DECORATOR='watchman.decorators.token_required')
+    def test_login_not_required_with_authorization_header(self):
+        # Have to manually reload settings here because override_settings
+        # happens after self.setUp(), but before self.tearDown()
+        reload_settings()
+        request = RequestFactory().get('/', HTTP_AUTHORIZATION='WATCHMAN-TOKEN Token="ABCDE"')
+        response = views.status(request)
+        self.assertEqual(response.status_code, 200)
+
+    @override_settings(WATCHMAN_TOKEN='ABCDE')
+    @override_settings(WATCHMAN_AUTH_DECORATOR='watchman.decorators.token_required')
+    def test_login_fails_with_invalid_get_param(self):
+        # Have to manually reload settings here because override_settings
+        # happens after self.setUp(), but before self.tearDown()
+        reload_settings()
+        request = RequestFactory().get('/', data={
+            'watchman-token': '12345',
+        })
+
+        response = views.status(request)
+
+        self.assertEqual(response.status_code, 403)
+
+    @override_settings(WATCHMAN_TOKEN='ABCDE')
+    @override_settings(WATCHMAN_AUTH_DECORATOR='watchman.decorators.token_required')
+    def test_login_fails_with_invalid_authorization_header(self):
+        # Have to manually reload settings here because override_settings
+        # happens after self.setUp(), but before self.tearDown()
+        reload_settings()
+        request = RequestFactory().get('/', HTTP_AUTHORIZATION='WATCHMAN-TOKEN Token="12345"')
+        response = views.status(request)
+        self.assertEqual(response.status_code, 403)
 
     @override_settings(WATCHMAN_AUTH_DECORATOR='django.contrib.auth.decorators.login_required')
     def test_response_when_login_required_is_redirect(self):

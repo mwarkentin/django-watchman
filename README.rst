@@ -85,6 +85,10 @@ your settings. When this setting is added, you must pass that value in as the
 
     GET http://127.0.0.1:8000/watchman/?watchman-token=:token
 
+Or by setting the ``Authorization: WATCHMAN-TOKEN`` header on the request::
+
+    curl -X GET -H "Authorization: WATCHMAN-TOKEN Token=\":token\"" http://127.0.0.1:8000/watchman/
+
 If you want to change the token name, you can set the ``WATCHMAN_TOKEN_NAME``.
 The value of this setting will be the **GET** parameter that you must pass in::
 
