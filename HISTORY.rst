@@ -4,6 +4,16 @@
 History
 =======
 
+0.10.0 (2016-05)
+
+* [`#75 <https://github.com/mwarkentin/django-watchman/pull/75>`_] Enable header-based authentication
+  * Set a header instead of passing the token via GET param: ``"Authorization: WATCHMAN-TOKEN Token=\":token\""``
+  * Improves security by keeping tokens out of logs
+* [`#79 <https://github.com/mwarkentin/django-watchman/pull/79>`_] Enable customization of email check
+  * Add ``WATCHMAN_EMAIL_RECIPIENTS`` setting - pass a list of recipients the email should be sent to
+  * Add ``WATCHMAN_EMAIL_HEADERS`` setting - pass a dict of custom headers to be set on the email
+
+
 0.9.0 (2015-12-16)
 ------------------
 
