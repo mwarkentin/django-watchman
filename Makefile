@@ -51,6 +51,7 @@ release: clean lint test
 	python setup.py sdist upload -r pypi
 	python setup.py bdist_wheel upload -r pypi
 
-sdist: clean
+dist: clean lint test
 	python setup.py sdist
+	python setup.py bdist_wheel
 	ls -l dist
