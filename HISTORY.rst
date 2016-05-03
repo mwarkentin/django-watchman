@@ -4,7 +4,15 @@
 History
 =======
 
+0.10.1 (2016-05-03)
+-------------------
+
+* [`#81 <https://github.com/mwarkentin/django-watchman/pull/81>`_] Fix header-based authentication for tokens w/ dashes (`-`)
+  * Regex was overly specific for header values (`\w`)
+  * Added TODO to follow up with a full regex for valid characters according to the spec
+
 0.10.0 (2016-05-02)
+-------------------
 
 * [`#75 <https://github.com/mwarkentin/django-watchman/pull/75>`_] Enable header-based authentication
   * Set a header instead of passing the token via GET param: ``"Authorization: WATCHMAN-TOKEN Token=\":token\""``
