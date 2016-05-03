@@ -45,7 +45,11 @@ def token_required(view_func):
         Expected format: `WATCHMAN-TOKEN Token="ABC123"`
         """
 
-        reg = re.compile('(\w+)[=] ?"?(\w+)"?')
+        # TODO: Figure out full set of allowed characters
+        # http://stackoverflow.com/questions/19028068/illegal-characters-in-http-headers
+        # https://www.w3.org/Protocols/rfc2616/rfc2616-sec2.html#sec2.2
+        # https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
+        reg = re.compile('(\w+)[=] ?"?([\w-]+)"?')
         header_dict = dict(reg.findall(auth_header))
         return header_dict['Token']
 

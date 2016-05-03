@@ -159,6 +159,16 @@ class TestWatchman(unittest.TestCase):
         response = views.status(request)
         self.assertEqual(response.status_code, 200)
 
+    @override_settings(WATCHMAN_TOKEN='123-456-ABCD')
+    @override_settings(WATCHMAN_AUTH_DECORATOR='watchman.decorators.token_required')
+    def test_login_not_required_with_authorization_header_dashes_in_token(self):
+        # Have to manually reload settings here because override_settings
+        # happens after self.setUp(), but before self.tearDown()
+        reload_settings()
+        request = RequestFactory().get('/', HTTP_AUTHORIZATION='WATCHMAN-TOKEN Token="123-456-ABCD"')
+        response = views.status(request)
+        self.assertEqual(response.status_code, 200)
+
     @override_settings(WATCHMAN_TOKEN='ABCDE')
     @override_settings(WATCHMAN_AUTH_DECORATOR='watchman.decorators.token_required')
     def test_login_fails_with_invalid_get_param(self):
