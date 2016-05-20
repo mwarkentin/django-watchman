@@ -27,20 +27,14 @@ class TestWatchman(unittest.TestCase):
             # Python 2.7
             self.assertItemsEqual(list1, list2)
 
-    @patch('watchman.utils.django_cache')
-    def test_get_cache(self, cache_mock):
-        cache_key = 'my_cache'
-        cache_value = 'i am a cache'
-        cache = {cache_key: cache_value}
-
-        def getitem(cache_name):
-            return cache[cache_name]
-
-        cache_mock.caches.__getitem__.side_effect = getitem
-
-        result = get_cache(cache_key)
-
-        self.assertEqual(result, cache_value)
+    @unittest.skipIf(
+        django.VERSION < (1, 7),
+        'caches interface is not added until Django 1.7',
+    )
+    @patch('watchman.utils.django_cache.caches', spec_set=dict)
+    def test_get_cache_django_17_or_greater(self, get_cache_mock):
+        get_cache('foo')
+        get_cache_mock.__getitem__.called_once_with('foo')
 
     @unittest.skipIf(
         django.VERSION >= (1, 7),
