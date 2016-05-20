@@ -74,7 +74,10 @@ class TestWatchman(unittest.TestCase):
         self.assertEqual(response['foo']['error'], "The connection foo doesn't exist")
 
     def test_check_cache_handles_exception(self):
-        expected_error = "Could not find config for 'foo' in settings.CACHES"
+        if django.VERSION < (1, 7):
+            expected_error = "Could not find backend 'foo': Could not find backend 'foo': foo doesn't look like a module path"
+        else:
+            expected_error = "Could not find config for 'foo' in settings.CACHES"
 
         response = checks._check_cache('foo')
         self.assertFalse(response['foo']['ok'])
