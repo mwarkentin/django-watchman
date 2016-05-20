@@ -11,6 +11,7 @@ from __future__ import unicode_literals
 
 import unittest
 
+import django
 from mock import patch
 
 from watchman.utils import get_cache, get_checks
@@ -41,14 +42,13 @@ class TestWatchman(unittest.TestCase):
 
         self.assertEqual(result, cache_value)
 
-    @unittest.skip("Seems to be blowing up on Django 1.9")
+    @unittest.skipIf(
+        django.VERSION >= (1, 7),
+        'get_cache has been deprecated as of Django 1.7'
+    )
     @patch('django.core.cache.get_cache')
-    @patch('watchman.utils.django')
-    def test_get_cache_less_than_django_17(self, django_mock, get_cache_mock):
-        django_mock.VERSION = (1, 6, 6, 'final', 0)
-
+    def test_get_cache_less_than_django_17(self, get_cache_mock):
         get_cache('foo')
-
         get_cache_mock.assert_called_once_with('foo')
 
     def test_get_checks_returns_all_available_checks_by_default(self):
