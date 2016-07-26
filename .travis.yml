@@ -4,25 +4,27 @@ language: python
 
 python:
   - "2.7"
+  - "3.4"
   - "3.5"
 
 env:
-  - DJANGO_VERSION=1.7.11
-  - DJANGO_VERSION=1.8.7
-  - DJANGO_VERSION=1.9.0
+  matrix:
+    - DJANGO_VERSION=dj17
+    - DJANGO_VERSION=dj18
+    - DJANGO_VERSION=dj19
+    - DJANGO_VERSION=dj110
 
 matrix:
   exclude:
     - python: "3.5"
-      env: DJANGO_VERSION=1.7.11
+      env: DJANGO_VERSION=dj17
 
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
 install:
-  - pip install -r requirements-test.txt
-  - pip install Django==$DJANGO_VERSION
+  - pip install tox
 
 # command to run tests using coverage, e.g. python setup.py test
-script: coverage run --source watchman runtests.py
+script:
+  - tox -e py${TRAVIS_PYTHON_VERSION//./}-${DJANGO_VERSION},coverage
 
 # report coverage to coveralls.io
 after_success: coveralls

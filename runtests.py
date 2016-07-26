@@ -1,4 +1,6 @@
 import sys
+import traceback
+
 
 try:
     from django.conf import settings
@@ -30,7 +32,8 @@ try:
 
     from django_nose import NoseTestSuiteRunner
 except ImportError:
-    raise ImportError("To fix this error, run: pip install -r requirements-test.txt")
+    traceback.print_exc()
+    raise RuntimeError("To fix this error, run: pip install django -r requirements-test.txt")
 
 
 def run_tests(*test_args):
