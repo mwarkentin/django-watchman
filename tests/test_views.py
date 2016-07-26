@@ -10,6 +10,14 @@ Tests for `django-watchman` views module.
 from __future__ import unicode_literals
 
 import json
+from _threading_local import local
+from copy import copy
+
+from django.db import connections
+from django.db.utils import DEFAULT_DB_ALIAS
+from django.test.testcases import TransactionTestCase
+
+
 try:
     from importlib import reload
 except ImportError:  # Python < 3
@@ -22,7 +30,7 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.core import mail
 from django.test import TestCase as DjangoTestCase
-from django.test.client import RequestFactory
+from django.test.client import RequestFactory, Client
 from django.test.utils import override_settings
 
 from mock import patch
@@ -275,8 +283,47 @@ class TestWatchman(unittest.TestCase):
         response = views.status(request)
         self.assertEqual(response.status_code, 500)
 
+
+class TestDBError(TransactionTestCase):
+    """
+    Ensure that we produce a valid response even in case of database
+    connection issues with `ATOMIC_REQUESTS` enabled.
+
+    Since overriding `DATABASES` isn't officially supported we need to perform
+    some gymnastics here to convince django.
+    """
+    def setUp(self):
+        # Cache current database connections
+        self.databases = copy(connections._databases)
+        self.connection = getattr(connections._connections, DEFAULT_DB_ALIAS, None)
+        del connections.__dict__['databases']  # remove cached_property value
+        connections._databases = None
+        connections._connections = local()
+
     def tearDown(self):
-        pass
+        # Restore previous database connections
+        connections._databases = self.databases
+        setattr(connections._connections, DEFAULT_DB_ALIAS, self.connection)
+        del connections.__dict__['databases']  # remove cached_property value
+
+    @override_settings(
+        DATABASES={
+            'default': {
+                "ENGINE": "django.db.backends.mysql",
+                "HOST": "no.host.by.this.name.some-tld-that-doesnt-exist",
+                "ATOMIC_REQUESTS": True
+            },
+        }
+    )
+    # can't use override_settings because of
+    # https://github.com/mwarkentin/django-watchman/issues/13
+    @patch('watchman.settings.WATCHMAN_ERROR_CODE', 201)
+    def test_db_error_w_atomic_requests(self):
+        # Ensure we don't trigger django's generic 500 page in case of DB error
+        response = Client().get('/', data={
+            'check': 'watchman.checks.databases',
+        })
+        self.assertEqual(response.status_code, 201)
 
 
 class TestWatchmanDashboard(unittest.TestCase):
