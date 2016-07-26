@@ -11,7 +11,10 @@ from __future__ import unicode_literals
 
 import unittest
 
-from django.core.urlresolvers import reverse
+try:
+    from django.urls import reverse
+except ImportError:
+    from django.core.urlresolvers import reverse
 from django.test.client import Client
 
 import mock
@@ -33,7 +36,7 @@ class TestWatchman(unittest.TestCase):
 
     def test_200_ok_if_no_token_set(self):
         watchman_settings.WATCHMAN_TOKEN = None
-        response = self.client.get(reverse('watchman.views.status'))
+        response = self.client.get(reverse('status'))
         self.assertEqual(response.status_code, 200)
         watchman_settings.WATCHMAN_TOKEN = 'foo'
 
@@ -41,7 +44,7 @@ class TestWatchman(unittest.TestCase):
         data = {
             'watchman-token': 'foo',
         }
-        response = self.client.get(reverse('watchman.views.status'), data)
+        response = self.client.get(reverse('status'), data)
         self.assertEqual(response.status_code, 200)
 
     def test_required_token_param_can_be_renamed(self):
@@ -49,19 +52,19 @@ class TestWatchman(unittest.TestCase):
         data = {
             'custom-token': 'foo',
         }
-        response = self.client.get(reverse('watchman.views.status'), data)
+        response = self.client.get(reverse('status'), data)
         self.assertEqual(response.status_code, 200)
         watchman_settings.WATCHMAN_TOKEN_NAME = 'watchman-token'
 
     def test_403_raised_if_missing_token(self):
-        response = self.client.get(reverse('watchman.views.status'))
+        response = self.client.get(reverse('status'))
         self.assertEqual(response.status_code, 403)
 
     def test_403_raised_if_invalid_token(self):
         data = {
             'watchman-token': 'bar',
         }
-        response = self.client.get(reverse('watchman.views.status'), data)
+        response = self.client.get(reverse('status'), data)
         self.assertEqual(response.status_code, 403)
 
     # We cannot easily mock a stacktrace, since:

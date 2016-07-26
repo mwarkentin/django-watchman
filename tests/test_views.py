@@ -31,6 +31,22 @@ from watchman import checks, views
 
 PYTHON_VERSION = sys.version_info[0]
 
+
+class AuthenticatedUser(AnonymousUser):
+    @property
+    def is_authenticated(self):
+        class CallableTrue(object):
+            def __call__(self, *args, **kwargs):
+                return True
+
+            def __bool__(self):
+                return True
+
+            __nonzero__ = __bool__
+
+        return CallableTrue()
+
+
 if django.VERSION >= (1, 7):
     # Initialize Django
     django.setup()
@@ -214,9 +230,7 @@ class TestWatchman(unittest.TestCase):
         # happens after self.setUp()
         reload_settings()
         request = RequestFactory().get('/')
-        request.user = AnonymousUser()
-        # Fake logging the user in
-        request.user.is_authenticated = lambda: True
+        request.user = AuthenticatedUser()
 
         response = views.status(request)
         self.assertEqual(response.status_code, 200)
