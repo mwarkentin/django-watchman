@@ -131,6 +131,7 @@ def dashboard(request):
 
                 check_types.append({
                     'type': _type,
+                    'type_singular': _type[:-1] if _type.endswith('s') else _type,
                     'ok': type_overall_status,
                     'statuses': statuses})
 
