@@ -1,87 +1,111 @@
+{% extends "watchman/base.html" %}
+
 {% load i18n %}
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    </head>
-    <body>
-        {% block content %}
-        <div class="container">
-            <h2>{% trans 'System Status' %}</h2>
-            <h3 class="{% if overall_status %}text-success{% else %}text-danger{% endif %}">
+{% block content %}
+{% block status_content %}
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
+        <h2>
+            {% trans "System Status" %}
+
+            <span class="{% if overall_status %}text-success{% else %}text-danger{% endif %} pull-right">
                 {% if overall_status %}
-                    <span class="glyphicon glyphicon-ok"></span> {% trans 'All systems up and running!' %}
+                <i class="fa fa-check"></i> {% trans "OK" %}
                 {% else %}
-                    <span class="glyphicon glyphicon-alert"></span> {% trans 'WARNING - Some systems down!' %}
+                <i class="fa fa-exclamation-triangle"></i> {% trans "WARNING" %}
                 {% endif %}{# overall_status #}
-            </h3>
-            <small></small>
+            </span>
+        </h2>
+    </div><!-- .col -->
+</div><!-- .row -->
 
-            <table class="table table-bordered table-hover">
-                <thead>
-                <tr>
-                    <th>{% trans 'Type' %}</th>
-                    <th>{% trans 'Name' %}</th>
-                    <th>{% trans 'Status' %}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for type in checks %}
-                {% for status in type.statuses %}
-                <tr class="{% if type.ok %}success{% else %}danger{% endif %}">
-                    <td>{{ type.type|title }}</td>
-                    <td>{{ status.name|title }}</td>
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
+        <h3 class="{% if overall_status %}text-success{% else %}text-danger{% endif %}">
+            {% if overall_status %}
+            {% trans "All systems go!" %}
+            {% else %}
+            {% trans "Some systems down!" %}
+            {% endif %}{# overall_status #}
+        </h3>
+        <small></small>
+    </div><!-- .col -->
+</div><!-- .row -->
 
-                    {% if status.ok %}
-                    <td class="success">{% trans 'OK' %}</td>
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
+        <hr />
+    </div><!-- .col -->
+</div><!-- .row -->
 
-                    {% else %}
-                    <td class="danger">
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}">{% trans 'ERROR!' %}</button>
-                    </td>
-                    {% endif %}{# status.ok #}
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
+        <table class="table table-bordered table-hover">
+            <thead>
+            <tr>
+                <th>{% trans "Type" %}</th>
+                <th>{% trans "Name" %}</th>
+                <th>{% trans "Status" %}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for type in checks %}
+            {% for status in type.statuses %}
+            <tr>
+                <td class="{% if type.ok %}success{% else %}{% if not status.ok %}danger{% else %}warning{% endif %}{# not status.ok #}{% endif %}{# type.ok #}">{{ type.type_singular|title }}</td>
+                <td class="{% if status.ok %}success{% else %}danger{% endif %}">{{ status.name }}</td>
 
-                </tr>
-                {% endfor %}{# for status in type.statuses #}
-                {% empty %}
-                <tr>
-                    <td colspan="3">{% trans 'No checks indicated.' %}</td>
-                </tr>
-                {% endfor %}{# for type in checks #}
-                </tbody>
-            </table>
+                {% if status.ok %}
+                <td class="success">{% trans "OK" %}</td>
 
-            {% if not overall_status %}<span class="pull-right"><small>{% trans 'Click an error button to see the full traceback' %}</small></span>{% endif %}{# overall_status #}
-        </div>
-        {% endblock %}{# status_content #}
+                {% else %}
+                <td class="danger">
+                    {% trans "ERROR!" %}
+
+                    <div class="btn-group btn-group-xs pull-right">
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}">{% trans "Traceback" %}</button>
+                    </div>
+                </td>
+                {% endif %}{# status.ok #}
+
+            </tr>
+            {% endfor %}{# for status in type.statuses #}
+            {% empty %}
+            <tr>
+                <td colspan="3">{% trans "No checks indicated." %}</td>
+            </tr>
+            {% endfor %}{# for type in checks #}
+            </tbody>
+        </table>
+    </div><!-- .col -->
+</div><!-- .row -->
+{% endblock %}{# status_content #}
 
 
-        {% for type in checks %}
-        {% for status in type.statuses %}
-        {% if not status.ok %}
-        <div class="modal fade" id="{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}" tabindex="-1" role="dialog" aria-labelledby="{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}-title">
-            <div class="modal-dialog" role="document" style="width: 65%">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}-title">{{ type.type|title }}{% if status.name %} - {{ status.name|title }}{% endif %}</h4>
-                    </div><!-- class="modal-header" -->
-                    <div class="modal-body">
-                        <h4><pre>{{ status.error }}</pre></h4>
-                        <pre>{{ status.stacktrace }}</pre>
-                    </div><!-- class="model-body" -->
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    </div><!-- class="modal-footer" -->
-                </div><!-- class="modal-content" -->
-            </div><!-- class="modal-dialog" -->
-        </div><!-- class="modal fade" -->
-        {% endif %}{# not status.ok #}
-        {% endfor %}{# for type in checks #}
-        {% endfor %}{# for status in type.statuses #}
-    </body>
-</html>
+{% block error_content %}
+{% for type in checks %}
+{% for status in type.statuses %}
+{% if not status.ok %}
+<div class="modal fade" id="{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}" tabindex="-1" role="dialog" aria-labelledby="{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}-title">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}-title">{{ type.type|title }}{% if status.name %} - {{ status.name|title }}{% endif %}</h4>
+            </div><!-- class="modal-header" -->
+            <div class="modal-body">
+                <h4><pre>{{ status.error }}</pre></h4>
+                <pre>{{ status.stacktrace }}</pre>
+            </div><!-- class="model-body" -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div><!-- class="modal-footer" -->
+        </div><!-- class="modal-content" -->
+    </div><!-- class="modal-dialog" -->
+</div><!-- class="modal fade" -->
+{% endif %}{# not status.ok #}
+{% endfor %}{# for type in checks #}
+{% endfor %}{# for status in type.statuses #}
+{% endblock %}{# error_content #}
+{% endblock %}{# content #}
