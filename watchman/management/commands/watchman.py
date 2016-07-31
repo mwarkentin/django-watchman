@@ -30,7 +30,7 @@ class Command(BaseCommand):
         check_list = None
         skip_list = None
         verbosity = options['verbosity']
-        print_all_checks = verbosity == '2' or verbosity == '3'
+        print_all_checks = verbosity in ['2', '3', ]
 
         checks = options['checks']
         skips = options['skips']
