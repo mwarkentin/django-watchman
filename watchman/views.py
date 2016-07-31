@@ -2,6 +2,7 @@
 
 from __future__ import unicode_literals
 
+from django.db.transaction import non_atomic_requests
 from django.http import Http404
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
@@ -30,6 +31,7 @@ def _get_check_params(request):
 
 @auth
 @json_view
+@non_atomic_requests
 def status(request):
     response = {}
     http_code = 200
@@ -60,6 +62,7 @@ def status(request):
 
 
 @auth
+@non_atomic_requests
 def dashboard(request):
     check_types = []
 
