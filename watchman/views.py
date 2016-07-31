@@ -127,7 +127,7 @@ def dashboard(request):
                                 'stacktrace': '' if result[name]['ok'] else result[name]['stacktrace'],
                             })
 
-                    type_overall_status = all([s['ok'] for s in statuses])
+                    type_overall_status = all(s['ok'] for s in statuses)
 
                 check_types.append({
                     'type': _type,
@@ -135,7 +135,7 @@ def dashboard(request):
                     'ok': type_overall_status,
                     'statuses': statuses})
 
-    overall_status = all([type_status['ok'] for type_status in check_types])
+    overall_status = all(type_status['ok'] for type_status in check_types)
 
     response = render(request, 'watchman/dashboard.html', {
         'checks': check_types,
