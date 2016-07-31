@@ -31,7 +31,7 @@ def check(func):
 
 def token_required(view_func):
     """
-    Decorator which ensures that WATCHMAN_TOKEN is provided if set.
+    Decorator which ensures that one of the WATCHMAN_TOKENS is provided if set.
 
     WATCHMAN_TOKEN_NAME can also be set if the token GET parameter must be
     customized.
@@ -66,14 +66,19 @@ def token_required(view_func):
         return token
 
     def _validate_token(request):
-        watchman_token = settings.WATCHMAN_TOKEN
+        if settings.WATCHMAN_TOKENS:
+            watchman_tokens = settings.WATCHMAN_TOKENS.split(',')
+        elif settings.WATCHMAN_TOKEN:
+            watchman_tokens = [settings.WATCHMAN_TOKEN, ]
+        else:
+            watchman_tokens = []
 
-        if watchman_token is None:
+        if not watchman_tokens:
             return True
 
         passed_token = _get_passed_token(request)
 
-        return watchman_token == passed_token
+        return passed_token in watchman_tokens
 
     @csrf_exempt
     @wraps(view_func)
