@@ -1,5 +1,3 @@
-import warnings
-
 from django.conf import settings
 
 # TODO: these should not be module level (https://github.com/mwarkentin/django-watchman/issues/13)
@@ -25,6 +23,3 @@ if WATCHMAN_ENABLE_PAID_CHECKS:
     DEFAULT_CHECKS = DEFAULT_CHECKS + PAID_CHECKS
 
 WATCHMAN_CHECKS = getattr(settings, 'WATCHMAN_CHECKS', DEFAULT_CHECKS)
-
-if WATCHMAN_TOKEN:
-    warnings.warn("`WATCHMAN_TOKEN` setting is deprecated, use `WATCHMAN_TOKENS` instead. It will be removed in django-watchman 1.0.", DeprecationWarning)

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+import warnings
 
 from django.db.transaction import non_atomic_requests
 from django.http import Http404
@@ -29,10 +30,17 @@ def _get_check_params(request):
     return (check_list, skip_list)
 
 
+def _deprecation_warnings():
+    if settings.WATCHMAN_TOKEN:
+        warnings.warn("`WATCHMAN_TOKEN` setting is deprecated, use `WATCHMAN_TOKENS` instead. It will be removed in django-watchman 1.0", DeprecationWarning)
+
+
 @auth
 @json_view
 @non_atomic_requests
 def status(request):
+    _deprecation_warnings()
+
     response = {}
     http_code = 200
 
@@ -64,6 +72,8 @@ def status(request):
 @auth
 @non_atomic_requests
 def dashboard(request):
+    _deprecation_warnings()
+
     check_types = []
 
     check_list, skip_list = _get_check_params(request)
