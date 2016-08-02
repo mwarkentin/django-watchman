@@ -28,17 +28,64 @@ class FakeException(Exception):
         super(self.__class__, self).__init__(*args, **kwargs)
 
 
-class TestWatchman(unittest.TestCase):
+class TestWatchmanMultiTokens(unittest.TestCase):
+
+    def setUp(self):
+        self.client = Client()
+        watchman_settings.WATCHMAN_TOKEN = None
+        watchman_settings.WATCHMAN_TOKENS = 't1,t2'
+
+    def test_200_ok_if_matching_first_token_in_list(self):
+        data = {
+            'watchman-token': 't1',
+        }
+        response = self.client.get(reverse('status'), data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_200_ok_if_matching_second_token_in_list(self):
+        data = {
+            'watchman-token': 't2',
+        }
+        response = self.client.get(reverse('status'), data)
+        self.assertEqual(response.status_code, 200)
+
+    def test_403_raised_if_missing_token(self):
+        response = self.client.get(reverse('status'))
+        self.assertEqual(response.status_code, 403)
+
+    def test_403_raised_if_invalid_token(self):
+        data = {
+            'watchman-token': 'bar',
+        }
+        response = self.client.get(reverse('status'), data)
+        self.assertEqual(response.status_code, 403)
+
+
+class TestWatchmanNoTokens(unittest.TestCase):
+
+    def setUp(self):
+        self.client = Client()
+        watchman_settings.WATCHMAN_TOKEN = None
+        watchman_settings.WATCHMAN_TOKENS = None
+
+    def test_200_ok_if_no_token_set(self):
+        response = self.client.get(reverse('status'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_200_ok_if_no_token_set_but_passed_in(self):
+        data = {
+            'watchman-token': 'foo',
+        }
+        response = self.client.get(reverse('status'), data)
+        self.assertEqual(response.status_code, 200)
+
+
+class TestWatchmanSingleToken(unittest.TestCase):
 
     def setUp(self):
         self.client = Client()
         watchman_settings.WATCHMAN_TOKEN = 'foo'
-
-    def test_200_ok_if_no_token_set(self):
-        watchman_settings.WATCHMAN_TOKEN = None
-        response = self.client.get(reverse('status'))
-        self.assertEqual(response.status_code, 200)
-        watchman_settings.WATCHMAN_TOKEN = 'foo'
+        watchman_settings.WATCHMAN_TOKENS = None
 
     def test_200_ok_if_tokens_match(self):
         data = {
