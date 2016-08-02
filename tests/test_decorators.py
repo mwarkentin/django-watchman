@@ -14,6 +14,7 @@ import unittest
 try:
     from django.urls import reverse
 except ImportError:
+    # Deprecated in Django 1.10
     from django.core.urlresolvers import reverse
 from django.test.client import Client
 
