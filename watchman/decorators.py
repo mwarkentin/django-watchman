@@ -71,14 +71,9 @@ def token_required(view_func):
         elif settings.WATCHMAN_TOKEN:
             watchman_tokens = [settings.WATCHMAN_TOKEN, ]
         else:
-            watchman_tokens = None
-
-        if watchman_tokens is None:
             return True
 
-        passed_token = _get_passed_token(request)
-
-        return passed_token in watchman_tokens
+        return _get_passed_token(request) in watchman_tokens
 
     @csrf_exempt
     @wraps(view_func)
