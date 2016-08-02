@@ -71,9 +71,9 @@ def token_required(view_func):
         elif settings.WATCHMAN_TOKEN:
             watchman_tokens = [settings.WATCHMAN_TOKEN, ]
         else:
-            watchman_tokens = []
+            watchman_tokens = None
 
-        if not watchman_tokens:
+        if watchman_tokens is None:
             return True
 
         passed_token = _get_passed_token(request)
