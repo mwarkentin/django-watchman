@@ -3,6 +3,7 @@ from django.conf import settings
 # TODO: these should not be module level (https://github.com/mwarkentin/django-watchman/issues/13)
 WATCHMAN_ENABLE_PAID_CHECKS = getattr(settings, 'WATCHMAN_ENABLE_PAID_CHECKS', False)
 WATCHMAN_AUTH_DECORATOR = getattr(settings, 'WATCHMAN_AUTH_DECORATOR', 'watchman.decorators.token_required')
+# TODO: Remove for django-watchman 1.0
 WATCHMAN_TOKEN = getattr(settings, 'WATCHMAN_TOKEN', None)
 WATCHMAN_TOKENS = getattr(settings, 'WATCHMAN_TOKENS', None)
 WATCHMAN_TOKEN_NAME = getattr(settings, 'WATCHMAN_TOKEN_NAME', 'watchman-token')

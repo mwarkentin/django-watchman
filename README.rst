@@ -79,9 +79,9 @@ Features
 Token based authentication
 **************************
 
-If you want to protect the status endpoint, you can add a ``WATCHMAN_TOKEN`` to
-your settings. When this setting is added, you must pass that value in as the
-``watchman-token`` **GET** parameter::
+If you want to protect the status endpoint, you can use the ``WATCHMAN_TOKENS`` setting.
+This is a comma-separated list of tokens.
+When this setting is added, you must pass one of the tokens in as the ``watchman-token`` **GET** parameter::
 
     GET http://127.0.0.1:8000/watchman/?watchman-token=:token
 
@@ -95,6 +95,9 @@ The value of this setting will be the **GET** parameter that you must pass in::
     WATCHMAN_TOKEN_NAME = 'custom-token-name'
 
     GET http://127.0.0.1:8000/watchman/?custom-token-name=:token
+
+**DEPRECATION WARNING**: ``WATCHMAN_TOKEN`` was replaced by the ``WATCHMAN_TOKENS`` setting to support multiple authentication tokens in django-watchman ``0.11``.
+It will continue to work until it's removed in django-watchman ``1.0``.
 
 Custom authentication/authorization
 ***********************************
