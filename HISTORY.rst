@@ -9,12 +9,17 @@ History
 
 * Update tests to run on Django 1.7 - 1.10
 * [`#87 <https://github.com/mwarkentin/django-watchman/pull/87>`_] Fix 500 errors with ATOMIC_REQUESTS enabled
+
   * Disables atomic transactions on the watchman views to prevent generic 500 errors
+
 * [`#88 <https://github.com/mwarkentin/django-watchman/pull/88>`_] Restructure dashboard and switch icon libraries
+
   * Make check types singular on dashboard
   * Switch to FontAwesome instead of Glyphicon to track Bootstrap updates
   * Improve traceback display width
+
 * [`#92 <https://github.com/mwarkentin/django-watchman/pull/92>`_] Support multiple auth tokens
+
   * Fixes [`#86 <https://github.com/mwarkentin/django-watchman/pull/86>`_]
   * Deprecates ``settings.WATCHMAN_TOKEN`` and adds ``settings.WATCHMAN_TOKENS``
 
