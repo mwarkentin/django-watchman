@@ -39,8 +39,6 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         check_list = None
         skip_list = None
-        verbosity = options['verbosity']
-        print_all_checks = verbosity in ['2', '3', ]
 
         checks = options['checks']
         skips = options['skips']
@@ -56,5 +54,6 @@ class Command(BaseCommand):
                 resp = json.dumps(check())
                 if '"ok": false' in resp:
                     raise CommandError(resp)
-                elif print_all_checks:
+                # Cast to int for Django < 1.8 (used to be a string value)
+                elif int(options['verbosity']) >= 2:
                     self.stdout.write(resp)
