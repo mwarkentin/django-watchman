@@ -4,6 +4,11 @@
 History
 =======
 
+0.11.1 (2017-02-14)
+-------------------
+
+* [`#99 <https://github.com/mwarkentin/django-watchman/pull/99>`_] Fix verbose output in management command on Django 1.8+
+
 0.11.0 (2016-08-02)
 -------------------
 
