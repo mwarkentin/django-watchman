@@ -413,3 +413,27 @@ class TestEmailCheck(DjangoTestCase):
             'foo': 'bar',
         }
         self.assertEqual(sent_email.extra_headers, expected_headers)
+
+    def def_test_email_with_default_sender(self):
+        checks._check_email()
+
+        # Test that one message has been sent.
+        self.assertEqual(len(mail.outbox), 1)
+
+        sent_email = mail.outbox[0]
+        expected_sender = 'watchman@example.com'
+        self.assertEqual(sent_email.from_email, expected_sender)
+
+    @override_settings(WATCHMAN_EMAIL_SENDER='custom@example.com')
+    def def_test_email_with_custom_sender(self):
+        # Have to manually reload settings here because override_settings
+        # happens after self.setUp()
+        reload_settings()
+        checks._check_email()
+
+        # Test that one message has been sent.
+        self.assertEqual(len(mail.outbox), 1)
+
+        sent_email = mail.outbox[0]
+        expected_sender = 'custom@example.com'
+        self.assertEqual(sent_email.from_email, expected_sender)
