@@ -48,7 +48,7 @@ def _check_email():
     email = EmailMessage(
         "django-watchman email check",
         "This is an automated test of the email system.",
-        "watchman@example.com",
+        watchman_settings.WATCHMAN_EMAIL_SENDER,
         watchman_settings.WATCHMAN_EMAIL_RECIPIENTS,
         headers=headers,
     )
