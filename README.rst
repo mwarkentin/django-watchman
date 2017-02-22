@@ -272,6 +272,7 @@ Requirements
 
 * `Vagrant <https://www.vagrantup.com/>`_
 * `Virtualbox <https://www.virtualbox.org/>`_
+* Testing mention bot
 * `Ansible <http://www.ansible.com/>`_
 
 Instructions
