@@ -19,3 +19,4 @@ Contributors
 * Justin Sacbibit - https://github.com/justinsacbibit
 * Ulrich Petri - https://github.com/ulope
 * Tim Tisdall - https://github.com/tisdall
+* Eduardo Cardoso - https://github.com/eduardocardoso

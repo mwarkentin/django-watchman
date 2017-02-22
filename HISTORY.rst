@@ -4,6 +4,11 @@
 History
 =======
 
+0.12.0 (2017-02-22)
+-------------------
+
+* [`#100 <https://github.com/mwarkentin/django-watchman/pull/100>`_] Add ``WATCHMAN_EMAIL_SENDER`` setting to customize email check "from" address
+
 0.11.1 (2017-02-14)
 -------------------
 
