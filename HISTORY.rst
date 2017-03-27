@@ -4,6 +4,11 @@
 History
 =======
 
+0.13.0 (Unreleased)
+-------------------
+
+* [`#101 <https://github.com/mwarkentin/django-watchman/pull/101>`_] Write ``bytes`` to dummy file on storage check
+
 0.12.0 (2017-02-22)
 -------------------
 
