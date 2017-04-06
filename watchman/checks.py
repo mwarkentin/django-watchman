@@ -78,7 +78,7 @@ def _check_amqp_connection(connection_url):
     conn_params = pika.URLParameters(connection_url)
     connection = pika.BlockingConnection(conn_params)
     connection.close()
-    return {conn_params.virtual_host: {'ok': True}}
+    return {conn_params.virtual_host: {"ok": True}}
 
 
 def caches():
@@ -98,4 +98,4 @@ def storage():
 
 
 def amqp():
-    return {'amqp': _check_amqp_connections(settings.AMQP_CONNECTIONS)}
+    return {"amqp": _check_amqp_connections(settings.AMQP_CONNECTIONS)}
