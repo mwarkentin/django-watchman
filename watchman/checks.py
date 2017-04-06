@@ -9,8 +9,6 @@ from django.core.files.storage import default_storage
 from django.core.mail import EmailMessage
 from django.db import connections
 
-import pika
-
 from watchman.decorators import check
 from watchman import settings as watchman_settings
 from watchman import utils
@@ -75,6 +73,8 @@ def _check_storage():
 
 @check
 def _check_amqp_connection(connection_url):
+    import pika
+
     conn_params = pika.URLParameters(connection_url)
     connection = pika.BlockingConnection(conn_params)
     connection.close()
