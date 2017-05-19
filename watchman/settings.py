@@ -12,6 +12,9 @@ WATCHMAN_EMAIL_SENDER = getattr(settings, 'WATCHMAN_EMAIL_SENDER', 'watchman@exa
 WATCHMAN_EMAIL_RECIPIENTS = getattr(settings, 'WATCHMAN_EMAIL_RECIPIENTS', ['to@example.com'])
 WATCHMAN_EMAIL_HEADERS = getattr(settings, 'WATCHMAN_EMAIL_HEADERS', {})
 
+WATCHMAN_CACHES = getattr(settings, 'WATCHMAN_CACHES', settings.CACHES)
+WATCHMAN_DATABASES = getattr(settings, 'WATCHMAN_DATABASES', settings.DATABASES)
+
 DEFAULT_CHECKS = (
     'watchman.checks.caches',
     'watchman.checks.databases',
