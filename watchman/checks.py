@@ -3,7 +3,6 @@
 from __future__ import unicode_literals
 
 import uuid
-from django.conf import settings
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.mail import EmailMessage
@@ -68,11 +67,11 @@ def _check_storage():
 
 
 def caches():
-    return {"caches": _check_caches(settings.CACHES)}
+    return {"caches": _check_caches(watchman_settings.WATCHMAN_CACHES)}
 
 
 def databases():
-    return {"databases": _check_databases(settings.DATABASES)}
+    return {"databases": _check_databases(watchman_settings.WATCHMAN_DATABASES)}
 
 
 def email():
