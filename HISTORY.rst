@@ -4,6 +4,15 @@
 History
 =======
 
+0.13.0 (2017-05-23)
+-------------------
+
+* [`#105 <https://github.com/mwarkentin/django-watchman/pull/105>`_] Add ``WATCHMAN_CACHES`` and ``WATCHMAN_DATABASES`` settings to override the Django defaults
+
+  * When using watchman with a large number of databases, the default checks can cause an excess of connections to the database / cache
+  * New settings allow you to check only a subset of databases / caches
+  * Watchman will still default to checking all databases / caches, so no changes necessary for most apps
+
 0.12.0 (2017-02-22)
 -------------------
 
