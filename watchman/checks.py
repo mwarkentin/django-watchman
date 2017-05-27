@@ -58,7 +58,7 @@ def _check_email():
 @check
 def _check_storage():
     filename = 'django-watchman-{}.txt'.format(uuid.uuid4())
-    content = 'django-watchman test file'
+    content = b'django-watchman test file'
     path = default_storage.save(filename, ContentFile(content))
     default_storage.size(path)
     default_storage.open(path).read()

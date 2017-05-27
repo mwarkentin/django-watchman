@@ -20,3 +20,4 @@ Contributors
 * Ulrich Petri - https://github.com/ulope
 * Tim Tisdall - https://github.com/tisdall
 * Eduardo Cardoso - https://github.com/eduardocardoso
+* Daniel Widerin - https://github.com/saily
