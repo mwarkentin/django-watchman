@@ -152,6 +152,15 @@ querystring should be run, eg::
 
     curl -XGET http://127.0.0.1:8080/watchman/?skip=watchman.checks.email
 
+Check a subset of databases or caches
+*************************************
+
+If your application has a large number of databases or caches configured,
+watchman may open too many connections as it checks each database or cache.
+
+You can set the ``WATCHMAN_DATABASES`` or ``WATCHMAN_CACHES`` settings in order
+to override the default set of databases and caches to be monitored.
+
 Django management command
 *************************
 
