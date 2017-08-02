@@ -109,8 +109,8 @@ to ``watchman.decorators.token_required``::
 
     WATCHMAN_AUTH_DECORATOR = 'django.contrib.admin.views.decorators.staff_member_required'
 
-Note that the ``token_required`` decorator does not protect a view unless the
-``WATCHMAN_TOKEN`` is set in settings.
+Note that the ``token_required`` decorator does not protect a view unless
+``WATCHMAN_TOKENS`` is set in settings.
 
 Custom checks
 *************
