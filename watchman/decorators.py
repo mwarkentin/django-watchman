@@ -1,4 +1,5 @@
 from functools import wraps
+import logging
 import re
 import traceback
 
@@ -7,24 +8,48 @@ from django.views.decorators.csrf import csrf_exempt
 
 from watchman import settings
 
+logger = logging.getLogger('watchman')
+
 
 def check(func):
     """
     Decorator which wraps checks and returns an error response on failure.
     """
     def wrapped(*args, **kwargs):
+        check_name = func.__name__
+        arg_name = None
+        if args:
+            arg_name = args[0]
         try:
+            if arg_name:
+                logger.debug("Checking '%s' for '%s'", check_name, arg_name)
+            else:
+                logger.debug("Checking '%s'", check_name)
             response = func(*args, **kwargs)
         except Exception as e:
+            message = str(e)
             response = {
                 "ok": False,
-                "error": str(e),
+                "error": message,
                 "stacktrace": traceback.format_exc(),
             }
             # The check contains several individual checks (e.g., one per
             # database). Preface the results by name.
-            if args:
-                response = {args[0]: response}
+            if arg_name:
+                response = {arg_name: response}
+                logger.exception(
+                    "Error calling '%s' for '%s': %s",
+                    check_name,
+                    arg_name,
+                    message
+                )
+            else:
+                logger.exception(
+                    "Error calling '%s': %s",
+                    check_name,
+                    message
+                )
+
         return response
     return wrapped
 

@@ -208,6 +208,11 @@ using the ``WATCHMAN_ERROR_CODE`` setting::
 
     WATCHMAN_ERROR_CODE = 500
 
+Logging
+*******
+
+watchman includes log messages using a logger called ``watchman``.
+You can configure this by configuring the builtin Python ``logging`` module.
 
 Available checks
 ----------------
