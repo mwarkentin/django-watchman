@@ -87,6 +87,26 @@ DATABASES = {
 }
 
 
+# Logging
+# https://docs.djangoproject.com/en/1.8/topics/logging/
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'watchman': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.8/topics/i18n/
 
