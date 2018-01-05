@@ -212,7 +212,29 @@ Logging
 *******
 
 watchman includes log messages using a logger called ``watchman``.
-You can configure this by configuring the builtin Python ``logging`` module.
+You can configure this by configuring the ``LOGGING`` section of your Django
+settings file.
+
+Here is a simple example that would log to the console:
+
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'loggers': {
+            'watchman': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+            },
+        },
+    }
+
+More information is available in the
+[Django documentation](https://docs.djangoproject.com/en/2.0/topics/logging/#configuring-logging).
 
 Available checks
 ----------------
