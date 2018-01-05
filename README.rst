@@ -215,7 +215,7 @@ watchman includes log messages using a logger called ``watchman``.
 You can configure this by configuring the ``LOGGING`` section of your Django
 settings file.
 
-Here is a simple example that would log to the console:
+Here is a simple example that would log to the console::
 
     LOGGING = {
         'version': 1,
@@ -233,8 +233,8 @@ Here is a simple example that would log to the console:
         },
     }
 
-More information is available in the
-[Django documentation](https://docs.djangoproject.com/en/2.0/topics/logging/#configuring-logging).
+More information is available in the `Django documentation 
+<https://docs.djangoproject.com/en/2.0/topics/logging/#configuring-logging]>`_.
 
 Available checks
 ----------------
