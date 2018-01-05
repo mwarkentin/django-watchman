@@ -1,4 +1,4 @@
-.PHONY: clean-pyc clean-build docs
+.PHONY: help clean clean-build clean-pyc lint test test-all coverage docs release dist run
 
 help:
 	@echo "clean-build - remove build artifacts"
@@ -10,6 +10,7 @@ help:
 	@echo "docs - generate Sphinx HTML documentation, including API docs"
 	@echo "release - package and upload a release"
 	@echo "dist - package a release"
+	@echo "run - build and run sample project with docker"
 
 clean: clean-build clean-pyc
 
@@ -55,3 +56,7 @@ dist: clean lint test
 	python setup.py sdist
 	python setup.py bdist_wheel
 	ls -l dist
+
+run:
+	docker build -t watchman .
+	docker run -it -p 8000:8000 watchman

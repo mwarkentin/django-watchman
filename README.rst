@@ -244,7 +244,7 @@ Here is a simple example that would log to the console::
         },
     }
 
-More information is available in the `Django documentation 
+More information is available in the `Django documentation
 <https://docs.djangoproject.com/en/2.0/topics/logging/#configuring-logging]>`_.
 
 Available checks
@@ -322,7 +322,7 @@ Requirements
 Instructions
 ************
 
-1. Build the Docker image with the current local code: `docker build -t watchman .`
-2. Launch the Docker image: `docker run -it -p 8000:8000 watchman`
-3. Visit watchman json endpoint in your browser: http://127.0.0.1:8000/watchman/
-4. Visit watchman dashboard in your browser: http://127.0.0.1:8000/watchman/dashboard/
+1. Build and run the Docker image with the current local code: ``make run``
+2. Visit watchman json endpoint in your browser: http://127.0.0.1:8000/watchman/
+3. Visit watchman dashboard in your browser: http://127.0.0.1:8000/watchman/dashboard/
+4. Visit watchman ping in your browser: http://127.0.0.1:8000/watchman/ping/
