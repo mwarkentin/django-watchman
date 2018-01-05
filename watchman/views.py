@@ -4,7 +4,7 @@ from __future__ import unicode_literals
 import warnings
 
 from django.db.transaction import non_atomic_requests
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from jsonview.decorators import json_view
@@ -67,6 +67,12 @@ def status(request):
         raise Http404(_('No checks found'))
 
     return response, http_code, {WATCHMAN_VERSION_HEADER: __version__}
+
+
+def ping(request):
+    _deprecation_warnings()
+
+    return HttpResponse('pong', content_type='text/plain')
 
 
 @auth

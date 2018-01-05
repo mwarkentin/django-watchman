@@ -342,6 +342,19 @@ class TestWatchmanDashboard(unittest.TestCase):
         self.assertTrue(response.has_header('X-Watchman-Version'))
 
 
+class TestPing(unittest.TestCase):
+    def setUp(self):
+        # Ensure that every test executes with separate settings
+        reload_settings()
+
+    def test_returns_pong(self):
+        request = RequestFactory().get('/')
+        response = views.ping(request)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.content.decode(), 'pong')
+        self.assertEqual(response['Content-Type'], 'text/plain')
+
+
 class TestEmailCheck(DjangoTestCase):
     def setUp(self):
         # Ensure that every test executes with separate settings
