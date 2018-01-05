@@ -161,6 +161,17 @@ watchman may open too many connections as it checks each database or cache.
 You can set the ``WATCHMAN_DATABASES`` or ``WATCHMAN_CACHES`` settings in order
 to override the default set of databases and caches to be monitored.
 
+Ping
+****
+
+If you want to simply check that your application is running and able to handle
+requests, you can call ping:
+
+    GET http://127.0.0.1:8000/watchman/ping/
+
+It will return the text ``pong`` with a 200 status code. Calling this doesn't
+run any of the checks.
+
 Django management command
 *************************
 
