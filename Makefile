@@ -49,8 +49,9 @@ docs:
 	open docs/_build/html/index.html
 
 release: clean lint test
-	python setup.py sdist upload -r pypi
-	python setup.py bdist_wheel upload -r pypi
+	python setup.py sdist
+	python setup.py bdist_wheel
+	twine upload dist/*
 
 dist: clean lint test
 	python setup.py sdist
