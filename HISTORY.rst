@@ -4,7 +4,7 @@
 History
 =======
 
-0.14.0 (2018-01-??)
+0.14.0 (2018-01-09)
 -------------------
 
 * [`#110 <https://github.com/mwarkentin/django-watchman/pull/110>`_] Replace vagrant + ansible with Dockerfile (@ryanwilsonperkin)
