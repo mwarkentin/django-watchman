@@ -4,6 +4,13 @@
 History
 =======
 
+0.14.0 (2018-01-??)
+-------------------
+
+* [`#110 <https://github.com/mwarkentin/django-watchman/pull/110>`_] Replace vagrant + ansible with Dockerfile (@ryanwilsonperkin)
+* [`#111 <https://github.com/mwarkentin/django-watchman/pull/111>`_] Configure Django logging for checks (@dhoffman34)
+* [`#112 <https://github.com/mwarkentin/django-watchman/pull/112>`_] Add simple HTTP ping endpoint (@dhoffman34)
+
 0.13.1 (2017-05-27)
 -------------------
 

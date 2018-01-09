@@ -21,3 +21,5 @@ Contributors
 * Tim Tisdall - https://github.com/tisdall
 * Eduardo Cardoso - https://github.com/eduardocardoso
 * Daniel Widerin - https://github.com/saily
+* Ryan Wilson-Perkin - https://github.com/ryanwilsonperkin
+* David Hoffman - https://github.com/dhoffman34
