@@ -213,11 +213,11 @@ Use ``-h`` to see a full list of options::
 Custom response code
 ********************
 
-By default, watchman will return a ``200`` HTTP response code, even if there's a
+By default, watchman will return a ``500`` HTTP response code, even if there's a
 failing check. You can specify a different response code for failing checks
 using the ``WATCHMAN_ERROR_CODE`` setting::
 
-    WATCHMAN_ERROR_CODE = 500
+    WATCHMAN_ERROR_CODE = 200
 
 Logging
 *******
