@@ -34,6 +34,10 @@ def _check_databases(databases):
     return [_check_database(database) for database in sorted(databases)]
 
 
+def _check_amqp_connections(connection_urls):
+    return [_check_amqp_connection(connection_url) for connection_url in sorted(connection_urls)]
+
+
 @check
 def _check_database(database):
     connections[database].introspection.table_names()
@@ -66,6 +70,16 @@ def _check_storage():
     return {"ok": True}
 
 
+@check
+def _check_amqp_connection(connection_url):
+    import pika
+
+    conn_params = pika.URLParameters(connection_url)
+    connection = pika.BlockingConnection(conn_params)
+    connection.close()
+    return {conn_params.virtual_host: {"ok": True}}
+
+
 def caches():
     return {"caches": _check_caches(watchman_settings.WATCHMAN_CACHES)}
 
@@ -80,3 +94,7 @@ def email():
 
 def storage():
     return {"storage": _check_storage()}
+
+
+def amqp():
+    return {"amqp": _check_amqp_connections(settings.AMQP_CONNECTIONS)}
