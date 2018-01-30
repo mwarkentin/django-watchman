@@ -71,15 +71,15 @@ def status(request):
 
     if not checks:
         raise Http404(_('No checks found'))
-
-    return checks, 200 if ok else settings.WATCHMAN_ERROR_CODE, {WATCHMAN_VERSION_HEADER: __version__}
+    http_code = 200 if ok else settings.WATCHMAN_ERROR_CODE
+    return checks, http_code, {WATCHMAN_VERSION_HEADER: __version__}
 
 
 @non_atomic_requests
 def bare_status(request):
     checks, ok = run_checks(request)
-
-    return HttpResponse(status=200 if ok else settings.WATCHMAN_ERROR_CODE, content_type='text/plain')
+    http_code = 200 if ok else settings.WATCHMAN_ERROR_CODE
+    return HttpResponse(status=http_code, content_type='text/plain')
 
 
 def ping(request):

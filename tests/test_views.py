@@ -385,6 +385,24 @@ class TestBareStatus(unittest.TestCase):
         self.assertEqual(response.status_code, 503)
         self.assertEqual(response.content.decode(), '')
 
+    @patch('watchman.checks._check_databases')
+    def test_bare_status_default_error(self, patched_check_databases):
+        reload_settings()
+        # Fake a DB error, ensure we get our error code
+        patched_check_databases.return_value = [{
+            "foo": {
+                "ok": False,
+                "error": "Fake DB Error",
+                "stacktrace": "Fake DB Stack Trace",
+            },
+        }]
+        request = RequestFactory().get('/', data={
+            'check': 'watchman.checks.databases',
+        })
+        response = views.bare_status(request)
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response.content.decode(), '')
+
 
 class TestEmailCheck(DjangoTestCase):
     def setUp(self):
