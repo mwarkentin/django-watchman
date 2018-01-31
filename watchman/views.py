@@ -38,7 +38,7 @@ def _deprecation_warnings():
 def _optional_newrelic_ignore_transaction():
     if settings.WATCHMAN_NEWRELIC_IGNORE:
         try:
-            import newrelic
+            import newrelic.agent
             newrelic.agent.ignore_transaction(flag=True)
         except ImportError:
             warnings.warn("`WATCHMAN_NEWRELIC_IGNORE` is True but newrelic library could not be imported.")
