@@ -337,3 +337,4 @@ Instructions
 2. Visit watchman json endpoint in your browser: http://127.0.0.1:8000/watchman/
 3. Visit watchman dashboard in your browser: http://127.0.0.1:8000/watchman/dashboard/
 4. Visit watchman ping in your browser: http://127.0.0.1:8000/watchman/ping/
+5. Visit watchman bare status in your browser: http://127.0.0.1:8000/watchman/bare/
