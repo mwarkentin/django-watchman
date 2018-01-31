@@ -172,6 +172,17 @@ requests, you can call ping:
 It will return the text ``pong`` with a 200 status code. Calling this doesn't
 run any of the checks.
 
+Bare status view
+****************
+
+If you would like a "bare" status view (one that doesn't report any details,
+just ``HTTP 200`` if checks pass, and ``HTTP 500`` if any checks fail), you
+can use the ``bare_status`` view by putting the following into ``urls.py``::
+
+    import watchman.views
+    # ...
+    url(r'^status/?$', watchman.views.bare_status),
+
 Django management command
 *************************
 
@@ -326,3 +337,4 @@ Instructions
 2. Visit watchman json endpoint in your browser: http://127.0.0.1:8000/watchman/
 3. Visit watchman dashboard in your browser: http://127.0.0.1:8000/watchman/dashboard/
 4. Visit watchman ping in your browser: http://127.0.0.1:8000/watchman/ping/
+5. Visit watchman bare status in your browser: http://127.0.0.1:8000/watchman/bare/

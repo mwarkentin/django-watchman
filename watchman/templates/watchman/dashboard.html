@@ -50,10 +50,10 @@
             </tr>
             </thead>
             <tbody>
-            {% for type in checks %}
+            {% for type_name, type in checks.items %}
             {% for status in type.statuses %}
             <tr>
-                <td class="{% if type.ok %}success{% else %}{% if not status.ok %}danger{% else %}warning{% endif %}{# not status.ok #}{% endif %}{# type.ok #}">{{ type.type_singular|title }}</td>
+                <td class="{% if type.ok %}success{% else %}{% if not status.ok %}danger{% else %}warning{% endif %}{# not status.ok #}{% endif %}{# type.ok #}">{{ type_name|title }}</td>
                 <td class="{% if status.ok %}success{% else %}danger{% endif %}">{{ status.name }}</td>
 
                 {% if status.ok %}
@@ -64,7 +64,7 @@
                     {% trans "ERROR!" %}
 
                     <div class="btn-group btn-group-xs pull-right">
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}">{% trans "Traceback" %}</button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type_name }}{% if status.name %}-{{ status.name }}{% endif %}">{% trans "Traceback" %}</button>
                     </div>
                 </td>
                 {% endif %}{# status.ok #}
@@ -75,7 +75,7 @@
             <tr>
                 <td colspan="3">{% trans "No checks indicated." %}</td>
             </tr>
-            {% endfor %}{# for type in checks #}
+            {% endfor %}{# for type_name, type in checks.items #}
             </tbody>
         </table>
     </div><!-- .col -->
@@ -84,15 +84,15 @@
 
 
 {% block error_content %}
-{% for type in checks %}
+{% for type_name, type in checks.items %}
 {% for status in type.statuses %}
 {% if not status.ok %}
-<div class="modal fade" id="{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}" tabindex="-1" role="dialog" aria-labelledby="{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}-title">
+<div class="modal fade" id="{{ type_name }}{% if status.name %}-{{ status.name }}{% endif %}" tabindex="-1" role="dialog" aria-labelledby="{{ type_name }}{% if status.name %}-{{ status.name }}{% endif %}-title">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="{{ type.type }}{% if status.name %}-{{ status.name }}{% endif %}-title">{{ type.type|title }}{% if status.name %} - {{ status.name|title }}{% endif %}</h4>
+                <h4 class="modal-title" id="{{ type_name }}{% if status.name %}-{{ status.name }}{% endif %}-title">{{ type_name|title }}{% if status.name %} - {{ status.name|title }}{% endif %}</h4>
             </div><!-- class="modal-header" -->
             <div class="modal-body">
                 <h4><pre>{{ status.error }}</pre></h4>
@@ -105,7 +105,7 @@
     </div><!-- class="modal-dialog" -->
 </div><!-- class="modal fade" -->
 {% endif %}{# not status.ok #}
-{% endfor %}{# for type in checks #}
 {% endfor %}{# for status in type.statuses #}
+{% endfor %}{# for type_name, type in checks.items #}
 {% endblock %}{# error_content #}
 {% endblock %}{# content #}

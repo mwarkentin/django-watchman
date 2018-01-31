@@ -35,14 +35,11 @@ def _deprecation_warnings():
         warnings.warn("`WATCHMAN_TOKEN` setting is deprecated, use `WATCHMAN_TOKENS` instead. It will be removed in django-watchman 1.0", DeprecationWarning)
 
 
-@auth
-@json_view
-@non_atomic_requests
-def status(request):
+def run_checks(request):
     _deprecation_warnings()
 
-    response = {}
-    http_code = 200
+    checks = {}
+    ok = True
 
     check_list, skip_list = _get_check_params(request)
 
@@ -55,109 +52,102 @@ def status(request):
                     if type(_check[_type]) == dict:
                         result = _check[_type]
                         if not result['ok']:
-                            http_code = settings.WATCHMAN_ERROR_CODE
+                            ok = False
                     elif type(_check[_type]) == list:
                         for entry in _check[_type]:
                             for result in entry:
                                 if not entry[result]['ok']:
-                                    http_code = settings.WATCHMAN_ERROR_CODE
-            response.update(_check)
+                                    ok = False
+            checks.update(_check)
 
-    if len(response) == 0:
+    return checks, ok
+
+
+@auth
+@json_view
+@non_atomic_requests
+def status(request):
+    checks, ok = run_checks(request)
+
+    if not checks:
         raise Http404(_('No checks found'))
+    http_code = 200 if ok else settings.WATCHMAN_ERROR_CODE
+    return checks, http_code, {WATCHMAN_VERSION_HEADER: __version__}
 
-    return response, http_code, {WATCHMAN_VERSION_HEADER: __version__}
+
+@non_atomic_requests
+def bare_status(request):
+    checks, ok = run_checks(request)
+    http_code = 200 if ok else settings.WATCHMAN_ERROR_CODE
+    return HttpResponse(status=http_code, content_type='text/plain')
 
 
 def ping(request):
-    _deprecation_warnings()
-
     return HttpResponse('pong', content_type='text/plain')
 
 
 @auth
 @non_atomic_requests
 def dashboard(request):
-    _deprecation_warnings()
+    checks, overall_status = run_checks(request)
 
-    check_types = []
+    expanded_checks = {}
+    for key, value in checks.items():
+        if isinstance(value, dict):
+            # For some systems (eg: email, storage) value is a
+            # dictionary of status
+            #
+            # Example:
+            # {
+            #     'ok': True,  # Status
+            # }
+            #
+            # Example:
+            # {
+            #     'ok': False,  # Status
+            #     'error': "RuntimeError",
+            #     'stacktrace': "...",
+            # }
+            single_status = value.copy()
+            single_status['name'] = ''
+            expanded_check = {
+                'ok': value['ok'],
+                'statuses': [single_status],
+            }
+        else:
+            # For other systems (eg: cache, database) value is a
+            # list of dictionaries of dictionaries of statuses
+            #
+            # Example:
+            # [
+            #     {
+            #         'default': {  # Cache/database name
+            #             'ok': True,  # Status
+            #         }
+            #     },
+            #     {
+            #         'non-default': {  # Cache/database name
+            #             'ok': False,  # Status
+            #             'error': "RuntimeError",
+            #             'stacktrace': "...",
+            #         }
+            #     },
+            # ]
+            statuses = []
+            for outer_status in value:
+                for name, inner_status in outer_status.items():
+                    detail = inner_status.copy()
+                    detail['name'] = name
+                    statuses.append(detail)
 
-    check_list, skip_list = _get_check_params(request)
-
-    for check in get_checks(check_list=check_list, skip_list=skip_list):
-        if callable(check):
-            _check = check()
-
-            for _type in _check:
-                # For other systems (eg: email, storage) _check[_type] is a
-                # dictionary of status
-                #
-                # Example:
-                # {
-                #     'ok': True,  # Status
-                # }
-                #
-                # Example:
-                # {
-                #     'ok': False,  # Status
-                #     'error': "RuntimeError",
-                #     'stacktrace': "...",
-                # }
-                #
-                # For some systems (eg: cache, database) _check[_type] is a
-                # list of dictionaries of dictionaries of statuses
-                #
-                # Example:
-                # [
-                #     {
-                #         'default': {  # Cache/database name
-                #             'ok': True,  # Status
-                #         }
-                #     },
-                #     {
-                #         'non-default': {  # Cache/database name
-                #             'ok': False,  # Status
-                #             'error': "RuntimeError",
-                #             'stacktrace': "...",
-                #         }
-                #     },
-                # ]
-                #
-                statuses = []
-
-                if type(_check[_type]) == dict:
-                    result = _check[_type]
-                    statuses = [{
-                        'name': '',
-                        'ok': result['ok'],
-                        'error': '' if result['ok'] else result['error'],
-                        'stacktrace': '' if result['ok'] else result['stacktrace'],
-                    }]
-
-                    type_overall_status = _check[_type]['ok']
-
-                elif type(_check[_type]) == list:
-                    for result in _check[_type]:
-                        for name in result:
-                            statuses.append({
-                                'name': name,
-                                'ok': result[name]['ok'],
-                                'error': '' if result[name]['ok'] else result[name]['error'],
-                                'stacktrace': '' if result[name]['ok'] else result[name]['stacktrace'],
-                            })
-
-                    type_overall_status = all(s['ok'] for s in statuses)
-
-                check_types.append({
-                    'type': _type,
-                    'type_singular': _type[:-1] if _type.endswith('s') else _type,
-                    'ok': type_overall_status,
-                    'statuses': statuses})
-
-    overall_status = all(type_status['ok'] for type_status in check_types)
+            expanded_check = {
+                'ok': all(detail['ok'] for detail in statuses),
+                'statuses': statuses,
+            }
+        expanded_checks[key] = expanded_check
 
     response = render(request, 'watchman/dashboard.html', {
-        'checks': check_types,
+        'checks': expanded_checks,
         'overall_status': overall_status
     })
 
