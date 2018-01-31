@@ -35,6 +35,15 @@ def _deprecation_warnings():
         warnings.warn("`WATCHMAN_TOKEN` setting is deprecated, use `WATCHMAN_TOKENS` instead. It will be removed in django-watchman 1.0", DeprecationWarning)
 
 
+def _optional_newrelic_ignore_transaction():
+    if settings.WATCHMAN_NEWRELIC_IGNORE:
+        try:
+            import newrelic
+            newrelic.agent.ignore_transaction(flag=True)
+        except ImportError:
+            warnings.warn("`WATCHMAN_NEWRELIC_IGNORE` is True but newrelic library could not be imported.")
+
+
 @auth
 @json_view
 @non_atomic_requests
@@ -45,6 +54,8 @@ def status(request):
     http_code = 200
 
     check_list, skip_list = _get_check_params(request)
+
+    _optional_newrelic_ignore_transaction()
 
     for check in get_checks(check_list=check_list, skip_list=skip_list):
         if callable(check):
@@ -72,6 +83,8 @@ def status(request):
 def ping(request):
     _deprecation_warnings()
 
+    _optional_newrelic_ignore_transaction()
+
     return HttpResponse('pong', content_type='text/plain')
 
 
@@ -83,6 +96,8 @@ def dashboard(request):
     check_types = []
 
     check_list, skip_list = _get_check_params(request)
+
+    _optional_newrelic_ignore_transaction()
 
     for check in get_checks(check_list=check_list, skip_list=skip_list):
         if callable(check):

@@ -247,6 +247,17 @@ Here is a simple example that would log to the console::
 More information is available in the `Django documentation
 <https://docs.djangoproject.com/en/2.0/topics/logging/#configuring-logging]>`_.
 
+New Relic Instrumentation
+*************************
+
+If you're using New Relic and watchman is being often for instance health checks
+(such as an ELB on AWS), you will likely find your average transaction time in
+New Relic will be affected greatly.
+
+You can disable instrumentation for watchman by using the ``WATCHMAN_NEWRELIC_IGNORE`` setting::
+
+    WATCHMAN_NEWRELIC_IGNORE = True
+
 Available checks
 ----------------
 

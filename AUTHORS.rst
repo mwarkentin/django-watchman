@@ -23,3 +23,4 @@ Contributors
 * Daniel Widerin - https://github.com/saily
 * Ryan Wilson-Perkin - https://github.com/ryanwilsonperkin
 * David Hoffman - https://github.com/dhoffman34
+* Ryan Verner - https://github.com/xfxf

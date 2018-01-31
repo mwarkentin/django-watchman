@@ -15,6 +15,8 @@ WATCHMAN_EMAIL_HEADERS = getattr(settings, 'WATCHMAN_EMAIL_HEADERS', {})
 WATCHMAN_CACHES = getattr(settings, 'WATCHMAN_CACHES', settings.CACHES)
 WATCHMAN_DATABASES = getattr(settings, 'WATCHMAN_DATABASES', settings.DATABASES)
 
+WATCHMAN_NEWRELIC_IGNORE = getattr(settings, 'WATCHMAN_NEWRELIC_IGNORE', False)
+
 DEFAULT_CHECKS = (
     'watchman.checks.caches',
     'watchman.checks.databases',
