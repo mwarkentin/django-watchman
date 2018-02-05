@@ -3,14 +3,14 @@
 from __future__ import unicode_literals
 
 import uuid
-from django.conf import settings
-from django.core.cache import get_cache
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.mail import EmailMessage
 from django.db import connections
 
 from watchman.decorators import check
+from watchman import settings as watchman_settings
+from watchman import utils
 
 
 def _check_caches(caches):
@@ -22,7 +22,8 @@ def _check_cache(cache_name):
     key = 'django-watchman-{}'.format(uuid.uuid4())
     value = 'django-watchman-{}'.format(uuid.uuid4())
 
-    cache = get_cache(cache_name)
+    cache = utils.get_cache(cache_name)
+
     cache.set(key, value)
     cache.get(key)
     cache.delete(key)
@@ -42,12 +43,13 @@ def _check_database(database):
 @check
 def _check_email():
     headers = {"X-DJANGO-WATCHMAN": True}
+    headers.update(watchman_settings.WATCHMAN_EMAIL_HEADERS)
     email = EmailMessage(
         "django-watchman email check",
         "This is an automated test of the email system.",
-        "watchman@example.com",
-        ["to@example.com"],
-        headers=headers
+        watchman_settings.WATCHMAN_EMAIL_SENDER,
+        watchman_settings.WATCHMAN_EMAIL_RECIPIENTS,
+        headers=headers,
     )
     email.send()
     return {"ok": True}
@@ -56,7 +58,7 @@ def _check_email():
 @check
 def _check_storage():
     filename = 'django-watchman-{}.txt'.format(uuid.uuid4())
-    content = 'django-watchman test file'
+    content = b'django-watchman test file'
     path = default_storage.save(filename, ContentFile(content))
     default_storage.size(path)
     default_storage.open(path).read()
@@ -65,11 +67,11 @@ def _check_storage():
 
 
 def caches():
-    return {"caches": _check_caches(settings.CACHES)}
+    return {"caches": _check_caches(watchman_settings.WATCHMAN_CACHES)}
 
 
 def databases():
-    return {"databases": _check_databases(settings.DATABASES)}
+    return {"databases": _check_databases(watchman_settings.WATCHMAN_DATABASES)}
 
 
 def email():

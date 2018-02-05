@@ -1,21 +1,24 @@
-
-{% comment %}
-As the developer of this package, don't place anything here if you can help it
-since this allows developers to have interoperability between your template
-structure and their own.
-
-Example: Developer melding the 2SoD pattern to fit inside with another pattern::
-
-    {% extends "base.html" %}
-    {% load static %}
-
-    <!-- Their site uses old school block layout -->
-    {% block extra_js %}
-
-        <!-- Your package using 2SoD block layout -->
-        {% block javascript %}
-            <script src="{% static 'js/ninja.js' %}" type="text/javascript"></script>
-        {% endblock javascript %}
-
-    {% endblock extra_js %}
-{% endcomment %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css">
+        <style>
+        @media (min-width: 768px) {
+        .modal-dialog {
+            width: auto;
+            margin: 30px 30px;
+        }
+        }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            {% block content %}
+            {% endblock %}{# content #}
+        </div><!-- .container -->
+    </body>
+</html>

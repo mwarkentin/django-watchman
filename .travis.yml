@@ -1,21 +1,29 @@
-# Config file for automatic testing at travis-ci.org
-
+sudo: false
 language: python
 
 python:
   - "2.7"
+  - "3.4"
   - "3.5"
 
 env:
-  - DJANGO_VERSION=1.7.10
-  - DJANGO_VERSION=1.8.5
-  - DJANGO_VERSION=1.9b1
+  matrix:
+    - DJANGO_VERSION=1.7
+    - DJANGO_VERSION=1.8
+    - DJANGO_VERSION=1.9
+    - DJANGO_VERSION=1.10
 
-# command to install dependencies, e.g. pip install -r requirements.txt --use-mirrors
-install: pip install -r requirements-test.txt
+matrix:
+  exclude:
+    - python: "3.5"
+      env: DJANGO_VERSION=1.7
+
+install:
+  - pip install tox coveralls
 
 # command to run tests using coverage, e.g. python setup.py test
-script: coverage run --source watchman runtests.py
+script:
+  - tox -e py${TRAVIS_PYTHON_VERSION//./}-dj${DJANGO_VERSION//./},coverage
 
 # report coverage to coveralls.io
 after_success: coveralls

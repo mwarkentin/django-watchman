@@ -67,6 +67,12 @@ Quickstart
         "storage": {"ok": true}
     }
 
+Pycon Canada Presentation (10 minutes)
+--------------------------------------
+
+.. image:: http://snaps.michaelwarkentin.com.s3.amazonaws.com/Full-stack_Django_application_monitoring_with_django-watchman_Michael_Warkentin_-_YouTube_2015-11-27_17-56-52.jpg
+   :target: https://www.youtube.com/watch?v=iEgOCY7_zGI
+
 Features
 --------
 
@@ -79,11 +85,15 @@ representation of all of your watchman checks.
 Token based authentication
 **************************
 
-If you want to protect the status endpoint, you can add a ``WATCHMAN_TOKEN`` to
-your settings. When this setting is added, you must pass that value in as the
-``watchman-token`` **GET** parameter::
+If you want to protect the status endpoint, you can use the ``WATCHMAN_TOKENS`` setting.
+This is a comma-separated list of tokens.
+When this setting is added, you must pass one of the tokens in as the ``watchman-token`` **GET** parameter::
 
     GET http://127.0.0.1:8000/watchman/?watchman-token=:token
+
+Or by setting the ``Authorization: WATCHMAN-TOKEN`` header on the request::
+
+    curl -X GET -H "Authorization: WATCHMAN-TOKEN Token=\":token\"" http://127.0.0.1:8000/watchman/
 
 If you want to change the token name, you can set the ``WATCHMAN_TOKEN_NAME``.
 The value of this setting will be the **GET** parameter that you must pass in::
@@ -91,6 +101,9 @@ The value of this setting will be the **GET** parameter that you must pass in::
     WATCHMAN_TOKEN_NAME = 'custom-token-name'
 
     GET http://127.0.0.1:8000/watchman/?custom-token-name=:token
+
+**DEPRECATION WARNING**: ``WATCHMAN_TOKEN`` was replaced by the ``WATCHMAN_TOKENS`` setting to support multiple authentication tokens in django-watchman ``0.11``.
+It will continue to work until it's removed in django-watchman ``1.0``.
 
 Custom authentication/authorization
 ***********************************
@@ -102,8 +115,8 @@ to ``watchman.decorators.token_required``::
 
     WATCHMAN_AUTH_DECORATOR = 'django.contrib.admin.views.decorators.staff_member_required'
 
-Note that the ``token_required`` decorator does not protect a view unless the
-``WATCHMAN_TOKEN`` is set in settings.
+Note that the ``token_required`` decorator does not protect a view unless
+``WATCHMAN_TOKENS`` is set in settings.
 
 Custom checks
 *************
@@ -144,6 +157,37 @@ in the request URL. Only the checks in ``WATCHMAN_CHECKS`` which are not in the
 querystring should be run, eg::
 
     curl -XGET http://127.0.0.1:8080/watchman/?skip=watchman.checks.email
+
+Check a subset of databases or caches
+*************************************
+
+If your application has a large number of databases or caches configured,
+watchman may open too many connections as it checks each database or cache.
+
+You can set the ``WATCHMAN_DATABASES`` or ``WATCHMAN_CACHES`` settings in order
+to override the default set of databases and caches to be monitored.
+
+Ping
+****
+
+If you want to simply check that your application is running and able to handle
+requests, you can call ping:
+
+    GET http://127.0.0.1:8000/watchman/ping/
+
+It will return the text ``pong`` with a 200 status code. Calling this doesn't
+run any of the checks.
+
+Bare status view
+****************
+
+If you would like a "bare" status view (one that doesn't report any details,
+just ``HTTP 200`` if checks pass, and ``HTTP 500`` if any checks fail), you
+can use the ``bare_status`` view by putting the following into ``urls.py``::
+
+    import watchman.views
+    # ...
+    url(r'^status/?$', watchman.views.bare_status),
 
 Django management command
 *************************
@@ -197,11 +241,39 @@ setting::
 Custom response code
 ********************
 
-By default, watchman will return a ``200`` HTTP response code, even if there's a
+By default, watchman will return a ``500`` HTTP response code, even if there's a
 failing check. You can specify a different response code for failing checks
 using the ``WATCHMAN_ERROR_CODE`` setting::
 
-    WATCHMAN_ERROR_CODE = 500
+    WATCHMAN_ERROR_CODE = 200
+
+Logging
+*******
+
+watchman includes log messages using a logger called ``watchman``.
+You can configure this by configuring the ``LOGGING`` section of your Django
+settings file.
+
+Here is a simple example that would log to the console::
+
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'loggers': {
+            'watchman': {
+                'handlers': ['console'],
+                'level': 'DEBUG',
+            },
+        },
+    }
+
+More information is available in the `Django documentation
+<https://docs.djangoproject.com/en/2.0/topics/logging/#configuring-logging]>`_.
 
 Available checks
 ----------------
@@ -234,6 +306,12 @@ this check is **not enabled** by default.
 For reference, if you were using Mandrill, and hitting your watchman endpoint
 once per minute, this would cost you ~$5.60/month.
 
+**Custom Settings**
+
+* ``WATCHMAN_EMAIL_SENDER`` (default: ``watchman@example.com``): Specify an email to be the sender of the test email
+* ``WATCHMAN_EMAIL_RECIPIENTS`` (default: ``[to@example.com]``): Specify a list of email addresses to send the test email
+* ``WATCHMAN_EMAIL_HEADERS`` (default: ``{}``): Specify a dict of custom headers to be added to the test email
+
 storage
 *******
 
@@ -258,25 +336,22 @@ Currently there is only one "paid" check - ``watchman.checks.email``. You can
 enable it by setting the ``WATCHMAN_ENABLE_PAID_CHECKS`` to ``True``, or by
 overriding the ``WATCHMAN_CHECKS`` setting.
 
-Trying it out with Vagrant
+Trying it out with Docker
 --------------------------
 
-A sample project is available along with a Vagrantfile to make it easy to try
+A sample project is available along with a Dockerfile to make it easy to try
 out django-watchman.
 
 Requirements
 ************
 
-* `Vagrant <https://www.vagrantup.com/>`_
-* `Virtualbox <https://www.virtualbox.org/>`_
-* `Ansible <http://www.ansible.com/>`_
+* `Docker <https://www.docker.com/get-docker>`
 
 Instructions
 ************
 
-1. Launch vagrant box: ``vagrant up``
-2. SSH into vagrant: ``vagrant ssh``
-3. Activate the virtualenv: ``workon watchman``
-4. Launch the development server: ``python manage.py runserver 0.0.0.0:8000``
-5. Visit watchman json endpoint in your browser: http://127.0.0.1:8000/watchman/
-6. Visit watchman dashboard in your browser: http://127.0.0.1:8000/watchman/dashboard/
+1. Build and run the Docker image with the current local code: ``make run``
+2. Visit watchman json endpoint in your browser: http://127.0.0.1:8000/watchman/
+3. Visit watchman dashboard in your browser: http://127.0.0.1:8000/watchman/dashboard/
+4. Visit watchman ping in your browser: http://127.0.0.1:8000/watchman/ping/
+5. Visit watchman bare status in your browser: http://127.0.0.1:8000/watchman/bare/

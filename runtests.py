@@ -1,7 +1,13 @@
 import sys
+import traceback
+
 
 try:
     from django.conf import settings
+
+    from pymysql import install_as_MySQLdb
+
+    install_as_MySQLdb()
 
     settings.configure(
         DEBUG=True,
@@ -9,8 +15,14 @@ try:
         DATABASES={
             "default": {
                 "ENGINE": "django.db.backends.sqlite3",
-            }
+            },
         },
+        TEMPLATES=[
+            {
+                'BACKEND': 'django.template.backends.django.DjangoTemplates',
+                'APP_DIRS': True,
+            },
+        ],
         ROOT_URLCONF="watchman.urls",
         INSTALLED_APPS=[
             "django.contrib.auth",
@@ -24,7 +36,8 @@ try:
 
     from django_nose import NoseTestSuiteRunner
 except ImportError:
-    raise ImportError("To fix this error, run: pip install -r requirements-test.txt")
+    traceback.print_exc()
+    raise RuntimeError("To fix this error, run: pip install django -r requirements-test.txt")
 
 
 def run_tests(*test_args):
