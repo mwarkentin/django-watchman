@@ -172,6 +172,17 @@ requests, you can call ping:
 It will return the text ``pong`` with a 200 status code. Calling this doesn't
 run any of the checks.
 
+Bare status view
+****************
+
+If you would like a "bare" status view (one that doesn't report any details,
+just ``HTTP 200`` if checks pass, and ``HTTP 500`` if any checks fail), you
+can use the ``bare_status`` view by putting the following into ``urls.py``::
+
+    import watchman.views
+    # ...
+    url(r'^status/?$', watchman.views.bare_status),
+
 Django management command
 *************************
 
@@ -247,18 +258,23 @@ Here is a simple example that would log to the console::
 More information is available in the `Django documentation
 <https://docs.djangoproject.com/en/2.0/topics/logging/#configuring-logging]>`_.
 
-Instrumentation (i.e. New Relic)
-********************************
+APM (i.e. New Relic)
+********************
 
-If you're using an instrumentation suite and watchman is being often for instance health checks
-(such as an ELB on AWS), you will likely find some stats based on averages will be affected
-(average transaction time, apdex, etc):
+If you're using APM and watchman is being often hit for health checks (such as an ELB on
+AWS), you will find some stats based on averages will be affected (average transaction
+time, apdex, etc):
 
-You can disable instrumentation for watchman by using the ``WATCHMAN_DISABLE_APM`` setting::
+You can disable APM instrumentation for watchman by using the ``WATCHMAN_DISABLE_APM``
+setting::
 
     WATCHMAN_DISABLE_APM = True
 
-This currently only supports the New Relic agent.
+This currently supports the following agents:
+
+ * New Relic
+
+Please open an issue if there's another APM you use which is being affected.
 
 
 Available checks
@@ -340,3 +356,4 @@ Instructions
 2. Visit watchman json endpoint in your browser: http://127.0.0.1:8000/watchman/
 3. Visit watchman dashboard in your browser: http://127.0.0.1:8000/watchman/dashboard/
 4. Visit watchman ping in your browser: http://127.0.0.1:8000/watchman/ping/
+5. Visit watchman bare status in your browser: http://127.0.0.1:8000/watchman/bare/

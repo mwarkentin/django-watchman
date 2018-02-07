@@ -4,6 +4,12 @@
 History
 =======
 
+0.15.0 (Unreleased)
+-------------------
+
+* [`#114 <https://github.com/mwarkentin/django-watchman/pull/114>`_] Add "bare" status view (@jamesmallen)
+* [`#115 <https://github.com/mwarkentin/django-watchman/pull/115>`_] Adds WATCHMAN_DISABLE_APM option (@xfxf)
+
 0.14.0 (2018-01-09)
 -------------------
 
