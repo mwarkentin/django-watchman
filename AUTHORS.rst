@@ -24,3 +24,4 @@ Contributors
 * Ryan Wilson-Perkin - https://github.com/ryanwilsonperkin
 * David Hoffman - https://github.com/dhoffman34
 * James M. Allen - https://github.com/jamesmallen
+* Ryan Verner - https://github.com/xfxf

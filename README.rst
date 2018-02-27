@@ -275,6 +275,25 @@ Here is a simple example that would log to the console::
 More information is available in the `Django documentation
 <https://docs.djangoproject.com/en/2.0/topics/logging/#configuring-logging]>`_.
 
+APM (i.e. New Relic)
+********************
+
+If you're using APM and watchman is being often hit for health checks (such as an ELB on
+AWS), you will find some stats based on averages will be affected (average transaction
+time, apdex, etc):
+
+You can disable APM instrumentation for watchman by using the ``WATCHMAN_DISABLE_APM``
+setting::
+
+    WATCHMAN_DISABLE_APM = True
+
+This currently supports the following agents:
+
+* New Relic
+
+Please open an issue if there's another APM you use which is being affected.
+
+
 Available checks
 ----------------
 

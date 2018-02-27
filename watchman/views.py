@@ -34,8 +34,20 @@ def _deprecation_warnings():
         warnings.warn("`WATCHMAN_TOKEN` setting is deprecated, use `WATCHMAN_TOKENS` instead. It will be removed in django-watchman 1.0", DeprecationWarning)
 
 
+def _disable_apm():
+    # New Relic
+    try:
+        import newrelic.agent
+        newrelic.agent.ignore_transaction(flag=True)
+    except ImportError:
+        pass
+
+
 def run_checks(request):
     _deprecation_warnings()
+
+    if settings.WATCHMAN_DISABLE_APM:
+        _disable_apm()
 
     checks = {}
     ok = True
