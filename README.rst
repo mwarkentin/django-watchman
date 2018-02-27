@@ -76,6 +76,12 @@ Pycon Canada Presentation (10 minutes)
 Features
 --------
 
+Human-friendly dashboard
+************************
+
+Visit ``http://127.0.0.1:8000/watchman/dashboard/`` to get a human-friendly HTML
+representation of all of your watchman checks.
+
 Token based authentication
 **************************
 
@@ -220,6 +226,17 @@ python module paths::
 Use ``-h`` to see a full list of options::
 
     python manage.py watchman -h
+
+X-Watchman-Version response header
+**********************************
+
+Watchman can return the version of watchman which is running to help you keep
+track of whether or not your sites are using an up-to-date version. This is
+disabled by default to prevent any unintended information leakage for websites
+without authentication. To enable, update the ``EXPOSE_WATCHMAN_VERSION``
+setting::
+
+    EXPOSE_WATCHMAN_VERSION = True
 
 Custom response code
 ********************

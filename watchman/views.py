@@ -8,8 +8,7 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
 from jsonview.decorators import json_view
-from watchman import settings
-from watchman import __version__
+from watchman import __version__, settings
 from watchman.decorators import auth
 from watchman.utils import get_checks
 
@@ -83,9 +82,14 @@ def status(request):
 
     if not checks:
         raise Http404(_('No checks found'))
-    http_code = 200 if ok else settings.WATCHMAN_ERROR_CODE
-    return checks, http_code, {WATCHMAN_VERSION_HEADER: __version__}
 
+    http_code = 200 if ok else settings.WATCHMAN_ERROR_CODE
+
+    response_headers = {}
+    if settings.EXPOSE_WATCHMAN_VERSION:
+        response_headers[WATCHMAN_VERSION_HEADER] = __version__
+
+    return checks, http_code, response_headers
 
 @non_atomic_requests
 def bare_status(request):
@@ -160,8 +164,12 @@ def dashboard(request):
 
     response = render(request, 'watchman/dashboard.html', {
         'checks': expanded_checks,
-        'overall_status': overall_status
+        'overall_status': overall_status,
+        'watchman_version': __version__,
+        'expose_watchman_version': settings.EXPOSE_WATCHMAN_VERSION,
     })
 
-    response[WATCHMAN_VERSION_HEADER] = __version__
+    if settings.EXPOSE_WATCHMAN_VERSION:
+        response[WATCHMAN_VERSION_HEADER] = __version__
+
     return response

@@ -35,12 +35,6 @@
 
 <div class="row">
     <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
-        <hr />
-    </div><!-- .col -->
-</div><!-- .row -->
-
-<div class="row">
-    <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
         <table class="table table-bordered table-hover">
             <thead>
             <tr>
@@ -82,7 +76,6 @@
 </div><!-- .row -->
 {% endblock %}{# status_content #}
 
-
 {% block error_content %}
 {% for type_name, type in checks.items %}
 {% for status in type.statuses %}
@@ -108,4 +101,13 @@
 {% endfor %}{# for status in type.statuses #}
 {% endfor %}{# for type_name, type in checks.items #}
 {% endblock %}{# error_content #}
+
+{% if expose_watchman_version %}
+<div class="row">
+    <div class="col-xs-12 col-sm-offset-1 col-sm-10 col-md-offset-2 col-md-8 col-lg-offset-3 col-lg-6">
+        <p>Watchman version: <a href="https://github.com/mwarkentin/django-watchman/releases/tag/{{ watchman_version }}">{{ watchman_version }}</a></p>
+    </div><!-- .col -->
+</div><!-- .row -->
+{% endif %}
+
 {% endblock %}{# content #}

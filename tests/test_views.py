@@ -177,6 +177,17 @@ class TestWatchman(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
 
     @override_settings(WATCHMAN_TOKEN='ABCDE')
+    def test_version_header_not_included_when_token_auth_fails(self):
+        # Have to manually reload settings here because override_settings
+        # happens after self.setUp(), but before self.tearDown()
+        reload_settings()
+        request = RequestFactory().get('/')
+
+        response = views.status(request)
+        self.assertEqual(response.status_code, 403)
+        self.assertFalse(response.has_header('X-Watchman-Version'))
+
+    @override_settings(WATCHMAN_TOKEN='ABCDE')
     @override_settings(WATCHMAN_AUTH_DECORATOR='watchman.decorators.token_required')
     def test_login_not_required_with_authorization_header(self):
         # Have to manually reload settings here because override_settings
@@ -243,7 +254,16 @@ class TestWatchman(unittest.TestCase):
         response = views.status(request)
         self.assertEqual(response.status_code, 200)
 
+    def test_response_version_header_missing_by_default(self):
+        request = RequestFactory().get('/')
+        response = views.status(request)
+        self.assertFalse(response.has_header('X-Watchman-Version'))
+
+    @override_settings(EXPOSE_WATCHMAN_VERSION=True)
     def test_response_version_header(self):
+        # Have to manually reload settings here because override_settings
+        # happens after self.setUp()
+        reload_settings()
         request = RequestFactory().get('/')
         response = views.status(request)
         self.assertTrue(response.has_header('X-Watchman-Version'))
@@ -336,10 +356,21 @@ class TestWatchmanDashboard(unittest.TestCase):
         response = views.dashboard(request)
         self.assertEqual(response.status_code, 200)
 
-    def test_response_version_header(self):
+    def test_response_version_header_and_html_missing_by_default(self):
+        request = RequestFactory().get('/')
+        response = views.dashboard(request)
+        self.assertFalse(response.has_header('X-Watchman-Version'))
+        self.assertNotIn('Watchman version:', response.content.decode())
+
+    @override_settings(EXPOSE_WATCHMAN_VERSION=True)
+    def test_response_has_version_header_and_html(self):
+        # Have to manually reload settings here because override_settings
+        # happens after self.setUp()
+        reload_settings()
         request = RequestFactory().get('/')
         response = views.dashboard(request)
         self.assertTrue(response.has_header('X-Watchman-Version'))
+        self.assertIn('Watchman version:', response.content.decode())
 
 
 class TestPing(unittest.TestCase):
