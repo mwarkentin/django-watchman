@@ -233,10 +233,10 @@ X-Watchman-Version response header
 Watchman can return the version of watchman which is running to help you keep
 track of whether or not your sites are using an up-to-date version. This is
 disabled by default to prevent any unintended information leakage for websites
-without authentication. To enable, update the ``WATCHMAN_VERSION_HEADER``
+without authentication. To enable, update the ``EXPOSE_WATCHMAN_VERSION``
 setting::
 
-    WATCHMAN_VERSION_HEADER = True
+    EXPOSE_WATCHMAN_VERSION = True
 
 Custom response code
 ********************

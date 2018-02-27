@@ -82,11 +82,11 @@ def status(request):
 
     if not checks:
         raise Http404(_('No checks found'))
-    
+
     http_code = 200 if ok else settings.WATCHMAN_ERROR_CODE
 
     response_headers = {}
-    if settings.WATCHMAN_VERSION_HEADER:
+    if settings.EXPOSE_WATCHMAN_VERSION:
         response_headers[WATCHMAN_VERSION_HEADER] = __version__
 
     return checks, http_code, response_headers
@@ -164,10 +164,12 @@ def dashboard(request):
 
     response = render(request, 'watchman/dashboard.html', {
         'checks': expanded_checks,
-        'overall_status': overall_status
+        'overall_status': overall_status,
+        'watchman_version': __version__,
+        'expose_watchman_version': settings.EXPOSE_WATCHMAN_VERSION,
     })
 
-    if settings.WATCHMAN_VERSION_HEADER:
+    if settings.EXPOSE_WATCHMAN_VERSION:
         response[WATCHMAN_VERSION_HEADER] = __version__
 
     return response

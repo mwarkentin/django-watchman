@@ -27,6 +27,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# Watchman configuration
+
+EXPOSE_WATCHMAN_VERSION = True
+
 
 # Application definition
 
