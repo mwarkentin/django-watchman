@@ -4,7 +4,7 @@
 History
 =======
 
-0.15.0 (Unreleased)
+0.15.0 (2018-02-27)
 -------------------
 
 * [`#114 <https://github.com/mwarkentin/django-watchman/pull/114>`_] Add "bare" status view (@jamesmallen)
