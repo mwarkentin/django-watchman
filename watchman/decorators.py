@@ -110,6 +110,7 @@ def token_required(view_func):
 
     return _wrapped_view
 
+
 if settings.WATCHMAN_AUTH_DECORATOR is None:
     def auth(view_func):
         @csrf_exempt

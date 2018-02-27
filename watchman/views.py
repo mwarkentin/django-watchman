@@ -91,6 +91,7 @@ def status(request):
 
     return checks, http_code, response_headers
 
+
 @non_atomic_requests
 def bare_status(request):
     checks, ok = run_checks(request)
