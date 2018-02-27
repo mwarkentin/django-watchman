@@ -360,7 +360,7 @@ class TestWatchmanDashboard(unittest.TestCase):
         request = RequestFactory().get('/')
         response = views.dashboard(request)
         self.assertFalse(response.has_header('X-Watchman-Version'))
-        self.assertNotIn('Watchman version:', response.content)
+        self.assertNotIn('Watchman version:', response.content.decode())
 
     @override_settings(EXPOSE_WATCHMAN_VERSION=True)
     def test_response_has_version_header_and_html(self):
@@ -370,7 +370,7 @@ class TestWatchmanDashboard(unittest.TestCase):
         request = RequestFactory().get('/')
         response = views.dashboard(request)
         self.assertTrue(response.has_header('X-Watchman-Version'))
-        self.assertIn('Watchman version:', response.content)
+        self.assertIn('Watchman version:', response.content.decode())
 
 
 class TestPing(unittest.TestCase):
