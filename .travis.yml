@@ -2,17 +2,17 @@ sudo: false
 language: python
 
 python:
-  - "2.7"
-  - "3.5"
   - "3.6"
+  - "3.5"
+  - "2.7"
 
 env:
   matrix:
-    - DJANGO_VERSION=1.8
-    - DJANGO_VERSION=1.9
-    - DJANGO_VERSION=1.10
-    - DJANGO_VERSION=1.11
     - DJANGO_VERSION=2.0
+    - DJANGO_VERSION=1.11
+    - DJANGO_VERSION=1.10
+    - DJANGO_VERSION=1.9
+    - DJANGO_VERSION=1.8
 
 matrix:
   exclude:
@@ -34,7 +34,7 @@ notifications:
 
 jobs:
   include:
-    deploy:
+    - stage: deploy
       provider: pypi
       user: mwarkentin
       password:
