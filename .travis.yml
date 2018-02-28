@@ -36,7 +36,7 @@ deploy:
   provider: pypi
   user: mwarkentin
   password:
-    secure: "nCd8+TIoZjsBw6b7w2T/EQduRL63f6aKdzdg2xR0tw2hdoByCmBVElbZlyuIbYkvg8FTVqnV4YnOoad4+Kg1pcqRbIa5YfpZTPv6IELXgvmCOZDlIoU1opV6By8RpIqu5NGXfoOcFbTmj8AfFAKkga1fwtUUDWBpl3VgTLAfcVI="
+    secure: "cQtAP8fMu+KzfBKG3ibTTXmDGZuz/FBp8RrLI8ddMGV4Jj5ElZLsvbqU43fiHbtVPV/uALDPF76WNGlpRH1P4w9m4XrFNCvkrnjtwIk7NZWi7uubWZcqQk9VE7MTP+i2IYrtNlGmlq1dbdJZcwS0mdzJcAAhAaP830Ekmqws9xE="
   distributions: "sdist bdist_wheel"
   on:
     tags: true
