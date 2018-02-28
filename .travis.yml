@@ -3,20 +3,16 @@ language: python
 
 python:
   - "2.7"
-  - "3.4"
   - "3.5"
+  - "3.6"
 
 env:
   matrix:
-    - DJANGO_VERSION=1.7
     - DJANGO_VERSION=1.8
     - DJANGO_VERSION=1.9
     - DJANGO_VERSION=1.10
-
-matrix:
-  exclude:
-    - python: "3.5"
-      env: DJANGO_VERSION=1.7
+    - DJANGO_VERSION=1.11
+    - DJANGO_VERSION=2.0
 
 install:
   - pip install tox coveralls
@@ -30,3 +26,12 @@ after_success: coveralls
 
 notifications:
   slack: tobalabs:XPt5OlsKuFGgIQZp0DpNXBUl
+
+deploy:
+  provider: pypi
+  user: mwarkentin
+  password:
+    secure: "nCd8+TIoZjsBw6b7w2T/EQduRL63f6aKdzdg2xR0tw2hdoByCmBVElbZlyuIbYkvg8FTVqnV4YnOoad4+Kg1pcqRbIa5YfpZTPv6IELXgvmCOZDlIoU1opV6By8RpIqu5NGXfoOcFbTmj8AfFAKkga1fwtUUDWBpl3VgTLAfcVI="
+  distributions: "sdist bdist_wheel"
+  on:
+    tags: true
