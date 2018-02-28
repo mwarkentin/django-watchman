@@ -32,11 +32,13 @@ after_success: coveralls
 notifications:
   slack: tobalabs:XPt5OlsKuFGgIQZp0DpNXBUl
 
-deploy:
-  provider: pypi
-  user: mwarkentin
-  password:
-    secure: "cQtAP8fMu+KzfBKG3ibTTXmDGZuz/FBp8RrLI8ddMGV4Jj5ElZLsvbqU43fiHbtVPV/uALDPF76WNGlpRH1P4w9m4XrFNCvkrnjtwIk7NZWi7uubWZcqQk9VE7MTP+i2IYrtNlGmlq1dbdJZcwS0mdzJcAAhAaP830Ekmqws9xE="
-  distributions: "sdist bdist_wheel"
-  on:
-    tags: true
+jobs:
+  include:
+    deploy:
+      provider: pypi
+      user: mwarkentin
+      password:
+        secure: "cQtAP8fMu+KzfBKG3ibTTXmDGZuz/FBp8RrLI8ddMGV4Jj5ElZLsvbqU43fiHbtVPV/uALDPF76WNGlpRH1P4w9m4XrFNCvkrnjtwIk7NZWi7uubWZcqQk9VE7MTP+i2IYrtNlGmlq1dbdJZcwS0mdzJcAAhAaP830Ekmqws9xE="
+      distributions: "sdist bdist_wheel"
+      on:
+        tags: true
