@@ -4,10 +4,9 @@ from __future__ import unicode_literals
 import warnings
 
 from django.db.transaction import non_atomic_requests
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils.translation import ugettext as _
-from jsonview.decorators import json_view
 from watchman import __version__, settings
 from watchman.decorators import auth
 from watchman.utils import get_checks
@@ -75,21 +74,25 @@ def run_checks(request):
 
 
 @auth
-@json_view
 @non_atomic_requests
 def status(request):
     checks, ok = run_checks(request)
 
-    if not checks:
-        raise Http404(_('No checks found'))
+    if checks:
+        http_code = 200 if ok else settings.WATCHMAN_ERROR_CODE
+    else:
+        checks = {
+            'error': 404,
+            'message': _('No checks found'),
+        }
+        http_code = 404
 
-    http_code = 200 if ok else settings.WATCHMAN_ERROR_CODE
+    response = JsonResponse(checks, status=http_code)
 
-    response_headers = {}
     if settings.EXPOSE_WATCHMAN_VERSION:
-        response_headers[WATCHMAN_VERSION_HEADER] = __version__
+        response[WATCHMAN_VERSION_HEADER] = __version__
 
-    return checks, http_code, response_headers
+    return response
 
 
 @non_atomic_requests
