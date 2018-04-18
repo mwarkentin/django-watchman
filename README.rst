@@ -1,3 +1,6 @@
+.. image:: logo/vertical.svg
+    :align: center
+   
 =============================
 django-watchman
 =============================
