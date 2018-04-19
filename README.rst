@@ -1,3 +1,6 @@
+.. image:: logo/vertical.png
+    :align: right
+   
 =============================
 django-watchman
 =============================
