@@ -1,5 +1,5 @@
-.. image:: logo/vertical.svg
-    :align: center
+.. image:: logo/vertical.png
+    :align: right
    
 =============================
 django-watchman
