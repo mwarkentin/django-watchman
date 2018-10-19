@@ -129,6 +129,13 @@ the ``WATCHMAN_CHECKS`` setting. In ``settings.py``::
         'another.module.path.to.callable',
     )
 
+You can also import the watchman.constants to include the DEFAULT_CHECKS and PAID_CHECKS in your ``settings.py``::
+
+   from watchman import constants as watchman_constants
+
+   WATCHMAN_CHECKS = watchman_constants.DEFAULT_CHECKS + ('module.path.to.callable', )
+
+
 Checks take no arguments, and must return a ``dict`` whose keys are applied to the JSON response. Use the ``watchman.decorators.check`` decorator to capture exceptions::
 
     from watchman.decorators import check

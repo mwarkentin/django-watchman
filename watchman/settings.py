@@ -1,4 +1,5 @@
 from django.conf import settings
+from watchman.constants import DEFAULT_CHECKS, PAID_CHECKS
 
 # TODO: these should not be module level (https://github.com/mwarkentin/django-watchman/issues/13)
 WATCHMAN_ENABLE_PAID_CHECKS = getattr(settings, 'WATCHMAN_ENABLE_PAID_CHECKS', False)
@@ -16,15 +17,6 @@ WATCHMAN_CACHES = getattr(settings, 'WATCHMAN_CACHES', settings.CACHES)
 WATCHMAN_DATABASES = getattr(settings, 'WATCHMAN_DATABASES', settings.DATABASES)
 
 WATCHMAN_DISABLE_APM = getattr(settings, 'WATCHMAN_DISABLE_APM', False)
-
-DEFAULT_CHECKS = (
-    'watchman.checks.caches',
-    'watchman.checks.databases',
-    'watchman.checks.storage',
-)
-PAID_CHECKS = (
-    'watchman.checks.email',
-)
 
 if WATCHMAN_ENABLE_PAID_CHECKS:
     DEFAULT_CHECKS = DEFAULT_CHECKS + PAID_CHECKS
