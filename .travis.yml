@@ -36,6 +36,7 @@ notifications:
 jobs:
   include:
     - stage: pypi release
+      if: tag IS present
       python: "3.6"
       script: echo "Deploying to pypi ..."
       deploy:
