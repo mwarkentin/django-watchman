@@ -1,4 +1,4 @@
-django<1.9
+django<2.0,>=1.11
 
 # django-watchman
 -e /app
