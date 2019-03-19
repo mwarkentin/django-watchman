@@ -4,6 +4,12 @@
 History
 =======
 
+0.16.0 (2019-03-19)
+-------------------
+
+* [`#131 <https://github.com/mwarkentin/django-watchman/pull/131>`_] Make watchman constants importable (@jonespm)
+* [`#134 <https://github.com/mwarkentin/django-watchman/pull/134>`_] Update Django/Python versions & clean up sample site Docker (@JayH5)
+
 0.15.0 (2018-02-27)
 -------------------
 
