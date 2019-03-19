@@ -37,7 +37,7 @@ jobs:
   include:
     - stage: pypi release
       if: tag IS present
-      python: "3.6"
+      python: "3.7"
       script: echo "Deploying to pypi ..."
       deploy:
         provider: pypi
