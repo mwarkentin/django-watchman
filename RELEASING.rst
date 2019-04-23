@@ -10,6 +10,7 @@ When the release is ready to go:
 * Bump version in ``watchman/__init__.py``
 * Tag code: ``git tag 1.0.0``
 * Push tag: ``git push origin 1.0.0``
+* Create a release from the tag on Github
 
 Travis will run the full test suite and deploy to pypi in a separate stage if everything passes.
 
