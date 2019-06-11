@@ -100,6 +100,8 @@ def bare_status(request):
 
 
 def ping(request):
+    if settings.WATCHMAN_DISABLE_APM:
+        _disable_apm()
     return HttpResponse('pong', content_type='text/plain')
 
 
