@@ -4,6 +4,11 @@
 History
 =======
 
+0.17.0 (2019-06-14)
+-------------------
+
+* [`#141 <https://github.com/mwarkentin/django-watchman/pull/141>`_] Disable APM monitoring on ``ping`` endpoint if ``settings.WATCHMAN_DISABLE_APM`` is configured (@JBKahn)
+
 0.16.0 (2019-03-19)
 -------------------
 
