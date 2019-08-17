@@ -41,6 +41,13 @@ def _disable_apm():
         newrelic.agent.ignore_transaction(flag=True)
     except ImportError:
         pass
+    # Datadog
+    try:
+        from ddtrace import tracer
+        from ddtrace.constants import MANUAL_DROP_KEY
+        tracer.current_span().set_tag(MANUAL_DROP_KEY)
+    except ImportError:
+        pass
 
 
 def run_checks(request):
