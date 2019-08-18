@@ -46,7 +46,7 @@ def _disable_apm():
         from ddtrace import tracer
         from ddtrace.constants import MANUAL_DROP_KEY
         tracer.current_span().set_tag(MANUAL_DROP_KEY)
-    except ImportError:
+    except (AttributeError, ImportError):
         pass
 
 
