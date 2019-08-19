@@ -2,7 +2,7 @@
 Releasing
 =========
 
-Releases are created via Travis or uploaded locally using `twine <https://github.com/pypa/twine]>`_.
+Releases are created via Travis or uploaded locally using `twine <https://github.com/pypa/twine>`_.
 
 When the release is ready to go:
 
@@ -17,8 +17,8 @@ Travis will run the full test suite and deploy to pypi in a separate stage if ev
 Local fallback
 ~~~~~~~~~~~~~~
 
-If Travis isn't available or working for releases for some reason, you can use `twine <https://github.com/pypa/twine]>`_ to upload the release.
+If Travis isn't available or working for releases for some reason, you can use `twine`_ to upload the release.
 
-* Install and configure `twine <https://github.com/pypa/twine]>`_
+* Install and configure `twine`_
 * Check dist locally: ``make dist``
 * Deploy release: ``make release``
