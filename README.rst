@@ -296,6 +296,8 @@ setting::
 
 This currently supports the following agents:
 
+* Datadog
+
 * New Relic
 
 Please open an issue if there's another APM you use which is being affected.

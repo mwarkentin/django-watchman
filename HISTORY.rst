@@ -4,6 +4,11 @@
 History
 =======
 
+0.18.0 (2019-08-19)
+-------------------
+
+* [`https://github.com/mwarkentin/django-watchman/pull/142`_] Disable APM monitoring, add support for Datadog (@robatwave)
+
 0.17.0 (2019-06-14)
 -------------------
 
