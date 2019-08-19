@@ -2,7 +2,7 @@
 Releasing
 =========
 
-Releases are created via Travis or uploaded locally using `twine <https://github.com/pypa/twine]>`_.
+Releases are created via Travis or uploaded locally using `twine <https://github.com/pypa/twine>`_.
 
 When the release is ready to go:
 
