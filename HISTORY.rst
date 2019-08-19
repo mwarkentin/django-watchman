@@ -4,6 +4,11 @@
 History
 =======
 
+0.18.0 (2019-08-19)
+-------------------
+
+* [`#142 <https://github.com/mwarkentin/django-watchman/pull/142>`_] Skip traces in Datadog if ``WATCHMAN_DISABLE_APM`` is enabled (@robatwave)
+
 0.17.0 (2019-06-14)
 -------------------
 
