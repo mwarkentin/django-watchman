@@ -282,7 +282,7 @@ Here is a simple example that would log to the console::
 More information is available in the `Django documentation
 <https://docs.djangoproject.com/en/2.0/topics/logging/#configuring-logging]>`_.
 
-APM (New Relic, Datadog)
+APM (Datadog, New Relic)
 ********************
 
 If you're using APM and watchman is being often hit for health checks (such as an ELB on
