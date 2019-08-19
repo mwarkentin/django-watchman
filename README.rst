@@ -283,7 +283,7 @@ More information is available in the `Django documentation
 <https://docs.djangoproject.com/en/2.0/topics/logging/#configuring-logging]>`_.
 
 APM (Datadog, New Relic)
-********************
+************************
 
 If you're using APM and watchman is being often hit for health checks (such as an ELB on
 AWS), you will find some stats based on averages will be affected (average transaction
