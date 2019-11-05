@@ -6,6 +6,5 @@ nose>=1.3.0
 django-nose>=1.2
 flake8>=2.1.0
 restructuredtext_lint==0.12.2
-# We use PyMySQL because it's pure python, has no C dependencies and can emulate MySQLDb
-PyMySQL>=0.7.5
+mysqlclient>=1.3.13
 tox>=1.7.0
