@@ -5,10 +5,6 @@ import traceback
 try:
     from django.conf import settings
 
-    from pymysql import install_as_MySQLdb
-
-    install_as_MySQLdb()
-
     settings.configure(
         DEBUG=True,
         USE_TZ=True,
