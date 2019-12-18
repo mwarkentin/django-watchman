@@ -7,8 +7,9 @@ History
 1.0.0 (2019-12-18)
 -------------------
 
-* Drop support for python2 and Django<2.2 (the only officially supported versions of Django that aren't on 2.7) (@JBKahn)
-* Drop usage of django-jsonview in favor of the builtin django JsonResponse (@JBKahn)
+* Official django-watchman 1.0 release! Releases will (try to) follow semantic versioning from now on.
+* Drop support for python 2 and Django<2 (@JBKahn)
+* Drop usage of ``django-jsonview`` in favor of the Django's built in JsonResponse (@JBKahn)
 
 0.18.0 (2019-08-19)
 -------------------
