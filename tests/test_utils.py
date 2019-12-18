@@ -11,8 +11,7 @@ from __future__ import unicode_literals
 
 import unittest
 
-import django
-from mock import patch
+from unittest.mock import patch
 
 from watchman.utils import get_cache, get_checks
 
@@ -27,23 +26,10 @@ class TestWatchman(unittest.TestCase):
             # Python 2
             self.assertItemsEqual(list1, list2)
 
-    @unittest.skipIf(
-        django.VERSION < (1, 7),
-        'caches interface is not added until Django 1.7',
-    )
     @patch('watchman.utils.django_cache.caches', spec_set=dict)
     def test_get_cache_django_17_or_greater(self, get_cache_mock):
         get_cache('foo')
         get_cache_mock.__getitem__.called_once_with('foo')
-
-    @unittest.skipIf(
-        django.VERSION >= (1, 7),
-        'get_cache has been deprecated as of Django 1.7'
-    )
-    @patch('django.core.cache.get_cache')
-    def test_get_cache_less_than_django_17(self, get_cache_mock):
-        get_cache('foo')
-        get_cache_mock.assert_called_once_with('foo')
 
     def test_get_checks_returns_all_available_checks_by_default(self):
         checks = [check.__name__ for check in get_checks()]
