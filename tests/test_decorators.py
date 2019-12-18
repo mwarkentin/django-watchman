@@ -12,14 +12,10 @@ from __future__ import unicode_literals
 import logging
 import unittest
 
-try:
-    from django.urls import reverse
-except ImportError:
-    # Deprecated in Django 1.10
-    from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test.client import Client
 
-import mock
+from unittest import mock
 
 from watchman import settings as watchman_settings
 from watchman.decorators import check

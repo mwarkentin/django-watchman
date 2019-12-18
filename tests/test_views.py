@@ -17,11 +17,7 @@ from django.db import connections
 from django.db.utils import DEFAULT_DB_ALIAS
 from django.test.testcases import TransactionTestCase
 
-
-try:
-    from importlib import reload
-except ImportError:  # Python < 3
-    pass
+from importlib import reload
 import sys
 import unittest
 
@@ -33,11 +29,9 @@ from django.test import TestCase as DjangoTestCase
 from django.test.client import RequestFactory, Client
 from django.test.utils import override_settings
 
-from mock import patch
+from unittest.mock import patch
 
 from watchman import checks, views
-
-PYTHON_VERSION = sys.version_info[0]
 
 
 class AuthenticatedUser(AnonymousUser):
@@ -55,12 +49,11 @@ class AuthenticatedUser(AnonymousUser):
         return CallableTrue()
 
 
-if django.VERSION >= (1, 7):
-    # Initialize Django
-    django.setup()
+# Initialize Django
+django.setup()
 
-    # Silence MIDDLEWARE_CLASSES warning as this is not an actual Django project
-    settings.SILENCED_SYSTEM_CHECKS = ['1_7.W001']
+# Silence MIDDLEWARE_CLASSES warning as this is not an actual Django project
+settings.SILENCED_SYSTEM_CHECKS = ['1_7.W001']
 
 
 def reload_settings():
@@ -85,12 +78,8 @@ class TestWatchman(unittest.TestCase):
         request = RequestFactory().get('/')
         response = views.status(request)
 
-        if PYTHON_VERSION == 2:
-            content = json.loads(response.content)
-            self.assertItemsEqual(expected_checks, content.keys())
-        else:
-            content = json.loads(response.content.decode('utf-8'))
-            self.assertCountEqual(expected_checks, content.keys())
+        content = json.loads(response.content.decode('utf-8'))
+        self.assertCountEqual(expected_checks, content.keys())
 
     def test_check_database_handles_exception(self):
         response = checks._check_database('foo')
@@ -98,10 +87,7 @@ class TestWatchman(unittest.TestCase):
         self.assertEqual(response['foo']['error'], "The connection foo doesn't exist")
 
     def test_check_cache_handles_exception(self):
-        if django.VERSION < (1, 7):
-            expected_error = "Could not find backend 'foo': Could not find backend 'foo': foo doesn't look like a module path"
-        else:
-            expected_error = "Could not find config for 'foo' in settings.CACHES"
+        expected_error = "Could not find config for 'foo' in settings.CACHES"
 
         response = checks._check_cache('foo')
         self.assertFalse(response['foo']['ok'])
@@ -114,12 +100,8 @@ class TestWatchman(unittest.TestCase):
         })
         response = views.status(request)
 
-        if PYTHON_VERSION == 2:
-            content = json.loads(response.content)
-            self.assertItemsEqual(expected_checks, content.keys())
-        else:
-            content = json.loads(response.content.decode('utf-8'))
-            self.assertCountEqual(expected_checks, content.keys())
+        content = json.loads(response.content.decode('utf-8'))
+        self.assertCountEqual(expected_checks, content.keys())
 
     def test_response_is_404_for_checked_and_skipped_check(self):
         # This is a bit of a weird one, basically if you explicitly include and
@@ -141,12 +123,8 @@ class TestWatchman(unittest.TestCase):
         response = views.status(request)
         self.assertEqual(response.status_code, 200)
 
-        if PYTHON_VERSION == 2:
-            content = json.loads(response.content)
-            self.assertItemsEqual({'databases': []}, content)
-        else:
-            content = json.loads(response.content.decode('utf-8'))
-            self.assertCountEqual({'databases': []}, content)
+        content = json.loads(response.content.decode('utf-8'))
+        self.assertCountEqual({'databases': []}, content)
 
     def test_response_404_when_none_specified(self):
         request = RequestFactory().get('/', data={
@@ -155,12 +133,8 @@ class TestWatchman(unittest.TestCase):
         response = views.status(request)
         self.assertEqual(response.status_code, 404)
 
-        if PYTHON_VERSION == 2:
-            content = json.loads(response.content)
-            self.assertItemsEqual({'message': 'No checks found', 'error': 404}, content)
-        else:
-            content = json.loads(response.content.decode('utf-8'))
-            self.assertCountEqual({'message': 'No checks found', 'error': 404}, content)
+        content = json.loads(response.content.decode('utf-8'))
+        self.assertCountEqual({'message': 'No checks found', 'error': 404}, content)
 
     @override_settings(WATCHMAN_TOKEN='ABCDE')
     @override_settings(WATCHMAN_AUTH_DECORATOR='watchman.decorators.token_required')

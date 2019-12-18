@@ -4,6 +4,12 @@
 History
 =======
 
+1.0.0 (2019-12-18)
+-------------------
+
+* Drop support for python2 and Django<2.2 (the only officially supported versions of Django that aren't on 2.7) (@JBKahn)
+* Drop usage of django-jsonview in favor of the builtin django JsonResponse (@JBKahn)
+
 0.18.0 (2019-08-19)
 -------------------
 
