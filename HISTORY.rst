@@ -4,6 +4,11 @@
 History
 =======
 
+1.0.1 (YYYY-MM-DD)
+------------------
+
+* Fix modal popups on dashboards when Type or Name fields contains spaces (@maikeps)
+
 1.0.0 (2019-12-18)
 -------------------
 
