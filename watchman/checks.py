@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+from os.path import join as joinpath
 
 import uuid
 from django.core.files.base import ContentFile
@@ -57,7 +58,7 @@ def _check_email():
 
 @check
 def _check_storage():
-    filename = 'django-watchman-{}.txt'.format(uuid.uuid4())
+    filename = joinpath(watchman_settings.WATCHMAN_STORAGE_PATH, 'django-watchman-{}.txt'.format(uuid.uuid4()))
     content = b'django-watchman test file'
     path = default_storage.save(filename, ContentFile(content))
     default_storage.size(path)
