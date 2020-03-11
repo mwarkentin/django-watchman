@@ -4,7 +4,7 @@
 History
 =======
 
-1.0.2 (2020-03-10)
+1.1.0 (2020-03-11)
 ------------------
 
 * [`#154 <https://github.com/mwarkentin/django-watchman/pull/155>`_] Added custom path support for storage check
