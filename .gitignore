@@ -49,3 +49,6 @@ htmlcov/
 
 # Vagrant boxes
 .vagrant/
+
+# VSCode
+.vscode
