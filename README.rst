@@ -361,6 +361,7 @@ If the ``MEDIA_ROOT`` is already defined::
 
 **Custom Settings**
 * ``WATCHMAN_STORAGE_PATH`` (default: ``settings.MEDIA_ROOT``): Specify a path to read/write files to
+* ``WATCHMAN_ENABLE_STORAGE_DELETION`` (default: ``True``): Enable deletion of the test file that's created. Disable this if your storage backend does not support deletion.
 
 Default checks
 **************

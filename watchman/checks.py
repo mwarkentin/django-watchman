@@ -63,7 +63,8 @@ def _check_storage():
     path = default_storage.save(filename, ContentFile(content))
     default_storage.size(path)
     default_storage.open(path).read()
-    default_storage.delete(path)
+    if watchman_settings.WATCHMAN_ENABLE_STORAGE_DELETION:
+        default_storage.delete(path)
     return {"ok": True}
 
 
