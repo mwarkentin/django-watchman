@@ -358,7 +358,10 @@ If the ``MEDIA_ROOT`` is already defined::
  
   from os.path import join as joinpath
   WATCHMAN_STORAGE_PATH = joinpath(MEDIA_ROOT, "foo/bar")
-    
+
+**Custom Settings**
+* ``WATCHMAN_STORAGE_PATH`` (default: ``settings.MEDIA_ROOT``): Specify a path to read/write files to
+
 Default checks
 **************
 
