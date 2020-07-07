@@ -11,9 +11,11 @@ from __future__ import unicode_literals
 
 import unittest
 
+from django.utils.module_loading import import_string
+
 from unittest.mock import patch
 
-from watchman.utils import get_cache, get_checks
+from watchman.utils import get_cache, get_checks, import_check
 
 
 class TestWatchman(unittest.TestCase):
@@ -69,3 +71,12 @@ class TestWatchman(unittest.TestCase):
     @unittest.skip("Unsure how to test w/ modified settings")
     def test_get_checks_with_paid_checks_enabled_returns_expected_checks(self):
         pass
+
+    @patch("watchman.utils.import_string", wraps=import_string)
+    @patch("watchman.utils.imported_checks", {})
+    def test_import_check_imports_once(self, spy_import_string):
+        check = import_check('watchman.checks.caches')
+        check2 = import_check('watchman.checks.caches')
+        self.assertEqual(check.__name__, 'caches')
+        self.assertEqual(check2.__name__, 'caches')
+        self.assertEqual(spy_import_string.call_count, 1)
