@@ -44,7 +44,7 @@ Quickstart
 
 3. Include the watchman URLconf in your project ``urls.py`` like this::
 
-    url(r'^watchman/', include('watchman.urls')),
+    re_path(r'^watchman/', include('watchman.urls')),
 
 4. Start the development server and visit ``http://127.0.0.1:8000/watchman/`` to
    get a JSON response of your backing service statuses::
@@ -194,7 +194,7 @@ can use the ``bare_status`` view by putting the following into ``urls.py``::
 
     import watchman.views
     # ...
-    url(r'^status/?$', watchman.views.bare_status),
+    re_path(r'^status/?$', watchman.views.bare_status),
 
 Django management command
 *************************
@@ -355,10 +355,10 @@ Remember that this must be within the ``MEDIA_ROOT``, which by default is your p
   WATCHMAN_STORAGE_PATH = "/path_to_your_app/foo/bar/"
 
 If the ``MEDIA_ROOT`` is already defined::
- 
+
   from os.path import join as joinpath
   WATCHMAN_STORAGE_PATH = joinpath(MEDIA_ROOT, "foo/bar")
-    
+
 Default checks
 **************
 
