@@ -4,6 +4,11 @@
 History
 =======
 
+1.2.0 (2020-09-20)
+------------------
+
+* [`#163 <https://github.com/mwarkentin/django-watchman/pull/163>`_] Replaced deprecated url() calls with re_path() (@dominik-bln)
+
 1.1.1 (2020-05-04)
 ------------------
 
