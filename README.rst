@@ -156,8 +156,8 @@ By default stacktrace buttons and modal popups on ``/status/dashboard/`` page ha
                 # because `slugify` makes '12700112340'
             }
         }
-*Note*: this id will be used in HTML directly, so use only allowed characters: begin with a letter ([A-Za-z]) and continue with any number of letters, digits ([0-9]), hyphens ("-"), underscores ("_"), colons (":"), and periods ("."). See the full spec at https://www.w3.org/TR/html4/types.html#h-6.2
 
+**Note**: this id will be used in HTML directly, so use only allowed characters: begin with a letter ([A-Za-z]) and continue with any number of letters, digits ([0-9]), hyphens ("-"), underscores ("_"), colons (":"), and periods ("."). See the full spec at https://www.w3.org/TR/html4/types.html#h-6.2
 
 In the absence of any checks, a 404 is thrown, which is then handled by the
 ``json_view`` decorator.
