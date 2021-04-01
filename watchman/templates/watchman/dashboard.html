@@ -62,9 +62,9 @@
                             type="button"
                             class="btn btn-danger"
                             data-toggle="modal"
-                            data-target="#{{ type_name|cut:' ' }}{% if status.name %}-{{ status.name|cut:' ' }}{% endif %}"
+                            data-target="#{{ type_name|cut:' ' }}{% if status.id %}-{{status.id}}{% elif status.name %}-{{ status.name|slugify|cut:' ' }}{% endif %}"
                         >
-                            {% trans "Traceback" %}
+                        {% trans "Traceback" %}
                         </button>
                     </div>
                 </td>
@@ -89,10 +89,10 @@
 {% if not status.ok %}
 <div
     class="modal fade"
-    id="{{ type_name|cut:' ' }}{% if status.name %}-{{ status.name|cut:' ' }}{% endif %}"
+    id="{{ type_name|cut:' ' }}{% if status.id %}-{{status.id}}{% elif status.name %}-{{ status.name|slugify|cut:' ' }}{% endif %}"
     tabindex="-1"
     role="dialog"
-    aria-labelledby="{{ type_name|cut:' ' }}{% if status.name %}-{{ status.name|cut:' ' }}{% endif %}-title"
+    aria-labelledby="{{ type_name|cut:' ' }}{% if status.id %}-{{status.id}}{% elif status.name %}-{{ status.name|slugify|cut:' ' }}{% endif %}-title"
 >
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -100,7 +100,7 @@
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4
                     class="modal-title"
-                    id="{{ type_name|cut:' ' }}{% if status.name %}-{{ status.name|cut:' ' }}{% endif %}-title"
+                    id="{{ type_name|cut:' ' }}{% if status.id %}-{{status.id}}{% elif status.name %}-{{ status.name|slugify|cut:' ' }}{% endif %}-title"
                 >
                     {{ type_name|title }}{% if status.name %} - {{ status.name|title }}{% endif %}
                 </h4>
