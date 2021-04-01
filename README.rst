@@ -144,6 +144,21 @@ Checks take no arguments, and must return a ``dict`` whose keys are applied to t
     def my_check():
         return {'x': 1}
 
+
+By default stacktrace buttons and modal popups on ``/status/dashboard/`` page have a slugified name as HTML id. You can also define some custom id to identify elements in HTML separately from their display names, for example when slugifying does something completely unreadable or results of slugifying match with another ids:
+
+    @check
+    def check_redis():
+        return {
+            "127.0.0.1:1234/0": {
+                "ok": True,
+                "id": "some-custom-redis-html-id",
+                # because `slugify` makes '12700112340'
+            }
+        }
+*Note*: this id will be used in HTML directly, so use only allowed characters: begin with a letter ([A-Za-z]) and continue with any number of letters, digits ([0-9]), hyphens ("-"), underscores ("_"), colons (":"), and periods ("."). See the full spec at https://www.w3.org/TR/html4/types.html#h-6.2
+
+
 In the absence of any checks, a 404 is thrown, which is then handled by the
 ``json_view`` decorator.
 
