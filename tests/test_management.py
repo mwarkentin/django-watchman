@@ -20,7 +20,7 @@ class TestWatchman(unittest.TestCase):
     def test_successful_management_command_outputs_nothing(self):
         out = StringIO()
         call_command('watchman', stdout=out)
-        self.assertEquals('', out.getvalue())
+        self.assertEqual('', out.getvalue())
 
     def test_successful_management_command_outputs_check_status_with_verbosity_2(self):
         out = StringIO()
