@@ -37,7 +37,9 @@ def _check_databases(databases):
 
 @check
 def _check_database(database):
-    connections[database].introspection.table_names()
+    connection = connections[database]
+    with connection.cursor() as cursor:
+        cursor.execute("SELECT 1")
     return {database: {"ok": True}}
 
 
