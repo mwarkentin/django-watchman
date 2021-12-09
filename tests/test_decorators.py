@@ -14,7 +14,7 @@ import unittest
 from unittest import mock
 
 from django.test.client import Client
-from django.urls import reverse
+from unittest.mock import MagicMock, patch
 
 from watchman import settings as watchman_settings
 from watchman.decorators import check
@@ -37,6 +37,17 @@ class TestWatchmanMultiTokens(unittest.TestCase):
         }
         response = self.client.get(reverse("status"), data)
         self.assertEqual(response.status_code, 200)
+
+    @patch('django.db.connections')
+    def test_cursor_is_called(self, mock_connections):
+        cursor_mock = MagicMock()
+        mock_connections['default'].cursor().__enter__.return_value = cursor_mock
+        data = {
+            'watchman-token': 't1',
+        }
+        self.client.get(reverse('status'), data)
+        cursor_mock.execute.assert_called_once_with('SELECT 1')
+
 
     def test_200_ok_if_matching_second_token_in_list(self):
         data = {
