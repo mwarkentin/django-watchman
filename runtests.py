@@ -28,6 +28,7 @@ try:
         ],
         SITE_ID=1,
         NOSE_ARGS=['-s'],
+        SECRET_KEY="ABCD1234"
     )
 
     from django_nose import NoseTestSuiteRunner
