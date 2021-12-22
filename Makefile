@@ -1,11 +1,10 @@
-.PHONY: help clean clean-build clean-pyc lint test test-all coverage docs release dist run
+.PHONY: help clean clean-build clean-pyc lint test docs release dist run
 
 help:
 	@echo "clean-build - remove build artifacts"
 	@echo "clean-pyc - remove Python file artifacts"
 	@echo "lint - check PEP8 style with flake8, and rst with rst-lint"
 	@echo "test - run tests quickly with the default Python"
-	@echo "testall - run tests on every Python version with tox"
 	@echo "coverage - check code coverage quickly with the default Python"
 	@echo "docs - generate Sphinx HTML documentation, including API docs"
 	@echo "release - package and upload a release"
@@ -29,16 +28,7 @@ lint:
 	rst-lint *.rst
 
 test:
-	python runtests.py
-
-test-all:
-	tox
-
-coverage:
-	coverage run --source watchman runtests.py
-	coverage report -m
-	coverage html
-	open htmlcov/index.html
+	act --job build
 
 docs:
 	rm -f docs/watchman.rst
