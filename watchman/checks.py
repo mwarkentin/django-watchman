@@ -20,8 +20,8 @@ def _check_caches(caches):
 
 @check
 def _check_cache(cache_name):
-    key = 'django-watchman-{}'.format(uuid.uuid4())
-    value = 'django-watchman-{}'.format(uuid.uuid4())
+    key = "django-watchman-{}".format(uuid.uuid4())
+    value = "django-watchman-{}".format(uuid.uuid4())
 
     cache = utils.get_cache(cache_name)
 
@@ -58,8 +58,11 @@ def _check_email():
 
 @check
 def _check_storage():
-    filename = joinpath(watchman_settings.WATCHMAN_STORAGE_PATH, 'django-watchman-{}.txt'.format(uuid.uuid4()))
-    content = b'django-watchman test file'
+    filename = joinpath(
+        watchman_settings.WATCHMAN_STORAGE_PATH,
+        "django-watchman-{}.txt".format(uuid.uuid4()),
+    )
+    content = b"django-watchman test file"
     path = default_storage.save(filename, ContentFile(content))
     default_storage.size(path)
     default_storage.open(path).read()

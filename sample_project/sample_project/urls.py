@@ -19,7 +19,7 @@ import watchman.views
 
 
 urlpatterns = [
-    re_path(r'^admin/', admin.site.urls),
-    re_path(r'^watchman/', include('watchman.urls')),
-    re_path(r'^watchman/bare/', watchman.views.bare_status, name='bare_status'),
+    re_path(r"^admin/", admin.site.urls),
+    re_path(r"^watchman/", include("watchman.urls")),
+    re_path(r"^watchman/bare/", watchman.views.bare_status, name="bare_status"),
 ]

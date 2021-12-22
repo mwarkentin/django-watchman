@@ -8,13 +8,14 @@ from django.views.decorators.csrf import csrf_exempt
 
 from watchman import settings
 
-logger = logging.getLogger('watchman')
+logger = logging.getLogger("watchman")
 
 
 def check(func):
     """
     Decorator which wraps checks and returns an error response on failure.
     """
+
     def wrapped(*args, **kwargs):
         check_name = func.__name__
         arg_name = None
@@ -38,19 +39,13 @@ def check(func):
             if arg_name:
                 response = {arg_name: response}
                 logger.exception(
-                    "Error calling '%s' for '%s': %s",
-                    check_name,
-                    arg_name,
-                    message
+                    "Error calling '%s' for '%s': %s", check_name, arg_name, message
                 )
             else:
-                logger.exception(
-                    "Error calling '%s': %s",
-                    check_name,
-                    message
-                )
+                logger.exception("Error calling '%s': %s", check_name, message)
 
         return response
+
     return wrapped
 
 
@@ -76,7 +71,7 @@ def token_required(view_func):
         # https://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2
         reg = re.compile(r'(\w+)[=] ?"?([\w-]+)"?')
         header_dict = dict(reg.findall(auth_header))
-        return header_dict['Token']
+        return header_dict["Token"]
 
     def _get_passed_token(request):
         """
@@ -84,7 +79,7 @@ def token_required(view_func):
         """
 
         try:
-            auth_header = request.META['HTTP_AUTHORIZATION']
+            auth_header = request.META["HTTP_AUTHORIZATION"]
             token = _parse_auth_header(auth_header)
         except KeyError:
             token = request.GET.get(settings.WATCHMAN_TOKEN_NAME)
@@ -92,9 +87,11 @@ def token_required(view_func):
 
     def _validate_token(request):
         if settings.WATCHMAN_TOKENS:
-            watchman_tokens = settings.WATCHMAN_TOKENS.split(',')
+            watchman_tokens = settings.WATCHMAN_TOKENS.split(",")
         elif settings.WATCHMAN_TOKEN:
-            watchman_tokens = [settings.WATCHMAN_TOKEN, ]
+            watchman_tokens = [
+                settings.WATCHMAN_TOKEN,
+            ]
         else:
             return True
 
@@ -112,6 +109,7 @@ def token_required(view_func):
 
 
 if settings.WATCHMAN_AUTH_DECORATOR is None:
+
     def auth(view_func):
         @csrf_exempt
         @wraps(view_func)
@@ -119,7 +117,8 @@ if settings.WATCHMAN_AUTH_DECORATOR is None:
             return view_func(request, *args, **kwargs)
 
         return _wrapped_view
-elif settings.WATCHMAN_AUTH_DECORATOR == 'watchman.decorators.token_required':
+
+elif settings.WATCHMAN_AUTH_DECORATOR == "watchman.decorators.token_required":
     # Avoid import loops
     auth = token_required
 else:
@@ -128,5 +127,5 @@ else:
     except ImportError:  # Django < 1.8
         from django.utils.importlib import import_module
 
-    mod_name, dec = settings.WATCHMAN_AUTH_DECORATOR.rsplit('.', 1)
+    mod_name, dec = settings.WATCHMAN_AUTH_DECORATOR.rsplit(".", 1)
     auth = getattr(import_module(mod_name), dec)

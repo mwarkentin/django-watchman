@@ -53,14 +53,14 @@ class AuthenticatedUser(AnonymousUser):
 django.setup()
 
 # Silence MIDDLEWARE_CLASSES warning as this is not an actual Django project
-settings.SILENCED_SYSTEM_CHECKS = ['1_7.W001']
+settings.SILENCED_SYSTEM_CHECKS = ["1_7.W001"]
 
 
 def reload_settings():
     # Reload settings - and all dependent modules - from scratch
-    reload(sys.modules['watchman.settings'])
-    reload(sys.modules['watchman.decorators'])
-    reload(sys.modules['watchman.views'])
+    reload(sys.modules["watchman.settings"])
+    reload(sys.modules["watchman.decorators"])
+    reload(sys.modules["watchman.views"])
 
 
 class TestWatchman(unittest.TestCase):
@@ -69,210 +69,257 @@ class TestWatchman(unittest.TestCase):
         reload_settings()
 
     def test_response_content_type_json(self):
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         response = views.status(request)
-        self.assertEqual(response['Content-Type'], 'application/json')
+        self.assertEqual(response["Content-Type"], "application/json")
 
     def test_response_contains_expected_checks(self):
-        expected_checks = ['caches', 'databases', 'storage', ]
-        request = RequestFactory().get('/')
+        expected_checks = [
+            "caches",
+            "databases",
+            "storage",
+        ]
+        request = RequestFactory().get("/")
         response = views.status(request)
 
-        content = json.loads(response.content.decode('utf-8'))
+        content = json.loads(response.content.decode("utf-8"))
         self.assertCountEqual(expected_checks, content.keys())
 
     def test_check_database_handles_exception(self):
-        response = checks._check_database('foo')
-        self.assertFalse(response['foo']['ok'])
-        self.assertEqual(response['foo']['error'], "The connection 'foo' doesn't exist.")
+        response = checks._check_database("foo")
+        self.assertFalse(response["foo"]["ok"])
+        self.assertEqual(
+            response["foo"]["error"], "The connection 'foo' doesn't exist."
+        )
 
     def test_check_cache_handles_exception(self):
 
-        response = checks._check_cache('foo')
-        self.assertFalse(response['foo']['ok'])
-        self.assertIn(response['foo']['error'], "The connection 'foo' doesn't exist.")
+        response = checks._check_cache("foo")
+        self.assertFalse(response["foo"]["ok"])
+        self.assertIn(response["foo"]["error"], "The connection 'foo' doesn't exist.")
 
     def test_response_skipped_checks(self):
-        expected_checks = ['caches', 'storage', ]
-        request = RequestFactory().get('/', data={
-            'skip': 'watchman.checks.databases',
-        })
+        expected_checks = [
+            "caches",
+            "storage",
+        ]
+        request = RequestFactory().get(
+            "/",
+            data={
+                "skip": "watchman.checks.databases",
+            },
+        )
         response = views.status(request)
 
-        content = json.loads(response.content.decode('utf-8'))
+        content = json.loads(response.content.decode("utf-8"))
         self.assertCountEqual(expected_checks, content.keys())
 
     def test_response_is_404_for_checked_and_skipped_check(self):
         # This is a bit of a weird one, basically if you explicitly include and
         # skip the same check, you should get back a 404 as they cancel each
         # other out
-        request = RequestFactory().get('/', data={
-            'check': 'watchman.checks.email',
-            'skip': 'watchman.checks.email',
-        })
+        request = RequestFactory().get(
+            "/",
+            data={
+                "check": "watchman.checks.email",
+                "skip": "watchman.checks.email",
+            },
+        )
         response = views.status(request)
         self.assertEqual(response.status_code, 404)
 
-    @patch('watchman.checks._check_databases')
+    @patch("watchman.checks._check_databases")
     def test_response_only_single_check(self, patched_check_databases):
         patched_check_databases.return_value = []
-        request = RequestFactory().get('/', data={
-            'check': 'watchman.checks.databases',
-        })
+        request = RequestFactory().get(
+            "/",
+            data={
+                "check": "watchman.checks.databases",
+            },
+        )
         response = views.status(request)
         self.assertEqual(response.status_code, 200)
 
-        content = json.loads(response.content.decode('utf-8'))
-        self.assertCountEqual({'databases': []}, content)
+        content = json.loads(response.content.decode("utf-8"))
+        self.assertCountEqual({"databases": []}, content)
 
     def test_response_404_when_none_specified(self):
-        request = RequestFactory().get('/', data={
-            'check': '',
-        })
+        request = RequestFactory().get(
+            "/",
+            data={
+                "check": "",
+            },
+        )
         response = views.status(request)
         self.assertEqual(response.status_code, 404)
 
-        content = json.loads(response.content.decode('utf-8'))
-        self.assertCountEqual({'message': 'No checks found', 'error': 404}, content)
+        content = json.loads(response.content.decode("utf-8"))
+        self.assertCountEqual({"message": "No checks found", "error": 404}, content)
 
-    @override_settings(WATCHMAN_TOKEN='ABCDE')
-    @override_settings(WATCHMAN_AUTH_DECORATOR='watchman.decorators.token_required')
+    @override_settings(WATCHMAN_TOKEN="ABCDE")
+    @override_settings(WATCHMAN_AUTH_DECORATOR="watchman.decorators.token_required")
     def test_login_not_required_with_get_param(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp(), but before self.tearDown()
         reload_settings()
-        request = RequestFactory().get('/', data={
-            'watchman-token': 'ABCDE',
-        })
+        request = RequestFactory().get(
+            "/",
+            data={
+                "watchman-token": "ABCDE",
+            },
+        )
 
         response = views.status(request)
 
         self.assertEqual(response.status_code, 200)
 
-    @override_settings(WATCHMAN_TOKEN='ABCDE')
+    @override_settings(WATCHMAN_TOKEN="ABCDE")
     def test_version_header_not_included_when_token_auth_fails(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp(), but before self.tearDown()
         reload_settings()
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
 
         response = views.status(request)
         self.assertEqual(response.status_code, 403)
-        self.assertFalse(response.has_header('X-Watchman-Version'))
+        self.assertFalse(response.has_header("X-Watchman-Version"))
 
-    @override_settings(WATCHMAN_TOKEN='ABCDE')
-    @override_settings(WATCHMAN_AUTH_DECORATOR='watchman.decorators.token_required')
+    @override_settings(WATCHMAN_TOKEN="ABCDE")
+    @override_settings(WATCHMAN_AUTH_DECORATOR="watchman.decorators.token_required")
     def test_login_not_required_with_authorization_header(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp(), but before self.tearDown()
         reload_settings()
-        request = RequestFactory().get('/', HTTP_AUTHORIZATION='WATCHMAN-TOKEN Token="ABCDE"')
+        request = RequestFactory().get(
+            "/", HTTP_AUTHORIZATION='WATCHMAN-TOKEN Token="ABCDE"'
+        )
         response = views.status(request)
         self.assertEqual(response.status_code, 200)
 
-    @override_settings(WATCHMAN_TOKEN='123-456-ABCD')
-    @override_settings(WATCHMAN_AUTH_DECORATOR='watchman.decorators.token_required')
+    @override_settings(WATCHMAN_TOKEN="123-456-ABCD")
+    @override_settings(WATCHMAN_AUTH_DECORATOR="watchman.decorators.token_required")
     def test_login_not_required_with_authorization_header_dashes_in_token(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp(), but before self.tearDown()
         reload_settings()
-        request = RequestFactory().get('/', HTTP_AUTHORIZATION='WATCHMAN-TOKEN Token="123-456-ABCD"')
+        request = RequestFactory().get(
+            "/", HTTP_AUTHORIZATION='WATCHMAN-TOKEN Token="123-456-ABCD"'
+        )
         response = views.status(request)
         self.assertEqual(response.status_code, 200)
 
-    @override_settings(WATCHMAN_TOKEN='ABCDE')
-    @override_settings(WATCHMAN_AUTH_DECORATOR='watchman.decorators.token_required')
+    @override_settings(WATCHMAN_TOKEN="ABCDE")
+    @override_settings(WATCHMAN_AUTH_DECORATOR="watchman.decorators.token_required")
     def test_login_fails_with_invalid_get_param(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp(), but before self.tearDown()
         reload_settings()
-        request = RequestFactory().get('/', data={
-            'watchman-token': '12345',
-        })
+        request = RequestFactory().get(
+            "/",
+            data={
+                "watchman-token": "12345",
+            },
+        )
 
         response = views.status(request)
 
         self.assertEqual(response.status_code, 403)
 
-    @override_settings(WATCHMAN_TOKEN='ABCDE')
-    @override_settings(WATCHMAN_AUTH_DECORATOR='watchman.decorators.token_required')
+    @override_settings(WATCHMAN_TOKEN="ABCDE")
+    @override_settings(WATCHMAN_AUTH_DECORATOR="watchman.decorators.token_required")
     def test_login_fails_with_invalid_authorization_header(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp(), but before self.tearDown()
         reload_settings()
-        request = RequestFactory().get('/', HTTP_AUTHORIZATION='WATCHMAN-TOKEN Token="12345"')
+        request = RequestFactory().get(
+            "/", HTTP_AUTHORIZATION='WATCHMAN-TOKEN Token="12345"'
+        )
         response = views.status(request)
         self.assertEqual(response.status_code, 403)
 
-    @override_settings(WATCHMAN_AUTH_DECORATOR='django.contrib.auth.decorators.login_required')
+    @override_settings(
+        WATCHMAN_AUTH_DECORATOR="django.contrib.auth.decorators.login_required"
+    )
     def test_response_when_login_required_is_redirect(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp()
         reload_settings()
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         request.user = AnonymousUser()
 
         response = views.status(request)
 
         self.assertEqual(response.status_code, 302)
 
-    @override_settings(WATCHMAN_AUTH_DECORATOR='django.contrib.auth.decorators.login_required')
+    @override_settings(
+        WATCHMAN_AUTH_DECORATOR="django.contrib.auth.decorators.login_required"
+    )
     def test_response_when_login_required(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp()
         reload_settings()
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         request.user = AuthenticatedUser()
 
         response = views.status(request)
         self.assertEqual(response.status_code, 200)
 
     def test_response_version_header_missing_by_default(self):
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         response = views.status(request)
-        self.assertFalse(response.has_header('X-Watchman-Version'))
+        self.assertFalse(response.has_header("X-Watchman-Version"))
 
     @override_settings(EXPOSE_WATCHMAN_VERSION=True)
     def test_response_version_header(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp()
         reload_settings()
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         response = views.status(request)
-        self.assertTrue(response.has_header('X-Watchman-Version'))
+        self.assertTrue(response.has_header("X-Watchman-Version"))
 
-    @patch('watchman.checks._check_databases')
+    @patch("watchman.checks._check_databases")
     @override_settings(WATCHMAN_ERROR_CODE=503)
     def test_custom_error_code(self, patched_check_databases):
         reload_settings()
         # Fake a DB error, ensure we get our error code
-        patched_check_databases.return_value = [{
-            "foo": {
-                "ok": False,
-                "error": "Fake DB Error",
-                "stacktrace": "Fake DB Stack Trace",
+        patched_check_databases.return_value = [
+            {
+                "foo": {
+                    "ok": False,
+                    "error": "Fake DB Error",
+                    "stacktrace": "Fake DB Stack Trace",
+                },
+            }
+        ]
+        request = RequestFactory().get(
+            "/",
+            data={
+                "check": "watchman.checks.databases",
             },
-        }]
-        request = RequestFactory().get('/', data={
-            'check': 'watchman.checks.databases',
-        })
+        )
         response = views.status(request)
         self.assertEqual(response.status_code, 503)
 
-    @patch('watchman.checks._check_databases')
+    @patch("watchman.checks._check_databases")
     def test_default_error_code(self, patched_check_databases):
         reload_settings()
         # Fake a DB error, ensure we get our error code
-        patched_check_databases.return_value = [{
-            "foo": {
-                "ok": False,
-                "error": "Fake DB Error",
-                "stacktrace": "Fake DB Stack Trace",
+        patched_check_databases.return_value = [
+            {
+                "foo": {
+                    "ok": False,
+                    "error": "Fake DB Error",
+                    "stacktrace": "Fake DB Stack Trace",
+                },
+            }
+        ]
+        request = RequestFactory().get(
+            "/",
+            data={
+                "check": "watchman.checks.databases",
             },
-        }]
-        request = RequestFactory().get('/', data={
-            'check': 'watchman.checks.databases',
-        })
+        )
         response = views.status(request)
         self.assertEqual(response.status_code, 500)
 
@@ -283,25 +330,25 @@ class TestWatchmanDashboard(unittest.TestCase):
         reload_settings()
 
     def test_dashboard_response_code(self):
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         response = views.dashboard(request)
         self.assertEqual(response.status_code, 200)
 
     def test_response_version_header_and_html_missing_by_default(self):
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         response = views.dashboard(request)
-        self.assertFalse(response.has_header('X-Watchman-Version'))
-        self.assertNotIn('Watchman version:', response.content.decode())
+        self.assertFalse(response.has_header("X-Watchman-Version"))
+        self.assertNotIn("Watchman version:", response.content.decode())
 
     @override_settings(EXPOSE_WATCHMAN_VERSION=True)
     def test_response_has_version_header_and_html(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp()
         reload_settings()
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         response = views.dashboard(request)
-        self.assertTrue(response.has_header('X-Watchman-Version'))
-        self.assertIn('Watchman version:', response.content.decode())
+        self.assertTrue(response.has_header("X-Watchman-Version"))
+        self.assertIn("Watchman version:", response.content.decode())
 
 
 class TestPing(unittest.TestCase):
@@ -310,11 +357,11 @@ class TestPing(unittest.TestCase):
         reload_settings()
 
     def test_returns_pong(self):
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         response = views.ping(request)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content.decode(), 'pong')
-        self.assertEqual(response['Content-Type'], 'text/plain')
+        self.assertEqual(response.content.decode(), "pong")
+        self.assertEqual(response["Content-Type"], "text/plain")
 
 
 class TestBareStatus(unittest.TestCase):
@@ -323,47 +370,57 @@ class TestBareStatus(unittest.TestCase):
         reload_settings()
 
     def test_bare_status_success(self):
-        request = RequestFactory().get('/')
+        request = RequestFactory().get("/")
         response = views.bare_status(request)
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.content.decode(), '')
+        self.assertEqual(response.content.decode(), "")
 
-    @patch('watchman.checks._check_databases')
+    @patch("watchman.checks._check_databases")
     @override_settings(WATCHMAN_ERROR_CODE=503)
     def test_bare_status_error(self, patched_check_databases):
         reload_settings()
         # Fake a DB error, ensure we get our error code
-        patched_check_databases.return_value = [{
-            "foo": {
-                "ok": False,
-                "error": "Fake DB Error",
-                "stacktrace": "Fake DB Stack Trace",
+        patched_check_databases.return_value = [
+            {
+                "foo": {
+                    "ok": False,
+                    "error": "Fake DB Error",
+                    "stacktrace": "Fake DB Stack Trace",
+                },
+            }
+        ]
+        request = RequestFactory().get(
+            "/",
+            data={
+                "check": "watchman.checks.databases",
             },
-        }]
-        request = RequestFactory().get('/', data={
-            'check': 'watchman.checks.databases',
-        })
+        )
         response = views.bare_status(request)
         self.assertEqual(response.status_code, 503)
-        self.assertEqual(response.content.decode(), '')
+        self.assertEqual(response.content.decode(), "")
 
-    @patch('watchman.checks._check_databases')
+    @patch("watchman.checks._check_databases")
     def test_bare_status_default_error(self, patched_check_databases):
         reload_settings()
         # Fake a DB error, ensure we get our error code
-        patched_check_databases.return_value = [{
-            "foo": {
-                "ok": False,
-                "error": "Fake DB Error",
-                "stacktrace": "Fake DB Stack Trace",
+        patched_check_databases.return_value = [
+            {
+                "foo": {
+                    "ok": False,
+                    "error": "Fake DB Error",
+                    "stacktrace": "Fake DB Stack Trace",
+                },
+            }
+        ]
+        request = RequestFactory().get(
+            "/",
+            data={
+                "check": "watchman.checks.databases",
             },
-        }]
-        request = RequestFactory().get('/', data={
-            'check': 'watchman.checks.databases',
-        })
+        )
         response = views.bare_status(request)
         self.assertEqual(response.status_code, 500)
-        self.assertEqual(response.content.decode(), '')
+        self.assertEqual(response.content.decode(), "")
 
 
 class TestEmailCheck(DjangoTestCase):
@@ -378,10 +435,10 @@ class TestEmailCheck(DjangoTestCase):
         self.assertEqual(len(mail.outbox), 1)
 
         sent_email = mail.outbox[0]
-        expected_recipients = ['to@example.com']
+        expected_recipients = ["to@example.com"]
         self.assertEqual(sent_email.to, expected_recipients)
 
-    @override_settings(WATCHMAN_EMAIL_RECIPIENTS=['custom@example.com'])
+    @override_settings(WATCHMAN_EMAIL_RECIPIENTS=["custom@example.com"])
     def def_test_email_with_custom_recipient(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp()
@@ -392,10 +449,10 @@ class TestEmailCheck(DjangoTestCase):
         self.assertEqual(len(mail.outbox), 1)
 
         sent_email = mail.outbox[0]
-        expected_recipients = ['custom@example.com']
+        expected_recipients = ["custom@example.com"]
         self.assertEqual(sent_email.to, expected_recipients)
 
-    @override_settings(WATCHMAN_EMAIL_RECIPIENTS=['to1@example.com', 'to2@example.com'])
+    @override_settings(WATCHMAN_EMAIL_RECIPIENTS=["to1@example.com", "to2@example.com"])
     def def_test_email_with_multiple_recipients(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp()
@@ -406,7 +463,7 @@ class TestEmailCheck(DjangoTestCase):
         self.assertEqual(len(mail.outbox), 1)
 
         sent_email = mail.outbox[0]
-        expected_recipients = ['to1@example.com', 'to2@example.com']
+        expected_recipients = ["to1@example.com", "to2@example.com"]
         self.assertEqual(sent_email.to, expected_recipients)
 
     def test_email_check_with_default_headers(self):
@@ -417,11 +474,11 @@ class TestEmailCheck(DjangoTestCase):
 
         sent_email = mail.outbox[0]
         expected_headers = {
-            'X-DJANGO-WATCHMAN': True,
+            "X-DJANGO-WATCHMAN": True,
         }
         self.assertEqual(sent_email.extra_headers, expected_headers)
 
-    @override_settings(WATCHMAN_EMAIL_HEADERS={'foo': 'bar'})
+    @override_settings(WATCHMAN_EMAIL_HEADERS={"foo": "bar"})
     def test_email_check_with_custom_headers(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp()
@@ -433,8 +490,8 @@ class TestEmailCheck(DjangoTestCase):
 
         sent_email = mail.outbox[0]
         expected_headers = {
-            'X-DJANGO-WATCHMAN': True,
-            'foo': 'bar',
+            "X-DJANGO-WATCHMAN": True,
+            "foo": "bar",
         }
         self.assertEqual(sent_email.extra_headers, expected_headers)
 
@@ -445,10 +502,10 @@ class TestEmailCheck(DjangoTestCase):
         self.assertEqual(len(mail.outbox), 1)
 
         sent_email = mail.outbox[0]
-        expected_sender = 'watchman@example.com'
+        expected_sender = "watchman@example.com"
         self.assertEqual(sent_email.from_email, expected_sender)
 
-    @override_settings(WATCHMAN_EMAIL_SENDER='custom@example.com')
+    @override_settings(WATCHMAN_EMAIL_SENDER="custom@example.com")
     def def_test_email_with_custom_sender(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp()
@@ -459,5 +516,5 @@ class TestEmailCheck(DjangoTestCase):
         self.assertEqual(len(mail.outbox), 1)
 
         sent_email = mail.outbox[0]
-        expected_sender = 'custom@example.com'
+        expected_sender = "custom@example.com"
         self.assertEqual(sent_email.from_email, expected_sender)
