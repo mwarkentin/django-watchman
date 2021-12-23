@@ -1,36 +1,31 @@
-.PHONY: help clean clean-build clean-pyc lint test docs release dist run
+.PHONY: help clean clean-build clean-pyc lint fmt test docs release dist run
 
 help:
-	@echo "clean-build - remove build artifacts"
-	@echo "clean-pyc - remove Python file artifacts"
-	@echo "lint - check PEP8 style with flake8, and rst with rst-lint"
-	@echo "test - run tests quickly with the default Python"
-	@echo "coverage - check code coverage quickly with the default Python"
-	@echo "docs - generate Sphinx HTML documentation, including API docs"
-	@echo "release - package and upload a release"
-	@echo "dist - package a release"
-	@echo "run - build and run sample project with docker"
+	@grep -E -h '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-clean: clean-build clean-pyc
+clean: clean-build clean-pyc ## Clean all
 
-clean-build:
+clean-build: ## Clean build artifacts
 	rm -fr build/
 	rm -fr dist/
 	rm -fr *.egg-info
 
-clean-pyc:
+clean-pyc: ## Clean compiled python files
 	find . -name '*.pyc' -exec rm -f {} +
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 
-lint:
+lint: ## Check PEP8 style with flake8, and rst with rst-lint
 	flake8 watchman tests --ignore=E501
 	rst-lint *.rst
 
-test:
+fmt: ## Format python code with black
+	black .
+
+test: ## Run tests using GHA workflows with act
 	act --job build
 
-docs:
+docs: ## Generate Sphinx HTML documentation, including API docs
 	rm -f docs/watchman.rst
 	rm -f docs/modules.rst
 	sphinx-apidoc -o docs/ watchman
@@ -38,16 +33,16 @@ docs:
 	$(MAKE) -C docs html
 	open docs/_build/html/index.html
 
-release: clean lint test
+release: clean lint test ## Package and upload a release
 	python setup.py sdist
 	python setup.py bdist_wheel
 	twine upload dist/*
 
-dist: clean lint test
+dist: clean lint test ## Package a release
 	python setup.py sdist
 	python setup.py bdist_wheel
 	ls -l dist
 
-run:
+run: ## Build and run sample project with docker
 	docker build -t watchman .
 	docker run -it -p 8000:8000 watchman

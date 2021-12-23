@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-from os.path import join as joinpath
 
 import uuid
+from os.path import join as joinpath
+
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.mail import EmailMessage
 from django.db import connections
 
-from watchman.decorators import check
 from watchman import settings as watchman_settings
 from watchman import utils
+from watchman.decorators import check
 
 
 def _check_caches(caches):
@@ -20,8 +21,8 @@ def _check_caches(caches):
 
 @check
 def _check_cache(cache_name):
-    key = 'django-watchman-{}'.format(uuid.uuid4())
-    value = 'django-watchman-{}'.format(uuid.uuid4())
+    key = "django-watchman-{}".format(uuid.uuid4())
+    value = "django-watchman-{}".format(uuid.uuid4())
 
     cache = utils.get_cache(cache_name)
 
@@ -60,8 +61,11 @@ def _check_email():
 
 @check
 def _check_storage():
-    filename = joinpath(watchman_settings.WATCHMAN_STORAGE_PATH, 'django-watchman-{}.txt'.format(uuid.uuid4()))
-    content = b'django-watchman test file'
+    filename = joinpath(
+        watchman_settings.WATCHMAN_STORAGE_PATH,
+        "django-watchman-{}.txt".format(uuid.uuid4()),
+    )
+    content = b"django-watchman test file"
     path = default_storage.save(filename, ContentFile(content))
     default_storage.size(path)
     default_storage.open(path).read()
