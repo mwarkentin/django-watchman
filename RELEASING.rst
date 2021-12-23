@@ -2,7 +2,7 @@
 Releasing
 =========
 
-Releases are created via Travis or uploaded locally using `twine <https://github.com/pypa/twine>`_.
+Releases are created via Github Actions (soon: https://github.com/mwarkentin/django-watchman/issues/177) or uploaded locally using `twine <https://github.com/pypa/twine>`_.
 
 When the release is ready to go:
 
@@ -12,12 +12,10 @@ When the release is ready to go:
 * Push tag: ``git push origin 1.0.0``
 * Create a release from the tag on Github
 
-Travis will run the full test suite and deploy to pypi in a separate stage if everything passes.
-
 Local fallback
 ~~~~~~~~~~~~~~
 
-If Travis isn't available or working for releases for some reason, you can use `twine`_ to upload the release.
+If Github Actions isn't available or working for releases for some reason, you can use `twine`_ to upload the release.
 
 * Install and configure `twine`_
 * Check dist locally: ``make dist``

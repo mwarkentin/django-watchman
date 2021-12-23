@@ -11,24 +11,24 @@ from watchman.utils import get_checks
 def _add_options(target):
     return (
         target(
-            '-c',
-            '--checks',
-            dest='checks',
-            help='A comma-separated list of watchman checks to run (full python dotted paths)'
+            "-c",
+            "--checks",
+            dest="checks",
+            help="A comma-separated list of watchman checks to run (full python dotted paths)",
         ),
         target(
-            '-s',
-            '--skips',
-            dest='skips',
-            help='A comma-separated list of watchman checks to skip (full python dotted paths)'
-        )
+            "-s",
+            "--skips",
+            dest="skips",
+            help="A comma-separated list of watchman checks to skip (full python dotted paths)",
+        ),
     )
 
 
 class Command(BaseCommand):
-    help = 'Runs the default django-watchman checks'
+    help = "Runs the default django-watchman checks"
 
-    if hasattr(BaseCommand, 'option_list'):
+    if hasattr(BaseCommand, "option_list"):
         # Django < 1.10
         option_list = BaseCommand.option_list + _add_options(make_option)
     else:
@@ -40,14 +40,14 @@ class Command(BaseCommand):
         check_list = None
         skip_list = None
 
-        checks = options['checks']
-        skips = options['skips']
+        checks = options["checks"]
+        skips = options["skips"]
 
         if checks is not None:
-            check_list = checks.split(',')
+            check_list = checks.split(",")
 
         if skips is not None:
-            skip_list = skips.split(',')
+            skip_list = skips.split(",")
 
         for check in get_checks(check_list=check_list, skip_list=skip_list):
             if callable(check):
@@ -55,5 +55,5 @@ class Command(BaseCommand):
                 if '"ok": false' in resp:
                     raise CommandError(resp)
                 # Cast to int for Django < 1.8 (used to be a string value)
-                elif int(options['verbosity']) >= 2:
+                elif int(options["verbosity"]) >= 2:
                     self.stdout.write(resp)

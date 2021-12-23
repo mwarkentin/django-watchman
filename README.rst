@@ -5,11 +5,8 @@ django-watchman
 .. image:: http://img.shields.io/pypi/v/django-watchman.svg
     :target: http://badge.fury.io/py/django-watchman
 
-.. image:: http://img.shields.io/travis/mwarkentin/django-watchman/master.svg
-    :target: https://travis-ci.org/mwarkentin/django-watchman
-
 .. image:: http://img.shields.io/coveralls/mwarkentin/django-watchman.svg
-    :target: https://coveralls.io/r/mwarkentin/django-watchman?branch=master
+    :target: https://coveralls.io/r/mwarkentin/django-watchman?branch=main
 
 django-watchman exposes a status endpoint for your backing services like
 databases, caches, etc.
@@ -44,7 +41,7 @@ Quickstart
 
 3. Include the watchman URLconf in your project ``urls.py`` like this::
 
-    url(r'^watchman/', include('watchman.urls')),
+    re_path(r'^watchman/', include('watchman.urls')),
 
 4. Start the development server and visit ``http://127.0.0.1:8000/watchman/`` to
    get a JSON response of your backing service statuses::
@@ -194,7 +191,7 @@ can use the ``bare_status`` view by putting the following into ``urls.py``::
 
     import watchman.views
     # ...
-    url(r'^status/?$', watchman.views.bare_status),
+    re_path(r'^status/?$', watchman.views.bare_status),
 
 Django management command
 *************************

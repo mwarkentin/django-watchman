@@ -4,6 +4,16 @@
 History
 =======
 
+1.2.0 (2020-09-20)
+------------------
+
+* [`#163 <https://github.com/mwarkentin/django-watchman/pull/163>`_] Replaced deprecated url() calls with re_path() (@dominik-bln)
+
+1.1.1 (2020-05-04)
+------------------
+
+* [`#159 <https://github.com/mwarkentin/django-watchman/pull/159>`_] Fixed invalid escape sequence in decorators by changing to a raw string
+
 1.1.0 (2020-03-16)
 ------------------
 
