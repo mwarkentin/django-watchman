@@ -1,7 +1,6 @@
 coverage>=4.0
-nose>=1.3.0
 django-nose>=1.2
 flake8>=2.1.0
-restructuredtext_lint==0.12.2
 mysqlclient>=1.3.13
-tox>=1.7.0
+nose>=1.3.0
+restructuredtext_lint==0.12.2
