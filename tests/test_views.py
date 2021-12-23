@@ -10,12 +10,6 @@ Tests for `django-watchman` views module.
 from __future__ import unicode_literals
 
 import json
-from _threading_local import local
-from copy import copy
-
-from django.db import connections
-from django.db.utils import DEFAULT_DB_ALIAS
-from django.test.testcases import TransactionTestCase
 
 from importlib import reload
 import sys
@@ -26,7 +20,7 @@ from django.conf import settings
 from django.contrib.auth.models import AnonymousUser
 from django.core import mail
 from django.test import TestCase as DjangoTestCase
-from django.test.client import RequestFactory, Client
+from django.test.client import RequestFactory
 from django.test.utils import override_settings
 
 from unittest.mock import patch
