@@ -1,17 +1,18 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
-from os.path import join as joinpath
 
 import uuid
+from os.path import join as joinpath
+
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
 from django.core.mail import EmailMessage
 from django.db import connections
 
-from watchman.decorators import check
 from watchman import settings as watchman_settings
 from watchman import utils
+from watchman.decorators import check
 
 
 def _check_caches(caches):

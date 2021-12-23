@@ -10,7 +10,6 @@ Tests for `django-watchman` utils module.
 from __future__ import unicode_literals
 
 import unittest
-
 from unittest.mock import patch
 
 from watchman.utils import get_cache, get_checks

@@ -1,7 +1,6 @@
 import sys
 import traceback
 
-
 try:
     from django.conf import settings
 

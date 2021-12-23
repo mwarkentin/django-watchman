@@ -11,11 +11,10 @@ from __future__ import unicode_literals
 
 import logging
 import unittest
-
-from django.urls import reverse
-from django.test.client import Client
-
 from unittest import mock
+
+from django.test.client import Client
+from django.urls import reverse
 
 from watchman import settings as watchman_settings
 from watchman.decorators import check

@@ -1,4 +1,5 @@
 from django.conf import settings
+
 from watchman.constants import DEFAULT_CHECKS, PAID_CHECKS
 
 # TODO: these should not be module level (https://github.com/mwarkentin/django-watchman/issues/13)

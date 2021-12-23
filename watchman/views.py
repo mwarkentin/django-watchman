@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+
 import warnings
 
 from django.db.transaction import non_atomic_requests
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.utils.translation import gettext as _
+
 from watchman import __version__, settings
 from watchman.decorators import auth
 from watchman.utils import get_checks
-
 
 WATCHMAN_VERSION_HEADER = "X-Watchman-Version"
 

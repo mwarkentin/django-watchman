@@ -10,10 +10,10 @@ Tests for `django-watchman` views module.
 from __future__ import unicode_literals
 
 import json
-
-from importlib import reload
 import sys
 import unittest
+from importlib import reload
+from unittest.mock import patch
 
 import django
 from django.conf import settings
@@ -22,8 +22,6 @@ from django.core import mail
 from django.test import TestCase as DjangoTestCase
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
-
-from unittest.mock import patch
 
 from watchman import checks, views
 

@@ -9,8 +9,8 @@ Tests for `django-watchman` management commands.
 
 from __future__ import unicode_literals
 
-from io import StringIO
 import unittest
+from io import StringIO
 
 from django.core.management import call_command
 
