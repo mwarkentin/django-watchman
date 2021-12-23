@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 
 from __future__ import unicode_literals
+
 import warnings
 from collections.abc import Iterable
 
 from django.db.transaction import non_atomic_requests
-from django.http import JsonResponse, HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
-from django.utils.translation import ugettext as _
+from django.utils.translation import gettext as _
+
 from watchman import __version__, settings
 from watchman.decorators import auth
 from watchman.utils import get_checks
 
-
-WATCHMAN_VERSION_HEADER = 'X-Watchman-Version'
+WATCHMAN_VERSION_HEADER = "X-Watchman-Version"
 
 
 def _get_check_params(request):
@@ -21,23 +22,27 @@ def _get_check_params(request):
     skip_list = None
 
     if len(request.GET) > 0:
-        if 'check' in request.GET:
-            check_list = request.GET.getlist('check')
-        if 'skip' in request.GET:
-            skip_list = request.GET.getlist('skip')
+        if "check" in request.GET:
+            check_list = request.GET.getlist("check")
+        if "skip" in request.GET:
+            skip_list = request.GET.getlist("skip")
 
     return (check_list, skip_list)
 
 
 def _deprecation_warnings():
     if settings.WATCHMAN_TOKEN:
-        warnings.warn("`WATCHMAN_TOKEN` setting is deprecated, use `WATCHMAN_TOKENS` instead. It will be removed in django-watchman 1.0", DeprecationWarning)
+        warnings.warn(
+            "`WATCHMAN_TOKEN` setting is deprecated, use `WATCHMAN_TOKENS` instead. It will be removed in django-watchman 1.0",
+            DeprecationWarning,
+        )
 
 
 def _disable_apm():
     # New Relic
     try:
         import newrelic.agent
+
         newrelic.agent.ignore_transaction(flag=True)
     except ImportError:
         pass
@@ -45,6 +50,7 @@ def _disable_apm():
     try:
         from ddtrace import tracer
         from ddtrace.constants import MANUAL_DROP_KEY
+
         tracer.current_span().set_tag(MANUAL_DROP_KEY)
     except (AttributeError, ImportError):
         pass
@@ -69,12 +75,12 @@ def run_checks(request):
                 for _type in _check:
                     if type(_check[_type]) == dict:
                         result = _check[_type]
-                        if not result['ok']:
+                        if not result["ok"]:
                             ok = False
                     elif type(_check[_type]) == list:
                         for entry in _check[_type]:
                             for result in entry:
-                                if not entry[result]['ok']:
+                                if not entry[result]["ok"]:
                                     ok = False
             checks.update(_check)
 
@@ -89,10 +95,10 @@ def status(request):
     if not checks:
         response = JsonResponse(
             {
-                'error': 404,
-                'message': _('No checks found'),
+                "error": 404,
+                "message": _("No checks found"),
             },
-            status=404
+            status=404,
         )
     else:
         http_code = 200 if ok else settings.WATCHMAN_ERROR_CODE
@@ -108,13 +114,13 @@ def status(request):
 def bare_status(request):
     checks, ok = run_checks(request)
     http_code = 200 if ok else settings.WATCHMAN_ERROR_CODE
-    return HttpResponse(status=http_code, content_type='text/plain')
+    return HttpResponse(status=http_code, content_type="text/plain")
 
 
 def ping(request):
     if settings.WATCHMAN_DISABLE_APM:
         _disable_apm()
-    return HttpResponse('pong', content_type='text/plain')
+    return HttpResponse("pong", content_type="text/plain")
 
 
 @auth
@@ -140,10 +146,10 @@ def dashboard(request):
             #     'stacktrace': "...",
             # }
             single_status = value.copy()
-            single_status['name'] = ''
+            single_status["name"] = ""
             expanded_check = {
-                'ok': value['ok'],
-                'statuses': [single_status],
+                "ok": value["ok"],
+                "statuses": [single_status],
             }
         else:
             # For other systems (eg: cache, database) value is a
@@ -171,21 +177,25 @@ def dashboard(request):
             for outer_status in value:
                 for name, inner_status in outer_status.items():
                     detail = inner_status.copy()
-                    detail['name'] = name
+                    detail["name"] = name
                     statuses.append(detail)
 
             expanded_check = {
-                'ok': all(detail['ok'] for detail in statuses),
-                'statuses': statuses,
+                "ok": all(detail["ok"] for detail in statuses),
+                "statuses": statuses,
             }
         expanded_checks[key] = expanded_check
 
-    response = render(request, 'watchman/dashboard.html', {
-        'checks': expanded_checks,
-        'overall_status': overall_status,
-        'watchman_version': __version__,
-        'expose_watchman_version': settings.EXPOSE_WATCHMAN_VERSION,
-    })
+    response = render(
+        request,
+        "watchman/dashboard.html",
+        {
+            "checks": expanded_checks,
+            "overall_status": overall_status,
+            "watchman_version": __version__,
+            "expose_watchman_version": settings.EXPOSE_WATCHMAN_VERSION,
+        },
+    )
 
     if settings.EXPOSE_WATCHMAN_VERSION:
         response[WATCHMAN_VERSION_HEADER] = __version__
