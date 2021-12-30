@@ -30,7 +30,7 @@ class TestDBConnection(unittest.TestCase):
     def setUp(self):
         self.client = Client()
 
-    @patch('django.db.connections')
+    @patch('watchman.checks.connections')
     def test_cursor_is_called(self, mock_connections):
         cursor_mock = MagicMock()
         mock_connections['default'].cursor().__enter__.return_value = cursor_mock
