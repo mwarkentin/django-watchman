@@ -12,10 +12,10 @@ from __future__ import unicode_literals
 import logging
 import unittest
 from unittest import mock
+from unittest.mock import MagicMock, patch
 
 from django.test.client import Client
 from django.urls import reverse
-from unittest.mock import MagicMock, patch
 
 from watchman import settings as watchman_settings
 from watchman.decorators import check
@@ -30,15 +30,16 @@ class TestDBConnection(unittest.TestCase):
     def setUp(self):
         self.client = Client()
 
-    @patch('watchman.checks.connections')
+    @patch("watchman.checks.connections")
     def test_cursor_is_called(self, mock_connections):
         cursor_mock = MagicMock()
-        mock_connections['default'].cursor().__enter__.return_value = cursor_mock
+        mock_connections["default"].cursor().__enter__.return_value = cursor_mock
         data = {
-            'watchman-token': 't1',
+            "watchman-token": "t1",
         }
-        self.client.get(reverse('status'), data)
-        cursor_mock.execute.assert_called_once_with('SELECT 1')
+        self.client.get(reverse("status"), data)
+        cursor_mock.execute.assert_called_once_with("SELECT 1")
+
 
 class TestWatchmanMultiTokens(unittest.TestCase):
     def setUp(self):
