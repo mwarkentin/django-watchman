@@ -85,10 +85,12 @@ class TestWatchman(unittest.TestCase):
         )
 
     def test_check_cache_handles_exception(self):
-
         response = checks._check_cache("foo")
         self.assertFalse(response["foo"]["ok"])
-        self.assertIn(response["foo"]["error"], "The connection 'foo' doesn't exist.")
+        self.assertIn(
+            response["foo"]["error"],
+            "The connection 'foo' doesn't exist.",
+        )
 
     def test_response_skipped_checks(self):
         expected_checks = [
