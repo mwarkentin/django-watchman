@@ -4,6 +4,11 @@
 History
 =======
 
+Unreleased
+----------
+
+* [`#181 <https://github.com/mwarkentin/django-watchman/pull/181>`_] Update sample project to Django 4.x
+
 1.2.0 (2020-09-20)
 ------------------
 
