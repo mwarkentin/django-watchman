@@ -4,6 +4,12 @@
 History
 =======
 
+Unreleased
+----------
+
+* [`#181 <https://github.com/mwarkentin/django-watchman/pull/181>`_] Update sample project to Django 4.x
+* [`#171 <https://github.com/mwarkentin/django-watchman/pull/171>`_] Improve database check performance: replace introspection.table_names() by a simple cursor query (@cristianemoyano)
+
 1.2.0 (2020-09-20)
 ------------------
 
