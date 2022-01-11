@@ -4,6 +4,14 @@
 History
 =======
 
+Unreleased
+----------
+
+* [`#181 <https://github.com/mwarkentin/django-watchman/pull/181>`_] Update sample project to Django 4.x
+* [`#171 <https://github.com/mwarkentin/django-watchman/pull/171>`_] Improve database check performance: replace introspection.table_names() by a simple cursor query (@cristianemoyano)
+* [`#180 <https://github.com/mwarkentin/django-watchman/pull/180>`_, `#174 <https://github.com/mwarkentin/django-watchman/pull/174>`_,] Switch testing to Github Actions from TravisCI, update to latest versions
+* [`#178 <https://github.com/mwarkentin/django-watchman/pull/178>`_] Add black, flake8, and isort linting
+
 1.2.0 (2020-09-20)
 ------------------
 
