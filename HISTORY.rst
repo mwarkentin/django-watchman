@@ -7,6 +7,9 @@ History
 Unreleased
 ----------
 
+1.3.0 (2022-02-24)
+------------------
+
 * [`#181 <https://github.com/mwarkentin/django-watchman/pull/181>`_] Update sample project to Django 4.x
 * [`#171 <https://github.com/mwarkentin/django-watchman/pull/171>`_] Improve database check performance: replace introspection.table_names() by a simple cursor query (@cristianemoyano)
 * [`#180 <https://github.com/mwarkentin/django-watchman/pull/180>`_, `#174 <https://github.com/mwarkentin/django-watchman/pull/174>`_,] Switch testing to Github Actions from TravisCI, update to latest versions
