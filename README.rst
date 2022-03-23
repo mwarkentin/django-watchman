@@ -11,8 +11,6 @@ django-watchman
 django-watchman exposes a status endpoint for your backing services like
 databases, caches, etc.
 
-.. image:: https://s3.amazonaws.com/snaps.michaelwarkentin.com/watchmenozy.jpg
-
 Documentation
 -------------
 
