@@ -65,7 +65,7 @@ Quickstart
 Pycon Canada Presentation (10 minutes)
 --------------------------------------
 
-.. image:: http://snaps.michaelwarkentin.com.s3.amazonaws.com/Full-stack_Django_application_monitoring_with_django-watchman_Michael_Warkentin_-_YouTube_2015-11-27_17-56-52.jpg
+.. image:: https://mwarkentin-snaps.s3.amazonaws.com/Full-stack_Django_application_monitoring_with_django-watchman_Michael_Warkentin_-_YouTube_2022-03-23_08-34-24.png
    :target: https://www.youtube.com/watch?v=iEgOCY7_zGI
 
 Features
