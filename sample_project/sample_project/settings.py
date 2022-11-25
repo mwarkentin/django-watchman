@@ -34,7 +34,8 @@ ALLOWED_HOSTS = ["0.0.0.0"]
 EXPOSE_WATCHMAN_VERSION = True
 
 WATCHMAN_CHECKS = watchman_constants.DEFAULT_CHECKS + (
-    "sample_project.checks.custom_check",
+    "sample_project.checks.ok_custom_check",
+    "sample_project.checks.fail_custom_check",
 )
 
 # Application definition
