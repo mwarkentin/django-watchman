@@ -132,14 +132,18 @@ You can also import the watchman.constants to include the DEFAULT_CHECKS and PAI
 
    WATCHMAN_CHECKS = watchman_constants.DEFAULT_CHECKS + ('module.path.to.callable', )
 
+Checks take no arguments, and must return a ``dict`` whose keys are applied to the JSON response.
 
-Checks take no arguments, and must return a ``dict`` whose keys are applied to the JSON response. Use the ``watchman.decorators.check`` decorator to capture exceptions::
+Use the ``watchman.decorators.check`` decorator to capture exceptions::
 
     from watchman.decorators import check
 
+    def custom_check():
+        return {"custom_check": _custom_check()}
+
     @check
-    def my_check():
-        return {'x': 1}
+    def _custom_check():
+        return {"ok": True, "extra_info": "if helpful"}
 
 In the absence of any checks, a 404 is thrown, which is then handled by the
 ``json_view`` decorator.
@@ -366,7 +370,10 @@ storage (``watchman.checks.storage``).
 Paid checks
 ***********
 
-Currently there is only one "paid" check - ``watchman.checks.email``. You can
+Paid checks are checks which may cost you money if they are run regularly.
+
+Currently there is only one "paid" check - ``watchman.checks.email``. Many
+times email is sent using managed services like SendGrid or Mailgun. You can
 enable it by setting the ``WATCHMAN_ENABLE_PAID_CHECKS`` to ``True``, or by
 overriding the ``WATCHMAN_CHECKS`` setting.
 

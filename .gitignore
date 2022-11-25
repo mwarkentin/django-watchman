@@ -18,6 +18,9 @@ develop-eggs
 lib
 lib64
 
+# Virtualenvs
+.venv/
+
 # Installer logs
 pip-log.txt
 
