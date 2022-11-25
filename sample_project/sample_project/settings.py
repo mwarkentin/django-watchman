@@ -38,6 +38,23 @@ WATCHMAN_CHECKS = watchman_constants.DEFAULT_CHECKS + (
     "sample_project.checks.fail_custom_check",
 )
 
+# Uncomment LOGGING to see debug logs in console
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'watchman': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#     },
+# }
+
 # Application definition
 
 INSTALLED_APPS = [
