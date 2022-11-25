@@ -366,7 +366,10 @@ storage (``watchman.checks.storage``).
 Paid checks
 ***********
 
-Currently there is only one "paid" check - ``watchman.checks.email``. You can
+Paid checks are checks which may cost you money if they are run regularly.
+
+Currently there is only one "paid" check - ``watchman.checks.email``. Many
+times email is sent using managed services like SendGrid or Mailgun. You can
 enable it by setting the ``WATCHMAN_ENABLE_PAID_CHECKS`` to ``True``, or by
 overriding the ``WATCHMAN_CHECKS`` setting.
 
