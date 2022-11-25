@@ -132,14 +132,18 @@ You can also import the watchman.constants to include the DEFAULT_CHECKS and PAI
 
    WATCHMAN_CHECKS = watchman_constants.DEFAULT_CHECKS + ('module.path.to.callable', )
 
+Checks take no arguments, and must return a ``dict`` whose keys are applied to the JSON response.
 
-Checks take no arguments, and must return a ``dict`` whose keys are applied to the JSON response. Use the ``watchman.decorators.check`` decorator to capture exceptions::
+Use the ``watchman.decorators.check`` decorator to capture exceptions::
 
     from watchman.decorators import check
 
+    def custom_check():
+        return {"custom_check": _custom_check()}
+
     @check
-    def my_check():
-        return {'x': 1}
+    def _custom_check():
+        return {"ok": True, "extra_info": "if helpful"}
 
 In the absence of any checks, a 404 is thrown, which is then handled by the
 ``json_view`` decorator.
