@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+from watchman import constants as watchman_constants
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -25,12 +27,33 @@ SECRET_KEY = "h%n@34@2nst!bm-ilj$3tfyq4-*iq@q@0_jjquu4$0g61ep-vy"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["0.0.0.0"]
 
 # Watchman configuration
 
 EXPOSE_WATCHMAN_VERSION = True
 
+WATCHMAN_CHECKS = watchman_constants.DEFAULT_CHECKS + (
+    "sample_project.checks.ok_custom_check",
+    "sample_project.checks.fail_custom_check",
+)
+
+# Uncomment LOGGING to see debug logs in console
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'watchman': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#     },
+# }
 
 # Application definition
 
