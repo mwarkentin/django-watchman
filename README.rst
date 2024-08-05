@@ -350,15 +350,26 @@ Using ``django.core.files.storage.default_storage``:
 * Read the test file's contents
 * Delete the test file
 
-By default the test file gets written on the root of the django ``MEDIA_ROOT``. If for whatever reasons this path is not writable by the user that runs the application you can override it by setting ``WATCHMAN_STORAGE_PATH`` to a specific path.
-Remember that this must be within the ``MEDIA_ROOT``, which by default is your project root. In ``settings.py``::
+By default the test file gets written on the root of the django ``MEDIA_ROOT``.
 
-  WATCHMAN_STORAGE_PATH = "/path_to_your_app/foo/bar/"
+There are two reasons why you may need to override this.  You can use
+the setting ``WATCHMAN_STORAGE_PATH`` to accomplish this.
+
+1) Django triggers a `django.core.exceptions.SuspiciousFileOperation
+<https://docs.djangoproject.com/en/5.0/ref/exceptions/#suspiciousoperation>`
+on the storage check.
+
+2) If for whatever reason, the base of ``MEDIA_ROOT`` is not writable by
+the user that runs Django.
+
+In either case, choose a path within and relative to ``MEDIA_ROOT``.
+
+  WATCHMAN_STORAGE_PATH = "django-watchman/"
 
 If the ``MEDIA_ROOT`` is already defined::
 
   from os.path import join as joinpath
-  WATCHMAN_STORAGE_PATH = joinpath(MEDIA_ROOT, "foo/bar")
+  WATCHMAN_STORAGE_PATH = joinpath(MEDIA_ROOT, "django-watchman/")
 
 Default checks
 **************
