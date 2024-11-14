@@ -3,6 +3,7 @@
 from __future__ import unicode_literals
 
 import warnings
+from collections.abc import Iterable
 
 from django.db.transaction import non_atomic_requests
 from django.http import HttpResponse, JsonResponse
@@ -170,6 +171,9 @@ def dashboard(request):
             #     },
             # ]
             statuses = []
+            if not isinstance(value, Iterable):
+                continue
+
             for outer_status in value:
                 for name, inner_status in outer_status.items():
                     detail = inner_status.copy()
