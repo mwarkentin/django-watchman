@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
-
 """
 test_django-watchman
 ------------
 
 Tests for `django-watchman` decorators module.
 """
-
-from __future__ import unicode_literals
 
 import logging
 import unittest

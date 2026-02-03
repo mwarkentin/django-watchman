@@ -15,32 +15,32 @@ clean-pyc: ## Clean compiled python files
 	find . -name '*.pyo' -exec rm -f {} +
 	find . -name '*~' -exec rm -f {} +
 
-lint: ## Check PEP8 style with flake8, and rst with rst-lint
-	flake8 watchman tests --ignore=E501
-	rst-lint *.rst
+lint: ## Check code with ruff and rst-lint
+	uv run ruff check .
+	uv run ruff format --check .
+	uv run rst-lint *.rst
 
-fmt: ## Format python code with black
-	black .
+fmt: ## Format code with ruff
+	uv run ruff format .
+	uv run ruff check --fix .
 
-test: ## Run tests using GHA workflows with act
-	act --job build
+test: ## Run tests
+	uv run coverage run --parallel --source watchman runtests.py
 
 docs: ## Generate Sphinx HTML documentation, including API docs
 	rm -f docs/watchman.rst
 	rm -f docs/modules.rst
-	sphinx-apidoc -o docs/ watchman
+	uv run sphinx-apidoc -o docs/ watchman
 	$(MAKE) -C docs clean
 	$(MAKE) -C docs html
 	open docs/_build/html/index.html
 
 release: clean lint test ## Package and upload a release
-	python setup.py sdist
-	python setup.py bdist_wheel
-	twine upload dist/*
+	uv build
+	uv publish
 
 dist: clean lint test ## Package a release
-	python setup.py sdist
-	python setup.py bdist_wheel
+	uv build
 	ls -l dist
 
 run: ## Build and run sample project with docker

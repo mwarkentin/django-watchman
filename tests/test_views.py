@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
-
 """
 test_django-watchman
 ------------
 
 Tests for `django-watchman` views module.
 """
-
-from __future__ import unicode_literals
 
 import json
 import sys
@@ -29,7 +25,7 @@ from watchman import checks, views
 class AuthenticatedUser(AnonymousUser):
     @property
     def is_authenticated(self):
-        class CallableTrue(object):
+        class CallableTrue:
             def __call__(self, *args, **kwargs):
                 return True
 
@@ -468,7 +464,7 @@ class TestEmailCheck(DjangoTestCase):
 
         sent_email = mail.outbox[0]
         expected_headers = {
-            "X-DJANGO-WATCHMAN": True,
+            "X-DJANGO-WATCHMAN": "true",
         }
         self.assertEqual(sent_email.extra_headers, expected_headers)
 
@@ -484,7 +480,7 @@ class TestEmailCheck(DjangoTestCase):
 
         sent_email = mail.outbox[0]
         expected_headers = {
-            "X-DJANGO-WATCHMAN": True,
+            "X-DJANGO-WATCHMAN": "true",
             "foo": "bar",
         }
         self.assertEqual(sent_email.extra_headers, expected_headers)

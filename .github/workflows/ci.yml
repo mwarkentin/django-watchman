@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Set up Python
+        run: uv python install 3.13
+      - name: Install dependencies
+        run: uv sync --group dev
+      - name: Run ruff check
+        run: uv run ruff check .
+      - name: Run ruff format check
+        run: uv run ruff format --check .
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        django-version: ["4.2", "5.0", "5.1"]
+        exclude:
+          # Django 5.0+ requires Python 3.10+
+          - django-version: "5.0"
+            python-version: "3.9"
+          - django-version: "5.1"
+            python-version: "3.9"
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Set up Python ${{ matrix.python-version }}
+        run: uv python install ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          uv sync --group dev
+          uv pip install django==${{ matrix.django-version }}.*
+      - name: Run tests with coverage
+        run: uv run coverage run --parallel --source watchman runtests.py
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          fail_ci_if_error: false

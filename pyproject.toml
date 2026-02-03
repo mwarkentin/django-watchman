@@ -1,6 +1,78 @@
-[tool.black]
-target-version = ['py39']
-include = '\.pyi?$'
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
-[tool.isort]
-profile = "black"
+[project]
+name = "django-watchman"
+version = "1.3.0"
+description = "django-watchman exposes a status endpoint for your backing services"
+readme = "README.rst"
+license = "BSD-3-Clause"
+authors = [{ name = "Michael Warkentin", email = "mwarkentin@gmail.com" }]
+keywords = ["django", "watchman", "health-check", "status"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Framework :: Django",
+    "Framework :: Django :: 4.2",
+    "Framework :: Django :: 5.0",
+    "Framework :: Django :: 5.1",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
+requires-python = ">=3.10"
+dependencies = ["django>=4.2"]
+
+[project.urls]
+Homepage = "https://github.com/mwarkentin/django-watchman"
+Documentation = "https://django-watchman.readthedocs.io"
+Repository = "https://github.com/mwarkentin/django-watchman"
+Changelog = "https://github.com/mwarkentin/django-watchman/blob/main/HISTORY.rst"
+
+[dependency-groups]
+dev = [
+    "coverage>=7.0",
+    "pytest>=8.0",
+    "pytest-django>=4.5",
+    "restructuredtext-lint>=1.4",
+    "ruff>=0.9",
+]
+mysql = [
+    "mysqlclient>=2.0",
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/watchman",
+    "/tests",
+    "/docs",
+    "AUTHORS.rst",
+    "CONTRIBUTING.rst",
+    "HISTORY.rst",
+    "LICENSE",
+    "README.rst",
+    "runtests.py",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["watchman"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "C4", "UP"]
+ignore = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["watchman"]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "tests.settings"
+python_files = ["tests.py", "test_*.py", "*_tests.py"]

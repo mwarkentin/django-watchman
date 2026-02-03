@@ -34,8 +34,8 @@ ALLOWED_HOSTS = ["0.0.0.0"]
 EXPOSE_WATCHMAN_VERSION = True
 
 WATCHMAN_CHECKS = watchman_constants.DEFAULT_CHECKS + (
-    "sample_project.checks.ok_custom_check",
-    "sample_project.checks.fail_custom_check",
+    "sample_project.sample_project.checks.ok_custom_check",
+    "sample_project.sample_project.checks.fail_custom_check",
 )
 
 # Uncomment LOGGING to see debug logs in console
@@ -77,7 +77,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "sample_project.urls"
+ROOT_URLCONF = "sample_project.sample_project.urls"
 
 TEMPLATES = [
     {
@@ -95,7 +95,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "sample_project.wsgi.application"
+WSGI_APPLICATION = "sample_project.sample_project.wsgi.application"
 
 
 # Database
@@ -150,3 +150,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = "/static/"
+
+# Media files (uploaded files)
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
+
+# Default auto field for models
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
