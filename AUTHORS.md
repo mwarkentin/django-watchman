@@ -1,0 +1,23 @@
+# Credits
+
+## Author / Maintainer
+
+- Michael Warkentin <mwarkentin@gmail.com> - <https://github.com/mwarkentin> - [@mwarkentin](https://twitter.com/mwarkentin)
+
+## Contributors
+
+- Keryn Knight - <https://github.com/kezabelle>
+- blag - <https://github.com/blag>
+- kilbasar - <https://github.com/kilbasar>
+- Joseph Kahn - <https://github.com/JBKahn>
+- Ben Webber - <https://github.com/benwebber>
+- Michael Fladischer - <https://github.com/fladi>
+- Justin Sacbibit - <https://github.com/justinsacbibit>
+- Ulrich Petri - <https://github.com/ulope>
+- Tim Tisdall - <https://github.com/tisdall>
+- Eduardo Cardoso - <https://github.com/eduardocardoso>
+- Daniel Widerin - <https://github.com/saily>
+- Ryan Wilson-Perkin - <https://github.com/ryanwilsonperkin>
+- David Hoffman - <https://github.com/dhoffman34>
+- James M. Allen - <https://github.com/jamesmallen>
+- Ryan Verner - <https://github.com/xfxf>

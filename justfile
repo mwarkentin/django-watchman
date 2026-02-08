@@ -17,11 +17,10 @@ clean-pyc:
     find . -name '*.pyo' -exec rm -f {} +
     find . -name '*~' -exec rm -f {} +
 
-# Check code with ruff and rst-lint
+# Check code with ruff
 lint:
     uv run ruff check .
     uv run ruff format --check .
-    uv run rst-lint *.rst
 
 # Format code with ruff
 fmt:
@@ -32,14 +31,13 @@ fmt:
 test:
     uv run coverage run --parallel --source watchman -m pytest
 
-# Generate Sphinx HTML documentation, including API docs
+# Serve MkDocs documentation locally
 docs:
-    rm -f docs/watchman.rst
-    rm -f docs/modules.rst
-    uv run sphinx-apidoc -o docs/ watchman
-    make -C docs clean
-    make -C docs html
-    open docs/_build/html/index.html
+    uv run --group docs mkdocs serve
+
+# Build MkDocs documentation
+docs-build:
+    uv run --group docs mkdocs build --strict
 
 # Package and upload a release
 release: clean lint test
