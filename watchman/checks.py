@@ -1,5 +1,5 @@
 import uuid
-from os.path import join as joinpath
+from pathlib import PurePath
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
@@ -60,11 +60,11 @@ def _check_storage():
     # Use relative path within storage - Django handles the base location
     storage_subdir = watchman_settings.WATCHMAN_STORAGE_PATH
     # Convert absolute paths to empty string (use storage root)
-    if storage_subdir and storage_subdir.startswith("/"):
+    if storage_subdir and PurePath(storage_subdir).is_absolute():
         storage_subdir = ""
     filename = f"django-watchman-{uuid.uuid4()}.txt"
     if storage_subdir:
-        filename = joinpath(storage_subdir, filename)
+        filename = str(PurePath(storage_subdir) / filename)
     content = b"django-watchman test file"
     path = default_storage.save(filename, ContentFile(content))
     default_storage.size(path)
