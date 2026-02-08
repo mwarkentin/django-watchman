@@ -13,7 +13,3 @@ indent_size = 4
 [*.yml]
 indent_style = space
 indent_size = 2
-
-[Vagrantfile]
-indent_style = space
-indent_size = 2
