@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
-
 """
 test_django-watchman
 ------------
 
 Tests for `django-watchman` management commands.
 """
-
-from __future__ import unicode_literals
 
 import unittest
 from io import StringIO

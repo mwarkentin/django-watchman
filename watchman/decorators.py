@@ -122,10 +122,7 @@ elif settings.WATCHMAN_AUTH_DECORATOR == "watchman.decorators.token_required":
     # Avoid import loops
     auth = token_required
 else:
-    try:
-        from importlib import import_module
-    except ImportError:  # Django < 1.8
-        from django.utils.importlib import import_module
+    from importlib import import_module
 
     mod_name, dec = settings.WATCHMAN_AUTH_DECORATOR.rsplit(".", 1)
     auth = getattr(import_module(mod_name), dec)

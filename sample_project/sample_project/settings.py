@@ -27,7 +27,7 @@ SECRET_KEY = "h%n@34@2nst!bm-ilj$3tfyq4-*iq@q@0_jjquu4$0g61ep-vy"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["0.0.0.0"]
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1"]
 
 # Watchman configuration
 
@@ -150,3 +150,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = "/static/"
+
+# Media files (uploaded files)
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = "/media/"
+
+# Default auto field for models
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

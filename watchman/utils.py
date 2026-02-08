@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.core import cache as django_cache
 from django.utils.module_loading import import_string
 

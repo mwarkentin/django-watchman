@@ -32,6 +32,10 @@ Quickstart
 
     pip install django-watchman
 
+   Or with `uv <https://docs.astral.sh/uv/>`_::
+
+    uv add django-watchman
+
 2. Add ``watchman`` to your ``INSTALLED_APPS`` setting like this::
 
     INSTALLED_APPS = (
@@ -405,7 +409,7 @@ Requirements
 Instructions
 ************
 
-1. Build and run the Docker image with the current local code: ``make run``
+1. Build and run the Docker image with the current local code: ``just run``
 2. Visit watchman json endpoint in your browser: http://127.0.0.1:8000/watchman/
 3. Visit watchman json endpoint in your browser: http://127.0.0.1:8000/watchman/?skip=sample_project.checks.fail_custom_check
 4. Visit watchman dashboard in your browser: http://127.0.0.1:8000/watchman/dashboard/

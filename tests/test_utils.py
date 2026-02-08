@@ -1,13 +1,9 @@
-# -*- coding: utf-8 -*-
-
 """
 test_django-watchman
 ------------
 
 Tests for `django-watchman` utils module.
 """
-
-from __future__ import unicode_literals
 
 import unittest
 from unittest.mock import patch
@@ -17,17 +13,12 @@ from watchman.utils import get_cache, get_checks
 
 class TestWatchman(unittest.TestCase):
     def assert_lists_equal(self, list1, list2):
-        try:
-            # Python 3
-            self.assertCountEqual(list1, list2)
-        except AttributeError:
-            # Python 2
-            self.assertItemsEqual(list1, list2)
+        self.assertCountEqual(list1, list2)
 
     @patch("watchman.utils.django_cache.caches", spec_set=dict)
     def test_get_cache_django_17_or_greater(self, get_cache_mock):
         get_cache("foo")
-        get_cache_mock.__getitem__.called_once_with("foo")
+        get_cache_mock.__getitem__.assert_called_once_with("foo")
 
     def test_get_checks_returns_all_available_checks_by_default(self):
         checks = [check.__name__ for check in get_checks()]

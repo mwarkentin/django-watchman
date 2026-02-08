@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
-
 import warnings
 
 from django.db.transaction import non_atomic_requests
@@ -34,6 +30,7 @@ def _deprecation_warnings():
         warnings.warn(
             "`WATCHMAN_TOKEN` setting is deprecated, use `WATCHMAN_TOKENS` instead. It will be removed in django-watchman 1.0",
             DeprecationWarning,
+            stacklevel=2,
         )
 
 
@@ -72,11 +69,11 @@ def run_checks(request):
             # Set our HTTP status code if there were any errors
             if settings.WATCHMAN_ERROR_CODE != 200:
                 for _type in _check:
-                    if type(_check[_type]) == dict:
+                    if isinstance(_check[_type], dict):
                         result = _check[_type]
                         if not result["ok"]:
                             ok = False
-                    elif type(_check[_type]) == list:
+                    elif isinstance(_check[_type], list):
                         for entry in _check[_type]:
                             for result in entry:
                                 if not entry[result]["ok"]:

@@ -1,9 +1,5 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
-
 import uuid
-from os.path import join as joinpath
+from pathlib import PurePath
 
 from django.core.files.base import ContentFile
 from django.core.files.storage import default_storage
@@ -21,8 +17,8 @@ def _check_caches(caches):
 
 @check
 def _check_cache(cache_name):
-    key = "django-watchman-{}".format(uuid.uuid4())
-    value = "django-watchman-{}".format(uuid.uuid4())
+    key = f"django-watchman-{uuid.uuid4()}"
+    value = f"django-watchman-{uuid.uuid4()}"
 
     cache = utils.get_cache(cache_name)
 
@@ -46,7 +42,7 @@ def _check_database(database):
 
 @check
 def _check_email():
-    headers = {"X-DJANGO-WATCHMAN": True}
+    headers = {"X-DJANGO-WATCHMAN": "true"}
     headers.update(watchman_settings.WATCHMAN_EMAIL_HEADERS)
     email = EmailMessage(
         "django-watchman email check",
@@ -61,10 +57,14 @@ def _check_email():
 
 @check
 def _check_storage():
-    filename = joinpath(
-        watchman_settings.WATCHMAN_STORAGE_PATH,
-        "django-watchman-{}.txt".format(uuid.uuid4()),
-    )
+    # Use relative path within storage - Django handles the base location
+    storage_subdir = watchman_settings.WATCHMAN_STORAGE_PATH
+    # Convert absolute paths to empty string (use storage root)
+    if storage_subdir and PurePath(storage_subdir).is_absolute():
+        storage_subdir = ""
+    filename = f"django-watchman-{uuid.uuid4()}.txt"
+    if storage_subdir:
+        filename = str(PurePath(storage_subdir) / filename)
     content = b"django-watchman test file"
     path = default_storage.save(filename, ContentFile(content))
     default_storage.size(path)
