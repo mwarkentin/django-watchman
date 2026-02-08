@@ -30,7 +30,7 @@ fmt:
 
 # Run tests
 test:
-    uv run coverage run --parallel --source watchman runtests.py
+    uv run coverage run --parallel --source watchman -m pytest
 
 # Generate Sphinx HTML documentation, including API docs
 docs:

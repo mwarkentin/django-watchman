@@ -41,7 +41,7 @@ jobs:
           uv sync --group dev
           uv pip install django==${{ matrix.django-version }}.*
       - name: Run tests with coverage
-        run: uv run coverage run --parallel --source watchman runtests.py
+        run: uv run coverage run --parallel --source watchman -m pytest
       - name: Upload coverage
         uses: codecov/codecov-action@v4
         with:
