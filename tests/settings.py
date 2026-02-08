@@ -2,9 +2,9 @@
 Test settings for django-watchman tests.
 """
 
-import os
+from pathlib import Path
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 DEBUG = True
 USE_TZ = True
@@ -54,7 +54,7 @@ SITE_ID = 1
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Media files for storage checks
-MEDIA_ROOT = os.path.join(BASE_DIR, ".test_media")
+MEDIA_ROOT = BASE_DIR / ".test_media"
 MEDIA_URL = "/media/"
 
 # Email backend for testing

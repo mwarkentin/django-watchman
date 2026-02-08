@@ -32,6 +32,10 @@ Quickstart
 
     pip install django-watchman
 
+   Or with `uv <https://docs.astral.sh/uv/>`_::
+
+    uv add django-watchman
+
 2. Add ``watchman`` to your ``INSTALLED_APPS`` setting like this::
 
     INSTALLED_APPS = (

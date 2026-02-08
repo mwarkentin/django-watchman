@@ -43,6 +43,6 @@ jobs:
       - name: Run tests with coverage
         run: uv run coverage run --parallel --source watchman -m pytest
       - name: Upload coverage
-        uses: codecov/codecov-action@v4
+        uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: false
