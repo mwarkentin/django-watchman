@@ -27,15 +27,15 @@ SECRET_KEY = "h%n@34@2nst!bm-ilj$3tfyq4-*iq@q@0_jjquu4$0g61ep-vy"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["0.0.0.0"]
+ALLOWED_HOSTS = ["0.0.0.0", "127.0.0.1"]
 
 # Watchman configuration
 
 EXPOSE_WATCHMAN_VERSION = True
 
 WATCHMAN_CHECKS = watchman_constants.DEFAULT_CHECKS + (
-    "sample_project.sample_project.checks.ok_custom_check",
-    "sample_project.sample_project.checks.fail_custom_check",
+    "sample_project.checks.ok_custom_check",
+    "sample_project.checks.fail_custom_check",
 )
 
 # Uncomment LOGGING to see debug logs in console
@@ -77,7 +77,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "sample_project.sample_project.urls"
+ROOT_URLCONF = "sample_project.urls"
 
 TEMPLATES = [
     {
@@ -95,7 +95,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "sample_project.sample_project.wsgi.application"
+WSGI_APPLICATION = "sample_project.wsgi.application"
 
 
 # Database
