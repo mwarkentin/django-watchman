@@ -5,3 +5,12 @@ repos:
       - id: ruff
         args: [--fix]
       - id: ruff-format
+
+  - repo: local
+    hooks:
+      - id: tests
+        name: Run tests
+        entry: uv run pytest
+        language: system
+        pass_filenames: false
+        always_run: true
