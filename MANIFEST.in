@@ -1,9 +1,0 @@
-include AUTHORS.rst
-include CONTRIBUTING.rst
-include HISTORY.rst
-include LICENSE
-include README.rst
-include runtests.py
-recursive-include watchman *.html *.png *.gif *js *jpg *jpeg *svg *py
-recursive-include tests *.py
-recursive-include docs Makefile conf.py *.rst
