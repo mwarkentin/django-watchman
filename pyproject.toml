@@ -83,14 +83,6 @@ python-version = "3.10"
 # Optional APM packages that are conditionally imported
 allowed-unresolved-imports = ["newrelic.**", "ddtrace.**"]
 
-[[tool.ty.overrides]]
-include = ["tests/**"]
-
-[tool.ty.overrides.rules]
-# Tests index CheckResult (CheckStatus | dict[str, CheckStatus]) with dynamic
-# keys like response["foo"]. ty resolves the union to CheckStatus first, which
-# lacks that key. These are false positives from the union type, not real bugs.
-invalid-key = "ignore"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"

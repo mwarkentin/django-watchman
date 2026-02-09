@@ -7,6 +7,7 @@ Tests for `django-watchman` decorators module.
 
 import logging
 import unittest
+from typing import cast
 from unittest import mock
 from unittest.mock import MagicMock, patch
 
@@ -15,6 +16,7 @@ from django.urls import reverse
 
 from watchman import settings as watchman_settings
 from watchman.decorators import check
+from watchman.types import CheckStatus
 
 
 class FakeException(Exception):
@@ -159,8 +161,9 @@ class TestWatchmanSingleToken(unittest.TestCase):
         ):
             decorated_func = check(test_func)
             keys = ["ok", "error", "stacktrace"]
-            response = decorated_func("default")
-            self.assertIsInstance(response, dict)
+            result = decorated_func("default")
+            self.assertIsInstance(result, dict)
+            response = cast(dict[str, CheckStatus], result)
             for key in keys:
                 self.assertIn(key, response["default"])
             self.assertEqual(response["default"]["ok"], False)

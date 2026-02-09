@@ -9,6 +9,7 @@ import json
 import sys
 import unittest
 from importlib import reload
+from typing import cast
 from unittest.mock import patch
 
 import django
@@ -20,6 +21,7 @@ from django.test.client import RequestFactory
 from django.test.utils import override_settings
 
 from watchman import checks, views
+from watchman.types import CheckStatus
 
 
 class AuthenticatedUser(AnonymousUser):
@@ -74,14 +76,14 @@ class TestWatchman(unittest.TestCase):
         self.assertCountEqual(expected_checks, content.keys())
 
     def test_check_database_handles_exception(self):
-        response = checks._check_database("foo")
+        response = cast(dict[str, CheckStatus], checks._check_database("foo"))
         self.assertFalse(response["foo"]["ok"])
         self.assertEqual(
             response["foo"]["error"], "The connection 'foo' doesn't exist."
         )
 
     def test_check_cache_handles_exception(self):
-        response = checks._check_cache("foo")
+        response = cast(dict[str, CheckStatus], checks._check_cache("foo"))
         self.assertFalse(response["foo"]["ok"])
         self.assertIn(
             response["foo"]["error"],
