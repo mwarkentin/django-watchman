@@ -43,12 +43,18 @@ docs:
 docs-build:
     uv run --group docs mkdocs build --strict
 
-# Package and upload a release
+# Bump version in watchman/__init__.py
+bump version:
+    sed -i '' 's/__version__ = ".*"/__version__ = "{{ version }}"/' watchman/__init__.py
+    @echo "Version bumped to {{ version }}"
+    @grep __version__ watchman/__init__.py
+
+# Package and upload a release (local fallback - prefer GitHub Actions)
 release: clean lint test
     uv build
     uv publish
 
-# Package a release
+# Package a release (without publishing)
 dist: clean lint test
     uv build
     ls -l dist
