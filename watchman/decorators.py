@@ -1,23 +1,26 @@
 import logging
 import re
 import traceback
+from collections.abc import Callable
 from functools import wraps
+from typing import Any
 
-from django.http import HttpResponseForbidden
+from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 
 from watchman import settings
+from watchman.types import CheckResult, CheckStatus
 
-logger = logging.getLogger("watchman")
+logger: logging.Logger = logging.getLogger("watchman")
 
 
-def check(func):
+def check(func: Callable[..., CheckResult]) -> Callable[..., CheckResult]:
     """
     Decorator which wraps checks and returns an error response on failure.
     """
 
-    def wrapped(*args, **kwargs):
-        check_name = func.__name__
+    def wrapped(*args: Any, **kwargs: Any) -> CheckResult:
+        check_name = getattr(func, "__name__", repr(func))
         arg_name = None
         if args:
             arg_name = args[0]
@@ -26,10 +29,10 @@ def check(func):
                 logger.debug("Checking '%s' for '%s'", check_name, arg_name)
             else:
                 logger.debug("Checking '%s'", check_name)
-            response = func(*args, **kwargs)
+            response: CheckResult = func(*args, **kwargs)
         except Exception as e:
             message = str(e)
-            response = {
+            error_status: CheckStatus = {
                 "ok": False,
                 "error": message,
                 "stacktrace": traceback.format_exc(),
@@ -37,11 +40,13 @@ def check(func):
             # The check contains several individual checks (e.g., one per
             # database). Preface the results by name.
             if arg_name:
-                response = {arg_name: response}
+                named_result: dict[str, CheckStatus] = {arg_name: error_status}
+                response = named_result
                 logger.exception(
                     "Error calling '%s' for '%s': %s", check_name, arg_name, message
                 )
             else:
+                response = error_status
                 logger.exception("Error calling '%s': %s", check_name, message)
 
         return response
@@ -49,7 +54,9 @@ def check(func):
     return wrapped
 
 
-def token_required(view_func):
+def token_required(
+    view_func: Callable[..., HttpResponse],
+) -> Callable[..., HttpResponse]:
     """
     Decorator which ensures that one of the WATCHMAN_TOKENS is provided if set.
 
@@ -58,7 +65,7 @@ def token_required(view_func):
 
     """
 
-    def _parse_auth_header(auth_header):
+    def _parse_auth_header(auth_header: str) -> str:
         """
         Parse the `Authorization` header
 
@@ -73,7 +80,7 @@ def token_required(view_func):
         header_dict = dict(reg.findall(auth_header))
         return header_dict["Token"]
 
-    def _get_passed_token(request):
+    def _get_passed_token(request: HttpRequest) -> str | None:
         """
         Try to get the passed token, starting with the header and fall back to `GET` param
         """
@@ -85,7 +92,7 @@ def token_required(view_func):
             token = request.GET.get(settings.WATCHMAN_TOKEN_NAME)
         return token
 
-    def _validate_token(request):
+    def _validate_token(request: HttpRequest) -> bool:
         if settings.WATCHMAN_TOKENS:
             watchman_tokens = settings.WATCHMAN_TOKENS.split(",")
         elif settings.WATCHMAN_TOKEN:
@@ -99,7 +106,7 @@ def token_required(view_func):
 
     @csrf_exempt
     @wraps(view_func)
-    def _wrapped_view(request, *args, **kwargs):
+    def _wrapped_view(request: HttpRequest, *args: Any, **kwargs: Any) -> HttpResponse:
         if _validate_token(request):
             return view_func(request, *args, **kwargs)
 
@@ -110,10 +117,12 @@ def token_required(view_func):
 
 if settings.WATCHMAN_AUTH_DECORATOR is None:
 
-    def auth(view_func):
+    def auth(view_func: Callable[..., HttpResponse]) -> Callable[..., HttpResponse]:
         @csrf_exempt
         @wraps(view_func)
-        def _wrapped_view(request, *args, **kwargs):
+        def _wrapped_view(
+            request: HttpRequest, *args: Any, **kwargs: Any
+        ) -> HttpResponse:
             return view_func(request, *args, **kwargs)
 
         return _wrapped_view

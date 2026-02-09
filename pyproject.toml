@@ -24,6 +24,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 requires-python = ">=3.10"
 dependencies = ["django>=4.2"]
@@ -40,6 +41,7 @@ dev = [
     "pytest>=8.0",
     "pytest-django>=4.5",
     "ruff>=0.9",
+    "ty>=0.0.1a7",
 ]
 docs = [
     "mkdocs>=1.6",
@@ -74,6 +76,14 @@ ignore = ["E501"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["watchman"]
+
+[tool.ty.environment]
+python-version = "3.10"
+
+[tool.ty.analysis]
+# Optional APM packages that are conditionally imported
+allowed-unresolved-imports = ["newrelic.**", "ddtrace.**"]
+
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"

@@ -14,7 +14,7 @@ jobs:
       - name: Install uv
         uses: astral-sh/setup-uv@v7
       - name: Set up Python
-        run: uv python install 3.13
+        run: uv python install 3.14
       - name: Install dependencies
         run: uv sync --group dev
       - name: Run ruff check
@@ -22,12 +22,25 @@ jobs:
       - name: Run ruff format check
         run: uv run ruff format --check .
 
+  typecheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+      - name: Set up Python
+        run: uv python install 3.14
+      - name: Install dependencies
+        run: uv sync --group dev
+      - name: Run ty check
+        run: uv run ty check
+
   test:
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
         django-version: ["4.2", "5.1", "5.2"]
 
     steps:

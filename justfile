@@ -17,6 +17,10 @@ clean-pyc:
     find . -name '*.pyo' -exec rm -f {} +
     find . -name '*~' -exec rm -f {} +
 
+# Type check with ty
+typecheck:
+    uv run ty check
+
 # Check code with ruff
 lint:
     uv run ruff check .
