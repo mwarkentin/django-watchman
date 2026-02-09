@@ -15,8 +15,52 @@ from django.test.client import Client
 from django.urls import reverse
 
 from watchman import settings as watchman_settings
-from watchman.decorators import check
+from watchman.decorators import check, parse_auth_header
 from watchman.types import CheckStatus
+
+
+class TestParseAuthHeader(unittest.TestCase):
+    def test_quoted_token(self):
+        self.assertEqual(
+            parse_auth_header('WATCHMAN-TOKEN Token="ABC123"'),
+            "ABC123",
+        )
+
+    def test_unquoted_token(self):
+        self.assertEqual(
+            parse_auth_header("WATCHMAN-TOKEN Token=ABC123"),
+            "ABC123",
+        )
+
+    def test_token_with_dashes(self):
+        self.assertEqual(
+            parse_auth_header('WATCHMAN-TOKEN Token="123-456-ABCD"'),
+            "123-456-ABCD",
+        )
+
+    def test_unquoted_token_with_dashes(self):
+        self.assertEqual(
+            parse_auth_header("WATCHMAN-TOKEN Token=123-456-ABCD"),
+            "123-456-ABCD",
+        )
+
+    def test_missing_token_key_raises_key_error(self):
+        with self.assertRaises(KeyError):
+            parse_auth_header("WATCHMAN-TOKEN NotToken=ABC123")
+
+    def test_empty_string_raises_key_error(self):
+        with self.assertRaises(KeyError):
+            parse_auth_header("")
+
+    def test_no_equals_raises_key_error(self):
+        with self.assertRaises(KeyError):
+            parse_auth_header("WATCHMAN-TOKEN NoEqualsHere")
+
+    def test_multiple_params_extracts_token(self):
+        self.assertEqual(
+            parse_auth_header('WATCHMAN-TOKEN Foo="bar" Token="SECRET"'),
+            "SECRET",
+        )
 
 
 class FakeException(Exception):
