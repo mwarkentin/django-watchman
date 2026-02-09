@@ -1,5 +1,5 @@
 ci:
-    skip: [tests]
+    skip: [tests, ty]
 
 repos:
   - repo: https://github.com/astral-sh/ruff-pre-commit
