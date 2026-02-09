@@ -87,8 +87,6 @@ allowed-unresolved-imports = ["newrelic.**", "ddtrace.**"]
 include = ["tests/**"]
 
 [tool.ty.overrides.rules]
-# Tests use MagicMock to patch Logger attributes (e.g. logger.exception)
-invalid-assignment = "warn"
 # Tests index CheckResult (CheckStatus | dict[str, CheckStatus]) with dynamic
 # keys like response["foo"]. ty resolves the union to CheckStatus first, which
 # lacks that key. These are false positives from the union type, not real bugs.
