@@ -17,11 +17,14 @@ clean-pyc:
     find . -name '*.pyo' -exec rm -f {} +
     find . -name '*~' -exec rm -f {} +
 
-# Check code with ruff and rst-lint
+# Type check with ty
+typecheck:
+    uv run ty check
+
+# Check code with ruff
 lint:
     uv run ruff check .
     uv run ruff format --check .
-    uv run rst-lint *.rst
 
 # Format code with ruff
 fmt:
@@ -32,21 +35,26 @@ fmt:
 test:
     uv run coverage run --parallel --source watchman -m pytest
 
-# Generate Sphinx HTML documentation, including API docs
+# Serve MkDocs documentation locally
 docs:
-    rm -f docs/watchman.rst
-    rm -f docs/modules.rst
-    uv run sphinx-apidoc -o docs/ watchman
-    make -C docs clean
-    make -C docs html
-    open docs/_build/html/index.html
+    uv run --group docs mkdocs serve
 
-# Package and upload a release
+# Build MkDocs documentation
+docs-build:
+    uv run --group docs mkdocs build --strict
+
+# Bump version in watchman/__init__.py
+bump version:
+    sed -i '' 's/__version__ = ".*"/__version__ = "{{ version }}"/' watchman/__init__.py
+    @echo "Version bumped to {{ version }}"
+    @grep __version__ watchman/__init__.py
+
+# Package and upload a release (local fallback - prefer GitHub Actions)
 release: clean lint test
     uv build
     uv publish
 
-# Package a release
+# Package a release (without publishing)
 dist: clean lint test
     uv build
     ls -l dist

@@ -4,9 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "django-watchman"
-version = "1.3.0"
+dynamic = ["version"]
 description = "django-watchman exposes a status endpoint for your backing services"
-readme = "README.rst"
+readme = "README.md"
 license = "BSD-3-Clause"
 authors = [{ name = "Michael Warkentin", email = "mwarkentin@gmail.com" }]
 keywords = ["django", "watchman", "health-check", "status"]
@@ -24,6 +24,7 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 requires-python = ">=3.10"
 dependencies = ["django>=4.2"]
@@ -32,31 +33,37 @@ dependencies = ["django>=4.2"]
 Homepage = "https://github.com/mwarkentin/django-watchman"
 Documentation = "https://django-watchman.readthedocs.io"
 Repository = "https://github.com/mwarkentin/django-watchman"
-Changelog = "https://github.com/mwarkentin/django-watchman/blob/main/HISTORY.rst"
+Changelog = "https://github.com/mwarkentin/django-watchman/blob/main/CHANGELOG.md"
 
 [dependency-groups]
 dev = [
     "coverage>=7.0",
     "pytest>=8.0",
     "pytest-django>=4.5",
-    "restructuredtext-lint>=1.4",
     "ruff>=0.9",
+    "ty>=0.0.1a7",
+]
+docs = [
+    "mkdocs>=1.6",
+    "mkdocs-material>=9.0",
+    "mkdocstrings[python]>=0.27",
 ]
 mysql = [
     "mysqlclient>=2.0",
 ]
 
+[tool.hatch.version]
+path = "watchman/__init__.py"
+
 [tool.hatch.build.targets.sdist]
 include = [
     "/watchman",
     "/tests",
-    "/docs",
-    "AUTHORS.rst",
-    "CONTRIBUTING.rst",
-    "HISTORY.rst",
+    "AUTHORS.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
     "LICENSE",
-    "README.rst",
-
+    "README.md",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -72,6 +79,14 @@ ignore = ["E501"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["watchman"]
+
+[tool.ty.environment]
+python-version = "3.10"
+
+[tool.ty.analysis]
+# Optional APM packages that are conditionally imported
+allowed-unresolved-imports = ["newrelic.**", "ddtrace.**"]
+
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"

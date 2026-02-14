@@ -7,6 +7,7 @@ Tests for `django-watchman` decorators module.
 
 import logging
 import unittest
+from typing import cast
 from unittest import mock
 from unittest.mock import MagicMock, patch
 
@@ -14,7 +15,52 @@ from django.test.client import Client
 from django.urls import reverse
 
 from watchman import settings as watchman_settings
-from watchman.decorators import check
+from watchman.decorators import check, parse_auth_header
+from watchman.types import CheckStatus
+
+
+class TestParseAuthHeader(unittest.TestCase):
+    def test_quoted_token(self):
+        self.assertEqual(
+            parse_auth_header('WATCHMAN-TOKEN Token="ABC123"'),
+            "ABC123",
+        )
+
+    def test_unquoted_token(self):
+        self.assertEqual(
+            parse_auth_header("WATCHMAN-TOKEN Token=ABC123"),
+            "ABC123",
+        )
+
+    def test_token_with_dashes(self):
+        self.assertEqual(
+            parse_auth_header('WATCHMAN-TOKEN Token="123-456-ABCD"'),
+            "123-456-ABCD",
+        )
+
+    def test_unquoted_token_with_dashes(self):
+        self.assertEqual(
+            parse_auth_header("WATCHMAN-TOKEN Token=123-456-ABCD"),
+            "123-456-ABCD",
+        )
+
+    def test_missing_token_key_raises_key_error(self):
+        with self.assertRaises(KeyError):
+            parse_auth_header("WATCHMAN-TOKEN NotToken=ABC123")
+
+    def test_empty_string_raises_key_error(self):
+        with self.assertRaises(KeyError):
+            parse_auth_header("")
+
+    def test_no_equals_raises_key_error(self):
+        with self.assertRaises(KeyError):
+            parse_auth_header("WATCHMAN-TOKEN NoEqualsHere")
+
+    def test_multiple_params_extracts_token(self):
+        self.assertEqual(
+            parse_auth_header('WATCHMAN-TOKEN Foo="bar" Token="SECRET"'),
+            "SECRET",
+        )
 
 
 class FakeException(Exception):
@@ -131,43 +177,51 @@ class TestWatchmanSingleToken(unittest.TestCase):
         def test_func():
             raise FakeException("test error")
 
-        self.logger.exception = mock.MagicMock()
-        self.logger.debug = mock.MagicMock()
-        decorated_func = check(test_func)
-        keys = ["ok", "error", "stacktrace"]
-        response = decorated_func()
-        self.assertIsInstance(response, dict)
-        for key in keys:
-            self.assertIn(key, response)
-        self.assertEqual(response["ok"], False)
-        self.assertEqual(response["error"], "test error")
-        self.assertIsInstance(response["stacktrace"], str)
-        self.logger.debug.assert_called_once_with("Checking '%s'", "test_func")
-        self.logger.exception.assert_called_once_with(
-            "Error calling '%s': %s", "test_func", "test error"
-        )
+        with (
+            mock.patch.object(self.logger, "exception") as mock_exception,
+            mock.patch.object(self.logger, "debug") as mock_debug,
+        ):
+            decorated_func = check(test_func)
+            keys = ["ok", "error", "stacktrace"]
+            response = decorated_func()
+            self.assertIsInstance(response, dict)
+            for key in keys:
+                self.assertIn(key, response)
+            self.assertEqual(response["ok"], False)
+            self.assertEqual(response["error"], "test error")
+            self.assertIsInstance(response["stacktrace"], str)
+            mock_debug.assert_called_once_with("Checking '%s'", "test_func")
+            mock_exception.assert_called_once_with(
+                "Error calling '%s': %s", "test_func", "test error"
+            )
 
     def test_exception_caught_with_argument(self):
         def test_func(arg):
             raise FakeException("test error")
 
-        self.logger.exception = mock.MagicMock()
-        self.logger.debug = mock.MagicMock()
-        decorated_func = check(test_func)
-        keys = ["ok", "error", "stacktrace"]
-        response = decorated_func("default")
-        self.assertIsInstance(response, dict)
-        for key in keys:
-            self.assertIn(key, response["default"])
-        self.assertEqual(response["default"]["ok"], False)
-        self.assertEqual(response["default"]["error"], "test error")
-        self.assertIsInstance(response["default"]["stacktrace"], str)
-        self.logger.debug.assert_called_once_with(
-            "Checking '%s' for '%s'", "test_func", "default"
-        )
-        self.logger.exception.assert_called_once_with(
-            "Error calling '%s' for '%s': %s", "test_func", "default", "test error"
-        )
+        with (
+            mock.patch.object(self.logger, "exception") as mock_exception,
+            mock.patch.object(self.logger, "debug") as mock_debug,
+        ):
+            decorated_func = check(test_func)
+            keys = ["ok", "error", "stacktrace"]
+            result = decorated_func("default")
+            self.assertIsInstance(result, dict)
+            response = cast(dict[str, CheckStatus], result)
+            for key in keys:
+                self.assertIn(key, response["default"])
+            self.assertEqual(response["default"]["ok"], False)
+            self.assertEqual(response["default"]["error"], "test error")
+            self.assertIsInstance(response["default"]["stacktrace"], str)
+            mock_debug.assert_called_once_with(
+                "Checking '%s' for '%s'", "test_func", "default"
+            )
+            mock_exception.assert_called_once_with(
+                "Error calling '%s' for '%s': %s",
+                "test_func",
+                "default",
+                "test error",
+            )
 
     def tearDown(self):
         watchman_settings.WATCHMAN_TOKEN = None
