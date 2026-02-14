@@ -2,6 +2,36 @@
 
 ## Unreleased
 
+### Security
+
+- [#213](https://github.com/mwarkentin/django-watchman/pull/213) Fix ReDoS vulnerability in auth header parsing — replace regex-based `Authorization` header parser with simple string splitting to prevent polynomial backtracking on crafted input
+
+### Added
+
+- [#212](https://github.com/mwarkentin/django-watchman/pull/212) Add type annotations to all source modules and ship PEP 561 `py.typed` marker for downstream type checking
+- [#212](https://github.com/mwarkentin/django-watchman/pull/212) Add Python 3.14 support
+- [#214](https://github.com/mwarkentin/django-watchman/pull/214) Automate PyPI publishing with GitHub Actions trusted publishing (OIDC, no API tokens needed)
+
+### Changed
+
+- [#206](https://github.com/mwarkentin/django-watchman/pull/206) Modernize project infrastructure:
+  - Replace black, flake8, and isort with ruff for linting and formatting
+  - Switch from `make` to [`just`](https://github.com/casey/just) as the task runner
+  - Migrate from `setup.py` / `MANIFEST.in` to `pyproject.toml` with Hatch build backend
+  - Update CI test matrix: drop Django 5.0 (EOL), add Django 5.2 (LTS)
+  - Expand Dependabot to cover GitHub Actions and pip dependencies
+  - Modernize tests to use `pathlib`; remove legacy `runtests.py` wrapper
+  - Add test runner and ty type checker to pre-commit hooks
+- [#206](https://github.com/mwarkentin/django-watchman/pull/206) Fix storage check to handle `pathlib.Path` objects for `MEDIA_ROOT` and `WATCHMAN_STORAGE_PATH`
+- [#214](https://github.com/mwarkentin/django-watchman/pull/214) Read version dynamically from `watchman/__init__.py` via Hatchling (eliminate duplication in `pyproject.toml`)
+
+### Documentation
+
+- [#211](https://github.com/mwarkentin/django-watchman/pull/211) Switch documentation from Sphinx/reStructuredText to MkDocs with Material theme
+- [#190](https://github.com/mwarkentin/django-watchman/pull/190) Clarify custom checks and paid checks documentation
+- [#201](https://github.com/mwarkentin/django-watchman/pull/201) Update `WATCHMAN_STORAGE_PATH` documentation in README
+- [#189](https://github.com/mwarkentin/django-watchman/pull/189) Add custom check example to sample project
+
 ## 1.3.0 (2022-02-24)
 
 - [#181](https://github.com/mwarkentin/django-watchman/pull/181) Update sample project to Django 4.x
