@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+## 1.4.0 (2026-02-21)
+
 ### Security
 
 - [#213](https://github.com/mwarkentin/django-watchman/pull/213) Fix ReDoS vulnerability in auth header parsing — replace regex-based `Authorization` header parser with simple string splitting to prevent polynomial backtracking on crafted input
