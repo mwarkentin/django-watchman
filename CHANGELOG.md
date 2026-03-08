@@ -2,9 +2,17 @@
 
 ## Unreleased
 
+## 1.5.0 (2026-03-07)
+
 ### Fixed
 
-- [#202](https://github.com/mwarkentin/django-watchman/issues/202) Fix database health check for Oracle — use `SELECT 1 FROM DUAL` instead of `SELECT 1` which Oracle does not support without a `FROM` clause
+- [#228](https://github.com/mwarkentin/django-watchman/pull/228) Fix database health check for Oracle — use `SELECT 1 FROM DUAL` instead of `SELECT 1` which Oracle does not support without a `FROM` clause
+- [#231](https://github.com/mwarkentin/django-watchman/pull/231) Raise `TypeError` when `WATCHMAN_CHECKS` is a string instead of a sequence — prevents confusing `ImportError` when parentheses are used without a trailing comma (e.g. `('single.check')`)
+
+### Documentation
+
+- [#229](https://github.com/mwarkentin/django-watchman/pull/229) Add monitoring integrations reference documentation for common uptime monitoring vendors
+- [#230](https://github.com/mwarkentin/django-watchman/pull/230) Improve API reference documentation with comprehensive docstrings and restructured layout
 
 ## 1.4.0 (2026-02-21)
 
