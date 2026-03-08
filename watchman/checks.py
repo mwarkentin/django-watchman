@@ -1,3 +1,11 @@
+"""Built-in health check functions for Django backing services.
+
+Each public function (e.g. `caches`, `databases`, `email`, `storage`) returns
+a dictionary suitable for inclusion in the watchman JSON response.  They can be
+referenced by their dotted Python path in the
+[`WATCHMAN_CHECKS`][watchman.settings.WATCHMAN_CHECKS] setting.
+"""
+
 import uuid
 from pathlib import PurePath
 from typing import Any
@@ -77,16 +85,60 @@ def _check_storage() -> CheckStatus:
 
 
 def caches() -> dict[str, list[CheckResult]]:
+    """Check all configured caches by writing, reading, and deleting a key.
+
+    Iterates over every cache defined in
+    [`WATCHMAN_CACHES`][watchman.settings.WATCHMAN_CACHES] (defaults to
+    Django's `CACHES` setting).
+
+    Returns:
+        A dictionary of the form:
+
+            {"caches": [{"default": {"ok": True}}, ...]}
+    """
     return {"caches": _check_caches(watchman_settings.WATCHMAN_CACHES)}
 
 
 def databases() -> dict[str, list[CheckResult]]:
+    """Check all configured databases by executing a ``SELECT 1`` query.
+
+    Iterates over every database defined in
+    [`WATCHMAN_DATABASES`][watchman.settings.WATCHMAN_DATABASES] (defaults to
+    Django's `DATABASES` setting).
+
+    Returns:
+        A dictionary of the form:
+
+            {"databases": [{"default": {"ok": True}}, ...]}
+    """
     return {"databases": _check_databases(watchman_settings.WATCHMAN_DATABASES)}
 
 
 def email() -> dict[str, CheckResult]:
+    """Check the email backend by sending a test message.
+
+    Only included when
+    [`WATCHMAN_ENABLE_PAID_CHECKS`][watchman.settings.WATCHMAN_ENABLE_PAID_CHECKS]
+    is ``True`` or when explicitly listed in
+    [`WATCHMAN_CHECKS`][watchman.settings.WATCHMAN_CHECKS].
+
+    Returns:
+        A dictionary of the form:
+
+            {"email": {"ok": True}}
+    """
     return {"email": _check_email()}
 
 
 def storage() -> dict[str, CheckResult]:
+    """Check the default file storage backend.
+
+    Creates a temporary file, reads it back, and deletes it using Django's
+    default storage.
+
+    Returns:
+        A dictionary of the form:
+
+            {"storage": {"ok": True}}
+    """
     return {"storage": _check_storage()}

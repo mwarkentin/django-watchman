@@ -1,3 +1,12 @@
+"""Django views that expose watchman health-check endpoints.
+
+The three main endpoints are:
+
+* **status** -- JSON response with the results of all configured checks.
+* **dashboard** -- HTML page summarising check results.
+* **ping** -- Lightweight ``pong`` response for simple uptime monitoring.
+"""
+
 import warnings
 from typing import Any
 
@@ -56,6 +65,17 @@ def _disable_apm() -> None:
 
 
 def run_checks(request: HttpRequest) -> tuple[dict[str, Any], bool]:
+    """Execute all configured health checks and return the aggregated results.
+
+    Reads ``check`` and ``skip`` query parameters from *request* to allow
+    callers to filter which checks are executed.
+
+    Returns:
+        A ``(checks, ok)`` tuple where *checks* is a dictionary of check
+        results and *ok* is ``False`` when any check reported an error
+        (and [`WATCHMAN_ERROR_CODE`][watchman.settings.WATCHMAN_ERROR_CODE]
+        is not ``200``).
+    """
     _deprecation_warnings()
 
     if settings.WATCHMAN_DISABLE_APM:
@@ -89,6 +109,23 @@ def run_checks(request: HttpRequest) -> tuple[dict[str, Any], bool]:
 @auth
 @non_atomic_requests
 def status(request: HttpRequest) -> HttpResponse:
+    """Return JSON health-check results for all configured checks.
+
+    Protected by the configured
+    [`WATCHMAN_AUTH_DECORATOR`][watchman.settings.WATCHMAN_AUTH_DECORATOR].
+
+    **Example response:**
+
+        {
+            "caches": [{"default": {"ok": true}}],
+            "databases": [{"default": {"ok": true}}],
+            "storage": {"ok": true}
+        }
+
+    Query parameters:
+        check: Run only the specified checks (repeatable).
+        skip: Skip the specified checks (repeatable).
+    """
     checks, ok = run_checks(request)
 
     if not checks:
@@ -111,12 +148,24 @@ def status(request: HttpRequest) -> HttpResponse:
 
 @non_atomic_requests
 def bare_status(request: HttpRequest) -> HttpResponse:
+    """Return an empty ``text/plain`` response whose status code reflects overall health.
+
+    Unlike [`status`][watchman.views.status], this view has **no** auth
+    decorator and returns no body -- only the HTTP status code matters.
+    Useful for load-balancer health checks that only inspect the status code.
+    """
     checks, ok = run_checks(request)
     http_code = 200 if ok else settings.WATCHMAN_ERROR_CODE
     return HttpResponse(status=http_code, content_type="text/plain")
 
 
 def ping(request: HttpRequest) -> HttpResponse:
+    """Return a plain-text ``pong`` response.
+
+    This is the simplest possible liveness probe -- it does **not** run any
+    backing-service checks.  Useful for Kubernetes liveness probes or simple
+    uptime pings.
+    """
     if settings.WATCHMAN_DISABLE_APM:
         _disable_apm()
     return HttpResponse("pong", content_type="text/plain")
@@ -125,6 +174,15 @@ def ping(request: HttpRequest) -> HttpResponse:
 @auth
 @non_atomic_requests
 def dashboard(request: HttpRequest) -> HttpResponse:
+    """Render an HTML dashboard showing the status of all configured checks.
+
+    Protected by the configured
+    [`WATCHMAN_AUTH_DECORATOR`][watchman.settings.WATCHMAN_AUTH_DECORATOR].
+
+    Query parameters:
+        check: Run only the specified checks (repeatable).
+        skip: Skip the specified checks (repeatable).
+    """
     checks, overall_status = run_checks(request)
 
     expanded_checks: dict[str, Any] = {}

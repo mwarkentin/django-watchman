@@ -1,3 +1,5 @@
+"""Decorators used to protect and wrap watchman views and checks."""
+
 import logging
 import traceback
 from collections.abc import Callable
@@ -14,8 +16,10 @@ logger: logging.Logger = logging.getLogger("watchman")
 
 
 def check(func: Callable[..., CheckResult]) -> Callable[..., CheckResult]:
-    """
-    Decorator which wraps checks and returns an error response on failure.
+    """Decorator that wraps a check function and converts exceptions into error results.
+
+    If the wrapped function raises, the exception is caught and returned as a
+    `CheckStatus` with ``ok=False``, the error message, and a stacktrace.
     """
 
     def wrapped(*args: Any, **kwargs: Any) -> CheckResult:
@@ -71,12 +75,14 @@ def parse_auth_header(auth_header: str) -> str:
 def token_required(
     view_func: Callable[..., HttpResponse],
 ) -> Callable[..., HttpResponse]:
-    """
-    Decorator which ensures that one of the WATCHMAN_TOKENS is provided if set.
+    """Decorator that enforces token-based authentication on a view.
 
-    WATCHMAN_TOKEN_NAME can also be set if the token GET parameter must be
-    customized.
+    When [`WATCHMAN_TOKENS`][watchman.settings.WATCHMAN_TOKENS] (or the
+    deprecated `WATCHMAN_TOKEN`) is set, the request must supply a matching
+    token via the ``Authorization`` header or a query parameter named by
+    [`WATCHMAN_TOKEN_NAME`][watchman.settings.WATCHMAN_TOKEN_NAME].
 
+    Returns an ``HTTP 403`` response when the token is missing or invalid.
     """
 
     def _get_passed_token(request: HttpRequest) -> str | None:
