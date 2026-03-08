@@ -30,6 +30,15 @@ def get_checks(
     Yields:
         Callable check functions resolved via `import_string`.
     """
+    if isinstance(WATCHMAN_CHECKS, str):
+        raise TypeError(
+            "WATCHMAN_CHECKS should be a list or tuple of dotted paths, not a "
+            "string. If you have a single check, use a list: "
+            "WATCHMAN_CHECKS = ['module.path.to.callable'] "
+            "or a tuple with a trailing comma: "
+            "WATCHMAN_CHECKS = ('module.path.to.callable',)"
+        )
+
     checks_to_run = frozenset(WATCHMAN_CHECKS)
 
     if check_list is not None:

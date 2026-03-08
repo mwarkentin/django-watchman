@@ -64,3 +64,9 @@ class TestWatchman(unittest.TestCase):
     @unittest.skip("Unsure how to test w/ modified settings")
     def test_get_checks_with_paid_checks_enabled_returns_expected_checks(self):
         pass
+
+    @patch("watchman.utils.WATCHMAN_CHECKS", "watchman.checks.caches")
+    def test_get_checks_raises_type_error_when_checks_is_a_string(self):
+        with self.assertRaises(TypeError) as ctx:
+            list(get_checks())
+        self.assertIn("should be a list or tuple", str(ctx.exception))
