@@ -98,7 +98,6 @@ class TestDBConnection(unittest.TestCase):
 class TestWatchmanMultiTokens(unittest.TestCase):
     def setUp(self):
         self.client = Client()
-        watchman_settings.WATCHMAN_TOKEN = None
         watchman_settings.WATCHMAN_TOKENS = "t1,t2"
 
     def test_200_ok_if_matching_first_token_in_list(self):
@@ -130,7 +129,6 @@ class TestWatchmanMultiTokens(unittest.TestCase):
 class TestWatchmanNoTokens(unittest.TestCase):
     def setUp(self):
         self.client = Client()
-        watchman_settings.WATCHMAN_TOKEN = None
         watchman_settings.WATCHMAN_TOKENS = None
 
     def test_200_ok_if_no_token_set(self):
@@ -149,8 +147,7 @@ class TestWatchmanSingleToken(unittest.TestCase):
     def setUp(self):
         self.client = Client()
         self.logger = logging.getLogger("watchman")
-        watchman_settings.WATCHMAN_TOKEN = "foo"
-        watchman_settings.WATCHMAN_TOKENS = None
+        watchman_settings.WATCHMAN_TOKENS = "foo"
 
     def test_200_ok_if_tokens_match(self):
         data = {
@@ -236,4 +233,4 @@ class TestWatchmanSingleToken(unittest.TestCase):
             )
 
     def tearDown(self):
-        watchman_settings.WATCHMAN_TOKEN = None
+        watchman_settings.WATCHMAN_TOKENS = None

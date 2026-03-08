@@ -77,9 +77,9 @@ def token_required(
 ) -> Callable[..., HttpResponse]:
     """Decorator that enforces token-based authentication on a view.
 
-    When [`WATCHMAN_TOKENS`][watchman.settings.WATCHMAN_TOKENS] (or the
-    deprecated `WATCHMAN_TOKEN`) is set, the request must supply a matching
-    token via the ``Authorization`` header or a query parameter named by
+    When [`WATCHMAN_TOKENS`][watchman.settings.WATCHMAN_TOKENS] is set, the
+    request must supply a matching token via the ``Authorization`` header or
+    a query parameter named by
     [`WATCHMAN_TOKEN_NAME`][watchman.settings.WATCHMAN_TOKEN_NAME].
 
     Returns an ``HTTP 403`` response when the token is missing or invalid.
@@ -100,10 +100,6 @@ def token_required(
     def _validate_token(request: HttpRequest) -> bool:
         if settings.WATCHMAN_TOKENS:
             watchman_tokens = settings.WATCHMAN_TOKENS.split(",")
-        elif settings.WATCHMAN_TOKEN:
-            watchman_tokens = [
-                settings.WATCHMAN_TOKEN,
-            ]
         else:
             return True
 

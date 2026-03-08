@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-## 1.5.0 (2026-03-07)
+### Removed
+
+- [#233](https://github.com/mwarkentin/django-watchman/pull/233) Remove deprecated `WATCHMAN_TOKEN` setting — use `WATCHMAN_TOKENS` instead (deprecated since 0.11, removal planned for 1.0)
 
 ### Fixed
 
