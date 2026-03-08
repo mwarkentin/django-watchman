@@ -4,7 +4,7 @@
 [![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-watchman.svg)](https://pypi.org/project/django-watchman/)
 [![PyPI - Django Version](https://img.shields.io/pypi/frameworkversions/django/django-watchman.svg)](https://pypi.org/project/django-watchman/)
 [![CI](https://github.com/mwarkentin/django-watchman/actions/workflows/ci.yml/badge.svg)](https://github.com/mwarkentin/django-watchman/actions/workflows/ci.yml)
-[![Docs](https://readthedocs.org/projects/django-watchman/badge/?version=latest)](https://django-watchman.readthedocs.io/en/latest/)
+[![Docs](https://readthedocs.org/projects/django-watchman/badge/?version=stable)](https://django-watchman.readthedocs.io/en/stable/)
 
 django-watchman exposes a status endpoint for your backing services like
 databases, caches, etc.
