@@ -12,7 +12,7 @@ databases, caches, etc.
 
 > We're in love with django-watchman. External monitoring is a vital part of our service offering. Using django-watchman we can introspect the infrastructure of an application via a secure URL. It's very well written and easy to extend. We've recommended it to many of our clients already.
 
--- Hany Fahim, CEO, [VM Farms](https://vmfarms.com/).
+-- Hany Fahim, CEO, [VM Farms](https://vmfarms.com/)
 
 ## PyCon Canada Presentation (10 minutes)
 
