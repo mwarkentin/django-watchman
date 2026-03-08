@@ -1,7 +1,10 @@
 # django-watchman
 
-[![PyPI version](http://img.shields.io/pypi/v/django-watchman.svg)](http://badge.fury.io/py/django-watchman)
-[![Coverage](http://img.shields.io/coveralls/mwarkentin/django-watchman.svg)](https://coveralls.io/r/mwarkentin/django-watchman?branch=main)
+[![PyPI version](https://img.shields.io/pypi/v/django-watchman.svg)](https://pypi.org/project/django-watchman/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/django-watchman.svg)](https://pypi.org/project/django-watchman/)
+[![PyPI - Django Version](https://img.shields.io/pypi/frameworkversions/django/django-watchman.svg)](https://pypi.org/project/django-watchman/)
+[![CI](https://github.com/mwarkentin/django-watchman/actions/workflows/ci.yml/badge.svg)](https://github.com/mwarkentin/django-watchman/actions/workflows/ci.yml)
+[![Docs](https://readthedocs.org/projects/django-watchman/badge/?version=latest)](https://django-watchman.readthedocs.io/en/latest/)
 
 django-watchman exposes a status endpoint for your backing services like
 databases, caches, etc.
@@ -31,7 +34,7 @@ Including `watchman.urls` gives you three endpoints. The bare status view is add
 | `/watchman/ping/`      | Returns `pong` -- no checks run, just a liveness probe | No   |
 | `/watchman/bare/`      | Empty response, HTTP 200 or 500 -- wire up manually via `watchman.views.bare_status` | No |
 
-## Available Checks
+## Built-in Checks
 
 | Check | Module path | Default | Description |
 |-------|-------------|---------|-------------|
