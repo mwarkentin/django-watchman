@@ -49,6 +49,22 @@ Enable email and other paid checks with `WATCHMAN_ENABLE_PAID_CHECKS = True`, or
 
 The full documentation is at [django-watchman.readthedocs.io](https://django-watchman.readthedocs.io).
 
+## Used By
+
+django-watchman is trusted in production by organizations including:
+
+- [Mozilla](https://github.com/mozilla) -- [mozilla.org](https://github.com/mozilla/bedrock), [support.mozilla.org](https://github.com/mozilla/kitsune), [basket](https://github.com/mozmeao/basket), and more
+- [Harvard University](https://github.com/Harvard-University-iCommons) -- LMS tools and course management
+- [University of Michigan](https://github.com/tl-its-umich-edu) -- [My Learning Analytics](https://github.com/tl-its-umich-edu/my-learning-analytics), [Remote Office Hours Queue](https://github.com/tl-its-umich-edu/remote-office-hours-queue)
+- [UNICEF](https://github.com/unicef-drp) -- [GeoRepo](https://github.com/unicef-drp/GeoRepo-OS)
+- [Caluma](https://github.com/projectcaluma/caluma) -- Swiss government digital forms platform
+- [Open Supply Hub](https://github.com/opensupplyhub/open-supply-hub) -- Global supply chain transparency
+- [Azavea](https://github.com/azavea) -- Civic technology ([NYC Trees](https://github.com/azavea/nyc-trees), [DistrictBuilder](https://github.com/PublicMapping/districtbuilder-classic), climate tools)
+- [PeopleForBikes](https://github.com/PeopleForBikes/pfb-network-connectivity) -- Bike network connectivity analysis
+- [Worldcon Voting Systems](https://github.com/WorldconVotingSystems/nomnom) -- Hugo Awards nomination and voting platform
+
+See the full list of [dependents on GitHub](https://github.com/mwarkentin/django-watchman/network/dependents).
+
 ## Testimonials
 
 > We're in love with django-watchman. External monitoring is a vital part of our service offering. Using django-watchman we can introspect the infrastructure of an application via a secure URL. It's very well written and easy to extend. We've recommended it to many of our clients already.
