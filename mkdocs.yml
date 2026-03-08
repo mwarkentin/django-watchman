@@ -37,7 +37,9 @@ nav:
   - Releasing: releasing.md
   - Changelog: changelog.md
   - Authors: authors.md
-  - API Reference: reference/api.md
+  - Reference:
+    - API: reference/api.md
+    - Monitoring Integrations: reference/monitoring-integrations.md
 
 plugins:
   - search
