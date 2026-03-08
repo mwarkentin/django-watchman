@@ -76,11 +76,23 @@ class TestDBConnection(unittest.TestCase):
     def test_cursor_is_called(self, mock_connections):
         cursor_mock = MagicMock()
         mock_connections["default"].cursor().__enter__.return_value = cursor_mock
+        mock_connections["default"].vendor = "sqlite"
         data = {
             "watchman-token": "t1",
         }
         self.client.get(reverse("status"), data)
         cursor_mock.execute.assert_called_once_with("SELECT 1")
+
+    @patch("watchman.checks.connections")
+    def test_cursor_uses_dual_for_oracle(self, mock_connections):
+        cursor_mock = MagicMock()
+        mock_connections["default"].cursor().__enter__.return_value = cursor_mock
+        mock_connections["default"].vendor = "oracle"
+        data = {
+            "watchman-token": "t1",
+        }
+        self.client.get(reverse("status"), data)
+        cursor_mock.execute.assert_called_once_with("SELECT 1 FROM DUAL")
 
 
 class TestWatchmanMultiTokens(unittest.TestCase):

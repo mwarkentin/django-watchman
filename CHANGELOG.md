@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Fixed
+
+- [#202](https://github.com/mwarkentin/django-watchman/issues/202) Fix database health check for Oracle — use `SELECT 1 FROM DUAL` instead of `SELECT 1` which Oracle does not support without a `FROM` clause
+
 ## 1.4.0 (2026-02-21)
 
 ### Security
