@@ -61,6 +61,7 @@ django-watchman is trusted in production by organizations including:
 - [Open Supply Hub](https://github.com/opensupplyhub/open-supply-hub) -- Global supply chain transparency
 - [Azavea](https://github.com/azavea) -- Civic technology ([NYC Trees](https://github.com/azavea/nyc-trees), [DistrictBuilder](https://github.com/PublicMapping/districtbuilder-classic), climate tools)
 - [PeopleForBikes](https://github.com/PeopleForBikes/pfb-network-connectivity) -- Bike network connectivity analysis
+- [Worldcon Voting Systems](https://github.com/WorldconVotingSystems/nomnom) -- Hugo Awards nomination and voting platform
 
 See the full list of [dependents on GitHub](https://github.com/mwarkentin/django-watchman/network/dependents).
 
