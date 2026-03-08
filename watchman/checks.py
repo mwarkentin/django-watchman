@@ -37,8 +37,9 @@ def _check_databases(databases: dict[str, Any]) -> list[CheckResult]:
 @check
 def _check_database(database: str) -> dict[str, CheckStatus]:
     connection = connections[database]
+    query = "SELECT 1 FROM DUAL" if connection.vendor == "oracle" else "SELECT 1"
     with connection.cursor() as cursor:
-        cursor.execute("SELECT 1")
+        cursor.execute(query)
     return {database: {"ok": True}}
 
 
