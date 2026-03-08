@@ -22,10 +22,6 @@ WATCHMAN_AUTH_DECORATOR: str | None = getattr(
 """Dotted path to a decorator applied to protected views. Set to ``None`` to
 disable authentication.  Default: ``"watchman.decorators.token_required"``."""
 
-WATCHMAN_TOKEN: str | None = getattr(settings, "WATCHMAN_TOKEN", None)
-"""*Deprecated* -- use [`WATCHMAN_TOKENS`][watchman.settings.WATCHMAN_TOKENS]
-instead.  Will be removed in django-watchman 1.0."""
-
 WATCHMAN_TOKENS: str | None = getattr(settings, "WATCHMAN_TOKENS", None)
 """Comma-separated list of accepted authentication tokens.  Default: ``None``
 (no token required)."""

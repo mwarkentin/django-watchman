@@ -7,7 +7,6 @@ The three main endpoints are:
 * **ping** -- Lightweight ``pong`` response for simple uptime monitoring.
 """
 
-import warnings
 from typing import Any
 
 from django.db.transaction import non_atomic_requests
@@ -35,15 +34,6 @@ def _get_check_params(
             skip_list = request.GET.getlist("skip")
 
     return (check_list, skip_list)
-
-
-def _deprecation_warnings() -> None:
-    if settings.WATCHMAN_TOKEN:
-        warnings.warn(
-            "`WATCHMAN_TOKEN` setting is deprecated, use `WATCHMAN_TOKENS` instead. It will be removed in django-watchman 1.0",
-            DeprecationWarning,
-            stacklevel=2,
-        )
 
 
 def _disable_apm() -> None:
@@ -76,8 +66,6 @@ def run_checks(request: HttpRequest) -> tuple[dict[str, Any], bool]:
         (and [`WATCHMAN_ERROR_CODE`][watchman.settings.WATCHMAN_ERROR_CODE]
         is not ``200``).
     """
-    _deprecation_warnings()
-
     if settings.WATCHMAN_DISABLE_APM:
         _disable_apm()
 

@@ -32,9 +32,6 @@ WATCHMAN_TOKEN_NAME = 'custom-token-name'
 GET http://127.0.0.1:8000/watchman/?custom-token-name=:token
 ```
 
-!!! warning "Deprecation Warning"
-    `WATCHMAN_TOKEN` was replaced by the `WATCHMAN_TOKENS` setting to support multiple authentication tokens in django-watchman `0.11`. It will continue to work until it's removed in django-watchman `1.0`.
-
 ## Custom authentication/authorization
 
 If you want to protect the status endpoint with a customized

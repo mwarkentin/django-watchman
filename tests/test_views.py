@@ -148,7 +148,7 @@ class TestWatchman(unittest.TestCase):
         content = json.loads(response.content.decode("utf-8"))
         self.assertCountEqual({"message": "No checks found", "error": 404}, content)
 
-    @override_settings(WATCHMAN_TOKEN="ABCDE")
+    @override_settings(WATCHMAN_TOKENS="ABCDE")
     @override_settings(WATCHMAN_AUTH_DECORATOR="watchman.decorators.token_required")
     def test_login_not_required_with_get_param(self):
         # Have to manually reload settings here because override_settings
@@ -165,7 +165,7 @@ class TestWatchman(unittest.TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    @override_settings(WATCHMAN_TOKEN="ABCDE")
+    @override_settings(WATCHMAN_TOKENS="ABCDE")
     def test_version_header_not_included_when_token_auth_fails(self):
         # Have to manually reload settings here because override_settings
         # happens after self.setUp(), but before self.tearDown()
@@ -176,7 +176,7 @@ class TestWatchman(unittest.TestCase):
         self.assertEqual(response.status_code, 403)
         self.assertFalse(response.has_header("X-Watchman-Version"))
 
-    @override_settings(WATCHMAN_TOKEN="ABCDE")
+    @override_settings(WATCHMAN_TOKENS="ABCDE")
     @override_settings(WATCHMAN_AUTH_DECORATOR="watchman.decorators.token_required")
     def test_login_not_required_with_authorization_header(self):
         # Have to manually reload settings here because override_settings
@@ -188,7 +188,7 @@ class TestWatchman(unittest.TestCase):
         response = views.status(request)
         self.assertEqual(response.status_code, 200)
 
-    @override_settings(WATCHMAN_TOKEN="123-456-ABCD")
+    @override_settings(WATCHMAN_TOKENS="123-456-ABCD")
     @override_settings(WATCHMAN_AUTH_DECORATOR="watchman.decorators.token_required")
     def test_login_not_required_with_authorization_header_dashes_in_token(self):
         # Have to manually reload settings here because override_settings
@@ -200,7 +200,7 @@ class TestWatchman(unittest.TestCase):
         response = views.status(request)
         self.assertEqual(response.status_code, 200)
 
-    @override_settings(WATCHMAN_TOKEN="ABCDE")
+    @override_settings(WATCHMAN_TOKENS="ABCDE")
     @override_settings(WATCHMAN_AUTH_DECORATOR="watchman.decorators.token_required")
     def test_login_fails_with_invalid_get_param(self):
         # Have to manually reload settings here because override_settings
@@ -217,7 +217,7 @@ class TestWatchman(unittest.TestCase):
 
         self.assertEqual(response.status_code, 403)
 
-    @override_settings(WATCHMAN_TOKEN="ABCDE")
+    @override_settings(WATCHMAN_TOKENS="ABCDE")
     @override_settings(WATCHMAN_AUTH_DECORATOR="watchman.decorators.token_required")
     def test_login_fails_with_invalid_authorization_header(self):
         # Have to manually reload settings here because override_settings
