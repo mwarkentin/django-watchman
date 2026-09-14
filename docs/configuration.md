@@ -25,7 +25,7 @@ If you want to change the token name, you can set the `WATCHMAN_TOKEN_NAME`.
 The value of this setting will be the **GET** parameter that you must pass in:
 
 ```python
-WATCHMAN_TOKEN_NAME = 'custom-token-name'
+WATCHMAN_TOKEN_NAME = "custom-token-name"
 ```
 
 ```
@@ -40,7 +40,7 @@ to your settings. This needs to be a dotted-path to a decorator, and defaults
 to `watchman.decorators.token_required`:
 
 ```python
-WATCHMAN_AUTH_DECORATOR = 'django.contrib.admin.views.decorators.staff_member_required'
+WATCHMAN_AUTH_DECORATOR = "django.contrib.admin.views.decorators.staff_member_required"
 ```
 
 !!! note
@@ -53,8 +53,8 @@ the `WATCHMAN_CHECKS` setting. In `settings.py`:
 
 ```python
 WATCHMAN_CHECKS = (
-    'module.path.to.callable',
-    'another.module.path.to.callable',
+    "module.path.to.callable",
+    "another.module.path.to.callable",
 )
 ```
 
@@ -63,7 +63,7 @@ You can also import the watchman.constants to include the DEFAULT_CHECKS and PAI
 ```python
 from watchman import constants as watchman_constants
 
-WATCHMAN_CHECKS = watchman_constants.DEFAULT_CHECKS + ('module.path.to.callable', )
+WATCHMAN_CHECKS = watchman_constants.DEFAULT_CHECKS + ("module.path.to.callable",)
 ```
 
 Checks take no arguments, and must return a `dict` whose keys are applied to the JSON response.
@@ -73,8 +73,10 @@ Use the `watchman.decorators.check` decorator to capture exceptions:
 ```python
 from watchman.decorators import check
 
+
 def custom_check():
     return {"custom_check": _custom_check()}
+
 
 @check
 def _custom_check():
@@ -132,8 +134,9 @@ can use the `bare_status` view by putting the following into `urls.py`:
 
 ```python
 import watchman.views
+
 # ...
-re_path(r'^status/?$', watchman.views.bare_status),
+(re_path(r"^status/?$", watchman.views.bare_status),)
 ```
 
 ## Django management command
@@ -215,17 +218,17 @@ Here is a simple example that would log to the console:
 
 ```python
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
         },
     },
-    'loggers': {
-        'watchman': {
-            'handlers': ['console'],
-            'level': 'DEBUG',
+    "loggers": {
+        "watchman": {
+            "handlers": ["console"],
+            "level": "DEBUG",
         },
     },
 }
