@@ -60,6 +60,7 @@ If the `MEDIA_ROOT` is already defined:
 
 ```python
 from os.path import join as joinpath
+
 WATCHMAN_STORAGE_PATH = joinpath(MEDIA_ROOT, "django-watchman/")
 ```
 
