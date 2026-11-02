@@ -60,3 +60,16 @@ jobs:
         uses: codecov/codecov-action@v5
         with:
           fail_ci_if_error: false
+
+  # Single required check for branch protection, so matrix changes don't
+  # need a settings update. `if: always()` makes it run (and fail) when a
+  # needed job fails; a skipped required check would count as passing.
+  ci-success:
+    name: CI success
+    if: always()
+    needs: [lint, typecheck, test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail if any CI job failed or was cancelled
+        if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
+        run: exit 1
