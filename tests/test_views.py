@@ -46,6 +46,12 @@ django.setup()
 settings.SILENCED_SYSTEM_CHECKS = ["1_7.W001"]
 
 
+def sent_mail():
+    # Django's test runner adds `outbox` to `django.core.mail` at runtime, so
+    # it isn't declared on the module for type checkers.
+    return mail.outbox  # ty: ignore[unresolved-attribute]
+
+
 def reload_settings():
     # Reload settings - and all dependent modules - from scratch
     reload(sys.modules["watchman.settings"])
@@ -424,9 +430,9 @@ class TestEmailCheck(DjangoTestCase):
         checks._check_email()
 
         # Test that one message has been sent.
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(sent_mail()), 1)
 
-        sent_email = mail.outbox[0]
+        sent_email = sent_mail()[0]
         expected_recipients = ["to@example.com"]
         self.assertEqual(sent_email.to, expected_recipients)
 
@@ -438,9 +444,9 @@ class TestEmailCheck(DjangoTestCase):
         checks._check_email()
 
         # Test that one message has been sent.
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(sent_mail()), 1)
 
-        sent_email = mail.outbox[0]
+        sent_email = sent_mail()[0]
         expected_recipients = ["custom@example.com"]
         self.assertEqual(sent_email.to, expected_recipients)
 
@@ -452,9 +458,9 @@ class TestEmailCheck(DjangoTestCase):
         checks._check_email()
 
         # Test that one message has been sent.
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(sent_mail()), 1)
 
-        sent_email = mail.outbox[0]
+        sent_email = sent_mail()[0]
         expected_recipients = ["to1@example.com", "to2@example.com"]
         self.assertEqual(sent_email.to, expected_recipients)
 
@@ -462,9 +468,9 @@ class TestEmailCheck(DjangoTestCase):
         checks._check_email()
 
         # Test that one message has been sent.
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(sent_mail()), 1)
 
-        sent_email = mail.outbox[0]
+        sent_email = sent_mail()[0]
         expected_headers = {
             "X-DJANGO-WATCHMAN": "true",
         }
@@ -478,9 +484,9 @@ class TestEmailCheck(DjangoTestCase):
         checks._check_email()
 
         # Test that one message has been sent.
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(sent_mail()), 1)
 
-        sent_email = mail.outbox[0]
+        sent_email = sent_mail()[0]
         expected_headers = {
             "X-DJANGO-WATCHMAN": "true",
             "foo": "bar",
@@ -491,9 +497,9 @@ class TestEmailCheck(DjangoTestCase):
         checks._check_email()
 
         # Test that one message has been sent.
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(sent_mail()), 1)
 
-        sent_email = mail.outbox[0]
+        sent_email = sent_mail()[0]
         expected_sender = "watchman@example.com"
         self.assertEqual(sent_email.from_email, expected_sender)
 
@@ -505,8 +511,8 @@ class TestEmailCheck(DjangoTestCase):
         checks._check_email()
 
         # Test that one message has been sent.
-        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(len(sent_mail()), 1)
 
-        sent_email = mail.outbox[0]
+        sent_email = sent_mail()[0]
         expected_sender = "custom@example.com"
         self.assertEqual(sent_email.from_email, expected_sender)
