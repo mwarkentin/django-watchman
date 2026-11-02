@@ -14,12 +14,17 @@ from watchman.types import CheckResult, CheckStatus
 
 logger: logging.Logger = logging.getLogger("watchman")
 
+GENERIC_ERROR_MESSAGE: str = "Check failed. See logs for details."
+
 
 def check(func: Callable[..., CheckResult]) -> Callable[..., CheckResult]:
     """Decorator that wraps a check function and converts exceptions into error results.
 
-    If the wrapped function raises, the exception is caught and returned as a
-    `CheckStatus` with ``ok=False``, the error message, and a stacktrace.
+    If the wrapped function raises, the exception is caught, logged, and returned
+    as a `CheckStatus` with ``ok=False`` and a generic error message. The
+    exception message and stacktrace are only included when
+    [`WATCHMAN_EXPOSE_ERROR_DETAILS`][watchman.settings.WATCHMAN_EXPOSE_ERROR_DETAILS]
+    is ``True``.
     """
 
     def wrapped(*args: Any, **kwargs: Any) -> CheckResult:
@@ -35,11 +40,15 @@ def check(func: Callable[..., CheckResult]) -> Callable[..., CheckResult]:
             response: CheckResult = func(*args, **kwargs)
         except Exception as e:
             message = str(e)
-            error_status: CheckStatus = {
-                "ok": False,
-                "error": message,
-                "stacktrace": traceback.format_exc(),
-            }
+            error_status: CheckStatus
+            if settings.WATCHMAN_EXPOSE_ERROR_DETAILS:
+                error_status = {
+                    "ok": False,
+                    "error": message,
+                    "stacktrace": traceback.format_exc(),
+                }
+            else:
+                error_status = {"ok": False, "error": GENERIC_ERROR_MESSAGE}
             # The check contains several individual checks (e.g., one per
             # database). Preface the results by name.
             if arg_name:

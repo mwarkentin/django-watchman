@@ -15,7 +15,7 @@ from django.test.client import Client
 from django.urls import reverse
 
 from watchman import settings as watchman_settings
-from watchman.decorators import check, parse_auth_header
+from watchman.decorators import GENERIC_ERROR_MESSAGE, check, parse_auth_header
 from watchman.types import CheckStatus
 
 
@@ -182,6 +182,7 @@ class TestWatchmanSingleToken(unittest.TestCase):
     #   2. file paths will change between systems
     #
     # Instead, assert all other response parameters are correct.
+    @patch.object(watchman_settings, "WATCHMAN_EXPOSE_ERROR_DETAILS", True)
     def test_exception_caught_if_no_arguments(self):
         def test_func():
             raise FakeException("test error")
@@ -204,6 +205,7 @@ class TestWatchmanSingleToken(unittest.TestCase):
                 "Error calling '%s': %s", "test_func", "test error"
             )
 
+    @patch.object(watchman_settings, "WATCHMAN_EXPOSE_ERROR_DETAILS", True)
     def test_exception_caught_with_argument(self):
         def test_func(arg):
             raise FakeException("test error")
@@ -224,6 +226,34 @@ class TestWatchmanSingleToken(unittest.TestCase):
             self.assertIsInstance(response["default"]["stacktrace"], str)
             mock_debug.assert_called_once_with(
                 "Checking '%s' for '%s'", "test_func", "default"
+            )
+            mock_exception.assert_called_once_with(
+                "Error calling '%s' for '%s': %s",
+                "test_func",
+                "default",
+                "test error",
+            )
+
+    def test_exception_details_hidden_by_default(self):
+        def test_func():
+            raise FakeException("test error")
+
+        with mock.patch.object(self.logger, "exception") as mock_exception:
+            response = check(test_func)()
+            self.assertEqual(response, {"ok": False, "error": GENERIC_ERROR_MESSAGE})
+            # Details are still logged
+            mock_exception.assert_called_once_with(
+                "Error calling '%s': %s", "test_func", "test error"
+            )
+
+    def test_exception_details_hidden_by_default_with_argument(self):
+        def test_func(arg):
+            raise FakeException("test error")
+
+        with mock.patch.object(self.logger, "exception") as mock_exception:
+            response = check(test_func)("default")
+            self.assertEqual(
+                response, {"default": {"ok": False, "error": GENERIC_ERROR_MESSAGE}}
             )
             mock_exception.assert_called_once_with(
                 "Error calling '%s' for '%s': %s",

@@ -195,6 +195,39 @@ setting:
 EXPOSE_WATCHMAN_VERSION = True
 ```
 
+## Error details
+
+By default, a failed check only reports a generic error, so the status
+endpoint and dashboard don't reveal exception messages or stacktraces (which
+can include hostnames, usernames, file paths, and library versions):
+
+```json
+{
+    "databases": [
+        {
+            "default": {
+                "ok": false,
+                "error": "Check failed. See logs for details."
+            }
+        }
+    ]
+}
+```
+
+The full exception and stacktrace are always written to the `watchman` logger
+(see [Logging](#logging)), so they still reach your logs and error tracking
+tools.
+
+If your endpoint is protected (see [Token based authentication](#token-based-authentication))
+and you want the details in responses, set `WATCHMAN_EXPOSE_ERROR_DETAILS`:
+
+```python
+WATCHMAN_EXPOSE_ERROR_DETAILS = True
+```
+
+This adds the exception message as `error` and the formatted traceback as
+`stacktrace` to each failed check, and shows them on the dashboard.
+
 ## Custom response code
 
 By default, watchman will return a `500` HTTP response code, even if there's a

@@ -27,8 +27,11 @@ result of each configured check. A successful response looks like:
 }
 ```
 
-When any check fails, the response includes error details and the HTTP status
-code changes to 500 (configurable via `WATCHMAN_ERROR_CODE`).
+When any check fails, the failing check reports `"ok": false` with a generic
+`error` message, and the HTTP status code changes to 500 (configurable via
+`WATCHMAN_ERROR_CODE`). Exception details are logged rather than returned
+unless `WATCHMAN_EXPOSE_ERROR_DETAILS` is enabled; see
+[Error details](../configuration.md#error-details).
 
 The **bare status endpoint** (`/watchman/bare/`) runs the same checks but
 returns only an HTTP status code with no body — 200 when all checks pass,

@@ -1,6 +1,12 @@
 # Changelog
 
-## Unreleased
+## 2.0.0 (2026-11-02)
+
+This release has two breaking changes: failed checks no longer include exception details in responses, and the deprecated `WATCHMAN_TOKEN` setting is removed.
+
+### Security
+
+- [GHSA-vwvx-6hm8-h27h](https://github.com/mwarkentin/django-watchman/security/advisories/GHSA-vwvx-6hm8-h27h) Stop exposing exception messages and stacktraces from failed checks by default. Failed checks now return `{"ok": false, "error": "Check failed. See logs for details."}` in the status endpoint, dashboard, and `watchman` management command; full details are still logged via the `watchman` logger. Set `WATCHMAN_EXPOSE_ERROR_DETAILS = True` to restore the previous behaviour. **This changes the response format for failing checks** — update any monitoring that parses the `error` or `stacktrace` fields.
 
 ### Removed
 

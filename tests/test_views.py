@@ -21,6 +21,7 @@ from django.test.client import RequestFactory
 from django.test.utils import override_settings
 
 from watchman import checks, views
+from watchman.decorators import GENERIC_ERROR_MESSAGE
 from watchman.types import CheckStatus
 
 
@@ -83,17 +84,43 @@ class TestWatchman(unittest.TestCase):
 
     def test_check_database_handles_exception(self):
         response = cast(dict[str, CheckStatus], checks._check_database("foo"))
+        self.assertEqual(response["foo"], {"ok": False, "error": GENERIC_ERROR_MESSAGE})
+
+    def test_check_cache_handles_exception(self):
+        response = cast(dict[str, CheckStatus], checks._check_cache("foo"))
+        self.assertEqual(response["foo"], {"ok": False, "error": GENERIC_ERROR_MESSAGE})
+
+    @override_settings(WATCHMAN_EXPOSE_ERROR_DETAILS=True)
+    def test_check_database_exposes_error_details_when_enabled(self):
+        reload_settings()
+        response = cast(dict[str, CheckStatus], checks._check_database("foo"))
         self.assertFalse(response["foo"]["ok"])
         self.assertEqual(
             response["foo"]["error"], "The connection 'foo' doesn't exist."
         )
+        self.assertIn("Traceback", response["foo"]["stacktrace"])
 
-    def test_check_cache_handles_exception(self):
+    @override_settings(WATCHMAN_EXPOSE_ERROR_DETAILS=True)
+    def test_check_cache_exposes_error_details_when_enabled(self):
+        reload_settings()
         response = cast(dict[str, CheckStatus], checks._check_cache("foo"))
         self.assertFalse(response["foo"]["ok"])
         self.assertIn(
             response["foo"]["error"],
             "The connection 'foo' doesn't exist.",
+        )
+        self.assertIn("Traceback", response["foo"]["stacktrace"])
+
+    @override_settings(WATCHMAN_DATABASES={"foo": {}})
+    def test_status_hides_error_details_by_default(self):
+        reload_settings()
+        request = RequestFactory().get("/", data={"check": "watchman.checks.databases"})
+        response = views.status(request)
+        self.assertEqual(response.status_code, 500)
+        content = json.loads(response.content.decode("utf-8"))
+        self.assertEqual(
+            content["databases"],
+            [{"foo": {"ok": False, "error": GENERIC_ERROR_MESSAGE}}],
         )
 
     def test_response_skipped_checks(self):
@@ -347,6 +374,25 @@ class TestWatchmanDashboard(unittest.TestCase):
         response = views.dashboard(request)
         self.assertTrue(response.has_header("X-Watchman-Version"))
         self.assertIn("Watchman version:", response.content.decode())
+
+    @override_settings(WATCHMAN_DATABASES={"foo": {}})
+    def test_dashboard_hides_error_details_by_default(self):
+        reload_settings()
+        request = RequestFactory().get("/")
+        content = views.dashboard(request).content.decode()
+        self.assertIn(GENERIC_ERROR_MESSAGE, content)
+        self.assertNotIn("doesn&#x27;t exist", content)
+        self.assertNotIn("Traceback (most recent call last)", content)
+
+    @override_settings(
+        WATCHMAN_DATABASES={"foo": {}}, WATCHMAN_EXPOSE_ERROR_DETAILS=True
+    )
+    def test_dashboard_shows_error_details_when_enabled(self):
+        reload_settings()
+        request = RequestFactory().get("/")
+        content = views.dashboard(request).content.decode()
+        self.assertIn("doesn&#x27;t exist", content)
+        self.assertIn("Traceback (most recent call last)", content)
 
 
 class TestPing(unittest.TestCase):

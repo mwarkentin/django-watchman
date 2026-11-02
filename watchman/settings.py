@@ -30,6 +30,13 @@ WATCHMAN_TOKEN_NAME: str = getattr(settings, "WATCHMAN_TOKEN_NAME", "watchman-to
 """Name of the query-string parameter used to pass the token.
 Default: ``"watchman-token"``."""
 
+WATCHMAN_EXPOSE_ERROR_DETAILS: bool = getattr(
+    settings, "WATCHMAN_EXPOSE_ERROR_DETAILS", False
+)
+"""Include the exception message and stacktrace of failed checks in responses.
+When ``False``, failed checks report a generic error and the details are only
+logged.  Default: ``False``."""
+
 WATCHMAN_ERROR_CODE: int = getattr(settings, "WATCHMAN_ERROR_CODE", 500)
 """HTTP status code returned when a check fails.  Default: ``500``."""
 

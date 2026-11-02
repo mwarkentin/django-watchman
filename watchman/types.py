@@ -8,8 +8,11 @@ class _CheckStatusRequired(TypedDict):
 class CheckStatus(_CheckStatusRequired, total=False):
     """Result of a single health check -- success or error.
 
-    The ``ok`` field is always present. The ``error`` and ``stacktrace``
-    fields are only present when the check failed.
+    The ``ok`` field is always present. The ``error`` field is only present
+    when the check failed. The ``stacktrace`` field is only present when the
+    check failed and
+    [`WATCHMAN_EXPOSE_ERROR_DETAILS`][watchman.settings.WATCHMAN_EXPOSE_ERROR_DETAILS]
+    is ``True``.
     """
 
     error: str

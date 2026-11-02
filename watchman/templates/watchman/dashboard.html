@@ -58,7 +58,7 @@
                     {% trans "ERROR!" %}
 
                     <div class="btn-group btn-group-xs pull-right">
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type_name|cut:' ' }}{% if status.name %}-{{ status.name|cut:' ' }}{% endif %}">{% trans "Traceback" %}</button>
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#{{ type_name|cut:' ' }}{% if status.name %}-{{ status.name|cut:' ' }}{% endif %}">{% if status.stacktrace %}{% trans "Traceback" %}{% else %}{% trans "Details" %}{% endif %}</button>
                     </div>
                 </td>
                 {% endif %}{# status.ok #}
@@ -89,7 +89,7 @@
             </div><!-- class="modal-header" -->
             <div class="modal-body">
                 <h4><pre>{{ status.error }}</pre></h4>
-                <pre>{{ status.stacktrace }}</pre>
+                {% if status.stacktrace %}<pre>{{ status.stacktrace }}</pre>{% endif %}
             </div><!-- class="model-body" -->
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

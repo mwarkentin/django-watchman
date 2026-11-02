@@ -142,6 +142,7 @@ See the full list of [dependents on GitHub](https://github.com/mwarkentin/django
 | `WATCHMAN_ENABLE_PAID_CHECKS` | Enable paid checks like email (default: `False`) |
 | `WATCHMAN_DATABASES` | Subset of `DATABASES` to check |
 | `WATCHMAN_CACHES` | Subset of `CACHES` to check |
+| `WATCHMAN_EXPOSE_ERROR_DETAILS` | Include exception messages and stacktraces of failed checks in responses (default: `False`) |
 | `WATCHMAN_ERROR_CODE` | HTTP status code for failing checks (default: `500`) |
 | `WATCHMAN_DISABLE_APM` | Suppress APM tracing on watchman views (default: `False`) |
 | `EXPOSE_WATCHMAN_VERSION` | Include `X-Watchman-Version` response header (default: `False`) |
