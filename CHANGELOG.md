@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+- Add a `watchman.W001` deployment check that warns from `manage.py check --deploy` when the status endpoint and dashboard don't require authentication (default `token_required` decorator with no `WATCHMAN_TOKENS`)
+
 ## 2.0.0 (2026-11-02)
 
 This release has two breaking changes: failed checks no longer include exception details in responses, and the deprecated `WATCHMAN_TOKEN` setting is removed.
