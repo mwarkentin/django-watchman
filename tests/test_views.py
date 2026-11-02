@@ -19,6 +19,7 @@ from django.core import mail
 from django.test import TestCase as DjangoTestCase
 from django.test.client import RequestFactory
 from django.test.utils import override_settings
+from django.urls import clear_url_caches
 
 from watchman import checks, views
 from watchman.decorators import GENERIC_ERROR_MESSAGE
@@ -58,12 +59,19 @@ def reload_settings():
     reload(sys.modules["watchman.settings"])
     reload(sys.modules["watchman.decorators"])
     reload(sys.modules["watchman.views"])
+    # URL patterns hold references to the view functions, so reload them too
+    # once something (e.g. login_required's redirect) has loaded the URLconf
+    if "watchman.urls" in sys.modules:
+        reload(sys.modules["watchman.urls"])
+    clear_url_caches()
 
 
 class TestWatchman(unittest.TestCase):
     def setUp(self):
-        # Ensure that every test executes with separate settings
+        # Ensure that every test executes with separate settings, and reload
+        # again afterwards so overridden settings don't leak into other modules
         reload_settings()
+        self.addCleanup(reload_settings)
 
     def test_response_content_type_json(self):
         request = RequestFactory().get("/")
@@ -351,8 +359,10 @@ class TestWatchman(unittest.TestCase):
 
 class TestWatchmanDashboard(unittest.TestCase):
     def setUp(self):
-        # Ensure that every test executes with separate settings
+        # Ensure that every test executes with separate settings, and reload
+        # again afterwards so overridden settings don't leak into other modules
         reload_settings()
+        self.addCleanup(reload_settings)
 
     def test_dashboard_response_code(self):
         request = RequestFactory().get("/")
@@ -397,8 +407,10 @@ class TestWatchmanDashboard(unittest.TestCase):
 
 class TestPing(unittest.TestCase):
     def setUp(self):
-        # Ensure that every test executes with separate settings
+        # Ensure that every test executes with separate settings, and reload
+        # again afterwards so overridden settings don't leak into other modules
         reload_settings()
+        self.addCleanup(reload_settings)
 
     def test_returns_pong(self):
         request = RequestFactory().get("/")
@@ -410,8 +422,10 @@ class TestPing(unittest.TestCase):
 
 class TestBareStatus(unittest.TestCase):
     def setUp(self):
-        # Ensure that every test executes with separate settings
+        # Ensure that every test executes with separate settings, and reload
+        # again afterwards so overridden settings don't leak into other modules
         reload_settings()
+        self.addCleanup(reload_settings)
 
     def test_bare_status_success(self):
         request = RequestFactory().get("/")
@@ -469,8 +483,10 @@ class TestBareStatus(unittest.TestCase):
 
 class TestEmailCheck(DjangoTestCase):
     def setUp(self):
-        # Ensure that every test executes with separate settings
+        # Ensure that every test executes with separate settings, and reload
+        # again afterwards so overridden settings don't leak into other modules
         reload_settings()
+        self.addCleanup(reload_settings)
 
     def def_test_email_with_default_recipient(self):
         checks._check_email()
