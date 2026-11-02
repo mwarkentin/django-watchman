@@ -46,6 +46,15 @@ WATCHMAN_AUTH_DECORATOR = 'django.contrib.admin.views.decorators.staff_member_re
 !!! note
     The `token_required` decorator does not protect a view unless `WATCHMAN_TOKENS` is set in settings.
 
+`manage.py check --deploy` warns (`watchman.W001`) when the default
+`token_required` decorator is in use and `WATCHMAN_TOKENS` isn't set, because
+the status endpoint and dashboard are then open to anyone. If you restrict
+access another way, such as at a proxy or load balancer, silence it:
+
+```python
+SILENCED_SYSTEM_CHECKS = ["watchman.W001"]
+```
+
 ## Custom checks
 
 django-watchman allows you to customize the checks which are run by modifying
