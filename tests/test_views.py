@@ -481,6 +481,72 @@ class TestBareStatus(unittest.TestCase):
         self.assertEqual(response.content.decode(), "")
 
 
+@patch("watchman.checks._check_databases")
+@override_settings(ADMINS=[("Admin", "admin@example.com")])
+class TestFailedCheckLogging(DjangoTestCase):
+    def setUp(self):
+        # Ensure that every test executes with separate settings, and reload
+        # again afterwards so overridden settings don't leak into other modules
+        reload_settings()
+        self.addCleanup(reload_settings)
+
+    def fail_database_check(self, patched_check_databases):
+        patched_check_databases.return_value = [
+            {
+                "foo": {
+                    "ok": False,
+                    "error": "Fake DB Error",
+                    "stacktrace": "Fake DB Stack Trace",
+                },
+            }
+        ]
+
+    def test_status_logs_failed_checks_as_warning(self, patched_check_databases):
+        self.fail_database_check(patched_check_databases)
+        with self.assertLogs("django.request", level="WARNING") as logs:
+            response = self.client.get("/", data={"check": "watchman.checks.databases"})
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(
+            [(record.levelname, record.getMessage()) for record in logs.records],
+            [("WARNING", "Watchman checks failed: /")],
+        )
+
+    def test_status_failed_checks_do_not_email_admins(self, patched_check_databases):
+        self.fail_database_check(patched_check_databases)
+        response = self.client.get("/", data={"check": "watchman.checks.databases"})
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(len(sent_mail()), 0)
+
+    @override_settings(WATCHMAN_ERROR_CODE=503)
+    def test_status_logs_custom_error_code_as_warning(self, patched_check_databases):
+        reload_settings()
+        self.fail_database_check(patched_check_databases)
+        with self.assertLogs("django.request", level="WARNING") as logs:
+            response = self.client.get("/", data={"check": "watchman.checks.databases"})
+        self.assertEqual(response.status_code, 503)
+        self.assertEqual([record.levelname for record in logs.records], ["WARNING"])
+        self.assertEqual(len(sent_mail()), 0)
+
+    def test_status_does_not_log_passing_checks(self, patched_check_databases):
+        patched_check_databases.return_value = [{"foo": {"ok": True}}]
+        with self.assertNoLogs("django.request"):
+            response = self.client.get("/", data={"check": "watchman.checks.databases"})
+        self.assertEqual(response.status_code, 200)
+
+    def test_bare_status_logs_failed_checks_as_warning(self, patched_check_databases):
+        self.fail_database_check(patched_check_databases)
+        request = RequestFactory().get(
+            "/bare/", data={"check": "watchman.checks.databases"}
+        )
+        with self.assertLogs("django.request", level="WARNING") as logs:
+            response = views.bare_status(request)
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(
+            [(record.levelname, record.getMessage()) for record in logs.records],
+            [("WARNING", "Watchman checks failed: /bare/")],
+        )
+
+
 class TestEmailCheck(DjangoTestCase):
     def setUp(self):
         # Ensure that every test executes with separate settings, and reload

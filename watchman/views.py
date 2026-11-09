@@ -12,6 +12,7 @@ from typing import Any
 from django.db.transaction import non_atomic_requests
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
+from django.utils.log import log_response
 from django.utils.translation import gettext as _
 
 from watchman import __version__, settings
@@ -52,6 +53,25 @@ def _disable_apm() -> None:
         tracer.current_span().set_tag(MANUAL_DROP_KEY)
     except (AttributeError, ImportError):
         pass
+
+
+def _log_failed_checks(request: HttpRequest, response: HttpResponse) -> None:
+    """Log a failed health check as a warning instead of a server error.
+
+    Django logs every 5xx response to the ``django.request`` logger at
+    ``ERROR`` level, which its default logging configuration emails to
+    ``ADMINS``. A failing check is an expected outcome that monitoring polls
+    for, and the underlying exception is already logged via the ``watchman``
+    logger, so log the response at ``WARNING`` level instead. Django skips
+    responses that have already been logged.
+    """
+    log_response(
+        "Watchman checks failed: %s",
+        request.path,
+        response=response,
+        request=request,
+        level="warning",
+    )
 
 
 def run_checks(request: HttpRequest) -> tuple[dict[str, Any], bool]:
@@ -127,6 +147,8 @@ def status(request: HttpRequest) -> HttpResponse:
     else:
         http_code = 200 if ok else settings.WATCHMAN_ERROR_CODE
         response = JsonResponse(checks, status=http_code)
+        if not ok:
+            _log_failed_checks(request, response)
 
     if settings.EXPOSE_WATCHMAN_VERSION:
         response[WATCHMAN_VERSION_HEADER] = __version__
@@ -144,7 +166,10 @@ def bare_status(request: HttpRequest) -> HttpResponse:
     """
     checks, ok = run_checks(request)
     http_code = 200 if ok else settings.WATCHMAN_ERROR_CODE
-    return HttpResponse(status=http_code, content_type="text/plain")
+    response = HttpResponse(status=http_code, content_type="text/plain")
+    if not ok:
+        _log_failed_checks(request, response)
+    return response
 
 
 def ping(request: HttpRequest) -> HttpResponse:
