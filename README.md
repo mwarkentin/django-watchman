@@ -97,7 +97,7 @@ See the full list of [dependents on GitHub](https://github.com/mwarkentin/django
 3. Include the watchman URLconf in your project `urls.py`:
 
     ```python
-    re_path(r'^watchman/', include('watchman.urls')),
+    (re_path(r"^watchman/", include("watchman.urls")),)
     ```
 
 4. Start the development server and visit `http://127.0.0.1:8000/watchman/` to
