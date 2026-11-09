@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+- [#264](https://github.com/mwarkentin/django-watchman/pull/264) Stop failed checks from emailing `ADMINS` — the status endpoints now log failing responses to `django.request` at `WARNING` level instead of Django's default `ERROR`, which `mail_admins` sent on every failed poll. Failure details are still logged via the `watchman` logger
+
 ## 2.0.0 (2026-11-02)
 
 This release has two breaking changes: failed checks no longer include exception details in responses, and the deprecated `WATCHMAN_TOKEN` setting is removed.

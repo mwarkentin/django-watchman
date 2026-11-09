@@ -264,6 +264,12 @@ LOGGING = {
 }
 ```
 
+When checks fail, the `status` and `bare_status` error responses are logged to
+Django's `django.request` logger at `WARNING` level, not `ERROR`. A failing check
+is an expected result rather than a server error, so it isn't emailed to `ADMINS` by
+Django's default logging configuration. The underlying exception is still
+logged via the `watchman` logger.
+
 More information is available in the [Django documentation](https://docs.djangoproject.com/en/stable/topics/logging/#configuring-logging).
 
 ## APM (Datadog, New Relic)
