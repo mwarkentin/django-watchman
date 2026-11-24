@@ -37,8 +37,9 @@ class TestEndpointAuthenticationCheck(SimpleTestCase):
     def test_no_warning_when_auth_explicitly_disabled(self):
         self.assertEqual(check_endpoint_authentication(), [])
 
-    def test_only_runs_as_deployment_check(self):
-        self.assertNotIn("watchman.W001", _ids(checks.run_checks()))
-        self.assertIn(
-            "watchman.W001", _ids(checks.run_checks(include_deployment_checks=True))
-        )
+    def test_runs_in_regular_checks(self):
+        self.assertIn("watchman.W001", _ids(checks.run_checks()))
+
+    def test_warning_mentions_3_0_change(self):
+        (message,) = check_endpoint_authentication()
+        self.assertIn("3.0", message.msg)

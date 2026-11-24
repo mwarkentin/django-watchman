@@ -7,6 +7,7 @@ Tests for `django-watchman` decorators module.
 
 import logging
 import unittest
+import warnings
 from typing import cast
 from unittest import mock
 from unittest.mock import MagicMock, patch
@@ -16,6 +17,7 @@ from django.urls import reverse
 
 from watchman import settings as watchman_settings
 from watchman.decorators import GENERIC_ERROR_MESSAGE, check, parse_auth_header
+from watchman.deprecation import RemovedInWatchman30Warning
 from watchman.types import CheckStatus
 
 
@@ -141,6 +143,21 @@ class TestWatchmanNoTokens(unittest.TestCase):
         }
         response = self.client.get(reverse("status"), data)
         self.assertEqual(response.status_code, 200)
+
+    def test_warns_about_3_0_if_no_token_set(self):
+        with self.assertWarnsRegex(RemovedInWatchman30Warning, "3.0"):
+            response = self.client.get(reverse("status"))
+        self.assertEqual(response.status_code, 200)
+
+    def test_no_warning_if_token_set(self):
+        watchman_settings.WATCHMAN_TOKENS = "foo"
+        self.addCleanup(setattr, watchman_settings, "WATCHMAN_TOKENS", None)
+        with warnings.catch_warnings(record=True) as caught:
+            warnings.simplefilter("always")
+            self.client.get(reverse("status"), {"watchman-token": "foo"})
+        self.assertFalse(
+            [w for w in caught if issubclass(w.category, RemovedInWatchman30Warning)]
+        )
 
 
 class TestWatchmanSingleToken(unittest.TestCase):

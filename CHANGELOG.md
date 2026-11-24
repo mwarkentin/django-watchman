@@ -2,9 +2,9 @@
 
 ## Unreleased
 
-### Added
+### Deprecated
 
-- Add a `watchman.W001` deployment check that warns from `manage.py check --deploy` when the status endpoint and dashboard don't require authentication (default `token_required` decorator with no `WATCHMAN_TOKENS`)
+- `token_required` allowing every request when `WATCHMAN_TOKENS` isn't set is deprecated. In 3.0 it will deny those requests instead. watchman now warns about this with a `watchman.W001` system check and a `RemovedInWatchman30Warning` on the first unauthenticated request. Set `WATCHMAN_TOKENS`, or set `WATCHMAN_AUTH_DECORATOR = None` to keep the endpoint open; health checks that can't send a token can use `/watchman/ping/` or the bare status view.
 
 ## 2.0.0 (2026-11-02)
 

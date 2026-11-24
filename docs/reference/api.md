@@ -68,6 +68,10 @@ Include these in your root URL configuration with
         - token_required
         - auth
 
+## Deprecation
+
+::: watchman.deprecation
+
 ## Utils
 
 ::: watchman.utils

@@ -2,6 +2,7 @@
 
 import logging
 import traceback
+import warnings
 from collections.abc import Callable
 from functools import wraps
 from typing import Any
@@ -10,9 +11,18 @@ from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 
 from watchman import settings
+from watchman.deprecation import RemovedInWatchman30Warning
 from watchman.types import CheckResult, CheckStatus
 
 logger: logging.Logger = logging.getLogger("watchman")
+
+
+NO_TOKENS_WARNING: str = (
+    "WATCHMAN_TOKENS isn't set, so the watchman status endpoint and dashboard "
+    "allow every request. In django-watchman 3.0, token_required will deny "
+    "them instead. Set WATCHMAN_TOKENS, or set WATCHMAN_AUTH_DECORATOR = None "
+    "to keep the endpoint open."
+)
 
 GENERIC_ERROR_MESSAGE: str = "Check failed. See logs for details."
 
@@ -92,6 +102,10 @@ def token_required(
     [`WATCHMAN_TOKEN_NAME`][watchman.settings.WATCHMAN_TOKEN_NAME].
 
     Returns an ``HTTP 403`` response when the token is missing or invalid.
+
+    When ``WATCHMAN_TOKENS`` is unset, every request is allowed and a
+    [`RemovedInWatchman30Warning`][watchman.deprecation.RemovedInWatchman30Warning]
+    is issued: in 3.0, those requests will be denied.
     """
 
     def _get_passed_token(request: HttpRequest) -> str | None:
@@ -110,6 +124,9 @@ def token_required(
         if settings.WATCHMAN_TOKENS:
             watchman_tokens = settings.WATCHMAN_TOKENS.split(",")
         else:
+            # stacklevel=1 points the warning at this line, so it's shown once
+            # per process rather than once per calling view
+            warnings.warn(NO_TOKENS_WARNING, RemovedInWatchman30Warning, stacklevel=1)
             return True
 
         return _get_passed_token(request) in watchman_tokens

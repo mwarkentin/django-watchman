@@ -46,14 +46,24 @@ WATCHMAN_AUTH_DECORATOR = 'django.contrib.admin.views.decorators.staff_member_re
 !!! note
     The `token_required` decorator does not protect a view unless `WATCHMAN_TOKENS` is set in settings.
 
-`manage.py check --deploy` warns (`watchman.W001`) when the default
-`token_required` decorator is in use and `WATCHMAN_TOKENS` isn't set, because
-the status endpoint and dashboard are then open to anyone. If you restrict
-access another way, such as at a proxy or load balancer, silence it:
+!!! warning "Changing in 3.0"
+    In django-watchman 3.0, `token_required` will **deny** every request when
+    `WATCHMAN_TOKENS` isn't set, instead of allowing it. Until then, watchman
+    warns about it in two places:
 
-```python
-SILENCED_SYSTEM_CHECKS = ["watchman.W001"]
-```
+    - `manage.py check` (and `runserver`, `migrate`, ...) shows system check
+      `watchman.W001`.
+    - The first unauthenticated request issues a `RemovedInWatchman30Warning`.
+
+    To prepare, do one of the following:
+
+    - Set `WATCHMAN_TOKENS` and send the token from your monitoring.
+    - Keep the endpoint open on purpose by setting
+      `WATCHMAN_AUTH_DECORATOR = None`. This silences both warnings and keeps
+      working in 3.0.
+    - Point health checks that can't send a token, such as load balancer or
+      Kubernetes probes, at `/watchman/ping/` or the
+      [bare status view](#bare-status-view). Neither requires authentication.
 
 ## Custom checks
 

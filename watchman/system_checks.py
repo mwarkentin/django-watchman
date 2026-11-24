@@ -17,10 +17,10 @@ def check_endpoint_authentication(
 ) -> list[CheckMessage]:
     """Warn when the status endpoint and dashboard are open to anyone.
 
-    Registered as a deployment check, so it only runs with
-    ``manage.py check --deploy``. It fires when the default
-    ``token_required`` decorator is in use but ``WATCHMAN_TOKENS`` is unset,
-    which lets every request through.
+    Fires when the default ``token_required`` decorator is in use but
+    ``WATCHMAN_TOKENS`` is unset, which lets every request through. In
+    django-watchman 3.0 those requests will be denied, so this also warns
+    about that change.
     """
     auth_decorator = getattr(
         settings, "WATCHMAN_AUTH_DECORATOR", DEFAULT_AUTH_DECORATOR
@@ -30,13 +30,15 @@ def check_endpoint_authentication(
     if auth_decorator == DEFAULT_AUTH_DECORATOR and not tokens:
         return [
             Warning(
-                "The watchman status endpoint and dashboard don't require "
-                "authentication.",
+                "WATCHMAN_TOKENS isn't set, so the watchman status endpoint and "
+                "dashboard don't require authentication. In django-watchman 3.0 "
+                "they will deny every request instead.",
                 hint=(
-                    "Set WATCHMAN_TOKENS, or set WATCHMAN_AUTH_DECORATOR to your "
-                    "own decorator. If access is already restricted another way, "
-                    "such as at a proxy, add 'watchman.W001' to "
-                    "SILENCED_SYSTEM_CHECKS."
+                    "Set WATCHMAN_TOKENS to require a token, or set "
+                    "WATCHMAN_AUTH_DECORATOR = None to keep the endpoint open. "
+                    "Health checks that can't send a token can use the "
+                    "watchman ping endpoint or the bare_status view, which "
+                    "don't require authentication."
                 ),
                 id="watchman.W001",
             )
