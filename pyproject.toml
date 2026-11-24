@@ -91,3 +91,5 @@ allowed-unresolved-imports = ["newrelic.**", "ddtrace.**"]
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "tests.settings"
 python_files = ["tests.py", "test_*.py", "*_tests.py"]
+# Most tests run without WATCHMAN_TOKENS; the tests for this warning assert it
+filterwarnings = ["ignore:WATCHMAN_TOKENS isn't set:FutureWarning"]

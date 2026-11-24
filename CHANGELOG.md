@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Deprecated
+
+- `token_required` allowing every request when `WATCHMAN_TOKENS` isn't set is deprecated. In 3.0 it will deny those requests instead. watchman now warns about this with a `watchman.W001` system check and a `RemovedInWatchman30Warning` on the first unauthenticated request. Set `WATCHMAN_TOKENS`, or set `WATCHMAN_AUTH_DECORATOR = None` to keep the endpoint open; health checks that can't send a token can use `/watchman/ping/` or the bare status view.
+
 ## 2.0.0 (2026-11-02)
 
 This release has two breaking changes: failed checks no longer include exception details in responses, and the deprecated `WATCHMAN_TOKEN` setting is removed.
